@@ -1,7 +1,9 @@
+import LoginPage from "./pages/loginPage/LoginPage"
+
 function App() {
 
   return (
-    <h1>Gzub</h1>
+    <LoginPage />
   )
 }
 
