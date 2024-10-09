@@ -1,7 +1,17 @@
+import LoginPopUp from "@/components/loginRegisterPopUp/LoginPopUp"
+import RegisterPopUp from "@/components/loginRegisterPopUp/RegisterPopUp"
 function LoginPage() {
+
+
     return (
-        <h1>login page</h1>
+        <div className="flex items-center justify-center h-screen space-x-12">
+            <LoginPopUp />
+            <RegisterPopUp />
+
+        </div >
     )
 }
+
+
 
 export default LoginPage
