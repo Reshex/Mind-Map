@@ -13,6 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
+import { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -38,6 +41,9 @@ const formSchema = z.object({
 });
 
 export default function ProfileForm() {
+    const [isLoading, setIsLoading] = useState(false)
+    const [dbError, setDbError] = useState<string | null>(null)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -48,9 +54,31 @@ export default function ProfileForm() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setIsLoading(true)
+
+        try {
+            const docRef = await addDoc(collection(db, "users"), {
+                name: values.name,
+                lastName: values.lastName,
+                email: values.email,
+                password: values.password,
+                createdAt: new Date()
+            })
+
+            console.log("Saved user with ID:", docRef.id)
+            setIsLoading(false)
+            form.reset();
+        }
+        catch (error: any) {
+            console.error(error)
+            setDbError(error.message)
+            setIsLoading(false)
+        }
     }
+
+    if (isLoading) { return <h1 style={{ backgroundColor: "white" }}>Loading...</h1> }
+    if (dbError) { return <h1 style={{ backgroundColor: "white" }}>An error has been occurred with your regisration</h1> }
 
     return (
         <Form {...form}>

@@ -6,6 +6,7 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyDAOtc93LQLS0yF-1dOVgd8YpiVIsutovc",
   authDomain: "mind-map-da8fb.firebaseapp.com",
+  databaseURL: "https://mind-map-da8fb-default-rtdb.firebaseio.com",
   projectId: "mind-map-da8fb",
   storageBucket: "mind-map-da8fb.appspot.com",
   messagingSenderId: "396419413613",

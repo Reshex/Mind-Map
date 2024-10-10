@@ -20,9 +20,12 @@ function LoginPopUp() {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Login</AlertDialogTitle>
                     <AlertDialogDescription>
-                        <LoginForm />
+                        Please fill out the login form below to login your account.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
+                <div className="mt-4">
+                    <LoginForm />
+                </div>
             </AlertDialogContent>
         </AlertDialog>
     )
