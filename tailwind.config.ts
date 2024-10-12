@@ -9,7 +9,7 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        primary: "0 4px 6px -1px rgba(255, 165, 0, 0.2), 0 2px 4px -1px rgba(255, 165, 0, 0.1)",
+        primary: "0 4px 32px -1px, 0 2px 4px -1px",
       },
       colors: {
         background: "hsl(var(--background))",

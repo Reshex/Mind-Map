@@ -20,7 +20,8 @@ function RegisterPopUp() {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Register</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Please fill out the registration form below to create your account.
+                        Please fill out the login form below to login your account.
+                        (Press Esc to close)
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="mt-4">

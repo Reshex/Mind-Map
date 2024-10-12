@@ -1,7 +1,13 @@
+//Imports
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
+//Queries
+import registerUserToDB from "../queries/userQueries";
+
+//Custom components
 import {
     Form,
     FormControl,
@@ -13,9 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
-import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/firebase";
+import Loading from "../loading/Loading";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -43,6 +47,7 @@ const formSchema = z.object({
 export default function ProfileForm() {
     const [isLoading, setIsLoading] = useState(false)
     const [dbError, setDbError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,30 +60,28 @@ export default function ProfileForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsLoading(true)
+        setIsLoading(true);
+        setDbError(null);
+        setSuccess(null)
 
         try {
-            const docRef = await addDoc(collection(db, "users"), {
-                name: values.name,
-                lastName: values.lastName,
-                email: values.email,
-                password: values.password,
-                createdAt: new Date()
-            })
-
-            console.log("Saved user with ID:", docRef.id)
-            setIsLoading(false)
+            await registerUserToDB(values);
+            setIsLoading(false);
+            setSuccess("Successfully registered!")
             form.reset();
-        }
-        catch (error: any) {
-            console.error(error)
-            setDbError(error.message)
-            setIsLoading(false)
+        } catch (error: any) {
+            console.error(error);
+            setDbError(error.message);
+            setIsLoading(false);
         }
     }
 
-    if (isLoading) { return <h1 style={{ backgroundColor: "white" }}>Loading...</h1> }
-    if (dbError) { return <h1 style={{ backgroundColor: "white" }}>An error has been occurred with your regisration</h1> }
+    if (isLoading) { return <Loading /> }
+    if (success) {
+        return <div className="text-foreground font-semibold">
+            {success}
+        </div>
+    }
 
     return (
         <Form {...form}>
@@ -135,6 +138,12 @@ export default function ProfileForm() {
                         </FormItem>
                     )}
                 />
+
+                {dbError && (
+                    <div className="text-destructive font-semibold">
+                        {dbError}
+                    </div>
+                )}
                 <AlertDialogFooter>
                     <AlertDialogCancel className="rounded">Cancel</AlertDialogCancel>
                     <Button type="submit" className="rounded">Register</Button>

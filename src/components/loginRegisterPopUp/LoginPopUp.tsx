@@ -21,6 +21,7 @@ function LoginPopUp() {
                     <AlertDialogTitle>Login</AlertDialogTitle>
                     <AlertDialogDescription>
                         Please fill out the login form below to login your account.
+                        (Press Esc to close)
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="mt-4">
