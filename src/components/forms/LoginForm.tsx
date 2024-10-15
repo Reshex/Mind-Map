@@ -1,40 +1,41 @@
+import { auth } from "@/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";  // Import the navigation hook
 
 const formSchema = z.object({
-    email: z.string().email({
-        message: "Please enter a valid email address.",
-    }),
-    password: z.string().min(1, {
-        message: "Password cannot be empty.",
-    }),
+    email: z.string().email("Please enter a valid email address."),
+    password: z.string().min(1, "Password cannot be empty."),
 });
 
-export default function ProfileForm() {
+export default function LoginForm() {
+    const [dbError, setDbError] = useState<string | null>(null);
+    const navigate = useNavigate();  // Use the React Router's useNavigate hook
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+        defaultValues: { email: "", password: "" },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-    }
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setDbError(null);
+
+        try {
+            await signInWithEmailAndPassword(auth, values.email, values.password);
+
+            navigate("/");
+            console.log("Successfully logged in");
+        } catch (error: any) {
+            setDbError(error.message);
+        }
+    };
 
     return (
         <Form {...form}>
@@ -59,12 +60,13 @@ export default function ProfileForm() {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Password" {...field} />
+                                <Input type="password" placeholder="Password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+                {dbError && <div className="text-destructive font-semibold">{dbError}</div>}
                 <AlertDialogFooter>
                     <AlertDialogCancel className="rounded">Cancel</AlertDialogCancel>
                     <Button type="submit" className="rounded">Login</Button>

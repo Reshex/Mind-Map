@@ -66,15 +66,14 @@ export default function ProfileForm() {
 
         try {
             await registerUserToDB(values);
-            setIsLoading(false);
-            setSuccess("Successfully registered!")
+            setSuccess("Successfully registered!");
             form.reset();
         } catch (error: any) {
-            console.error(error);
             setDbError(error.message);
+        } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     if (isLoading) { return <Loading /> }
     if (success) {
@@ -132,7 +131,7 @@ export default function ProfileForm() {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Password" {...field} />
+                                <Input type="password" placeholder="Password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
