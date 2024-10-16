@@ -6,11 +6,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Brain, House, Mail, Menu, User, X } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 
-const Navbar = () => {
+async function handleLogout() {
+    try {
+        await signOut(auth);
+        console.log("Successfully logged out");
+    } catch (error) {
+        console.error("Error logging out: ", error);
+    }
+}
+
+function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggleMenu = () => {
+    function toggleMenu() {
         setIsOpen(!isOpen);
     };
 
@@ -46,7 +57,7 @@ const Navbar = () => {
                                 <DropdownMenuContent className="bg-background text-foreground">
                                     <DropdownMenuItem>My Account</DropdownMenuItem>
                                     <DropdownMenuItem>Settings</DropdownMenuItem>
-                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleLogout()} >Logout</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </a>

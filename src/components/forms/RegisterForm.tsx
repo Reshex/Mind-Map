@@ -67,7 +67,6 @@ export default function ProfileForm() {
         try {
             await registerUserToDB(values);
             setSuccess("Successfully registered!");
-            form.reset();
         } catch (error: any) {
             setDbError(error.message);
         } finally {
