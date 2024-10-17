@@ -4,6 +4,8 @@ import NavbarWrapper from '../layout/navbarWrapper/NavbarWrapper';
 import HomePage from '../pages/homePage/HomePage';
 import PublicRoute from '@/components/routes/PublicRoute';
 import ProtectedRoute from '@/components/routes/ProtectedRoute';
+import ContactPage from '@/pages/contact/ContactPage';
+import MindMapPage from '@/pages/mindMap/MindMapPage';
 
 const router = createBrowserRouter([
     {
@@ -22,6 +24,19 @@ const router = createBrowserRouter([
                 element: <ProtectedRoute />,
                 children: [
                     { path: "/", element: <HomePage /> },
+                ]
+            },
+            {
+                path: "/contact",
+                children: [
+                    { path: "/contact", element: <ContactPage /> },
+                ]
+            },
+            {
+                path: "/mindMap",
+                element: <ProtectedRoute />,
+                children: [
+                    { path: "/mindMap", element: <MindMapPage /> },
                 ]
             }
         ]

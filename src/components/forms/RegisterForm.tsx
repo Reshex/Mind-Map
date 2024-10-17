@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useState } from "react";
 
 //Queries
-import registerUserToDB from "../queries/userQueries";
+import registerUserToDB from "../db/userDB";
 
 //Custom components
 import {

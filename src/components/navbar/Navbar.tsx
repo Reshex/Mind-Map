@@ -8,6 +8,7 @@ import {
 import { Brain, House, Mail, Menu, User, X } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
+import useAuth from "@/hooks/useAuth";
 
 async function handleLogout() {
     try {
@@ -20,6 +21,7 @@ async function handleLogout() {
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useAuth();
 
     function toggleMenu() {
         setIsOpen(!isOpen);
@@ -38,21 +40,25 @@ function Navbar() {
 
                     {/* Middle section (for larger screens) */}
                     <div className="hidden md:flex space-x-8 items-center">
-                        <a href="#home" className="text-muted-foreground hover:text-primary transition-colors">
+                        <a href="/" className="text-muted-foreground hover:text-primary transition-colors">
                             <House />
                         </a>
-                        <a href="#mindmap" className="text-muted-foreground hover:text-primary transition-colors">
+                        {user ? <a href="/mindmap" className="text-muted-foreground hover:text-primary transition-colors">
                             <Brain />
-                        </a>
-                        <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">
+                        </a> : null}
+
+                        <a href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                             <Mail />
                         </a>
                         <a>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="text-muted-foreground hover:text-primary focus:outline-none">
-                                        <User />
-                                    </button>
+                                    {user ?
+                                        <button className="text-muted-foreground hover:text-primary focus:outline-none">
+                                            <User />
+                                        </button> :
+                                        null}
+
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="bg-background text-foreground">
                                     <DropdownMenuItem>My Account</DropdownMenuItem>
@@ -64,28 +70,45 @@ function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="flex md:hidden">
+                    <div className="flex items-center justify-between md:hidden w-16">
                         <button onClick={toggleMenu} className="text-muted-foreground hover:text-primary focus:outline-none">
                             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
-                    </div>
 
+                        {user && (
+                            <a className="ml-auto">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="text-muted-foreground hover:text-primary focus:outline-none">
+                                            <User />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="bg-background text-foreground">
+                                        <DropdownMenuItem>My Account</DropdownMenuItem>
+                                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </a>
+                        )}
+                    </div>
 
                 </div>
 
                 {/* Mobile menu */}
+
                 {isOpen && (
                     <div className="md:hidden mt-4 space-y-2">
-                        <a href="#home" className="block text-foreground hover:text-primary transition-colors">
+
+                        <a href="/" className="block text-foreground hover:text-primary transition-colors">
                             Home
                         </a>
-                        <a href="#about" className="block text-muted-foreground hover:text-primary transition-colors">
-                            About
-                        </a>
-                        <a href="#services" className="block text-muted-foreground hover:text-primary transition-colors">
-                            Services
-                        </a>
-                        <a href="#contact" className="block text-muted-foreground hover:text-primary transition-colors">
+                        {user ?
+                            <a href="/mindMap" className="block text-muted-foreground hover:text-primary transition-colors">
+                                Mind Map
+                            </a> : null}
+
+                        <a href="/contact" className="block text-muted-foreground hover:text-primary transition-colors">
                             Contact
                         </a>
                     </div>
