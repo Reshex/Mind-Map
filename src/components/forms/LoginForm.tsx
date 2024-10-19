@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";  // Import the navigation hook
+import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address."),
@@ -17,7 +18,7 @@ const formSchema = z.object({
 
 export default function LoginForm() {
     const [dbError, setDbError] = useState<string | null>(null);
-    const navigate = useNavigate();  // Use the React Router's useNavigate hook
+    const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -31,7 +32,6 @@ export default function LoginForm() {
             await signInWithEmailAndPassword(auth, values.email, values.password);
 
             navigate("/");
-            console.log("Successfully logged in");
         } catch (error: any) {
             setDbError(error.message);
         }
@@ -68,6 +68,7 @@ export default function LoginForm() {
                 />
                 {dbError && <div className="text-destructive font-semibold">{dbError}</div>}
                 <AlertDialogFooter>
+                    <GoogleAuthButton />
                     <AlertDialogCancel className="rounded">Cancel</AlertDialogCancel>
                     <Button type="submit" className="rounded">Login</Button>
                 </AlertDialogFooter>

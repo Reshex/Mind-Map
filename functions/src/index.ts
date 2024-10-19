@@ -9,7 +9,6 @@ exports.onUserDelete = functions.auth.user().onDelete(async (user: functions.aut
   try {
     const userDocRef = admin.firestore().collection("users").doc(uid);
     await userDocRef.delete();
-    console.log(`Successfully deleted user data for UID: ${uid}`);
   } catch (error) {
     console.error(`Error deleting user data for UID: ${uid}`, error);
   }

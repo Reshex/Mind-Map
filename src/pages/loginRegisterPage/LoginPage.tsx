@@ -4,7 +4,7 @@ function LoginPage() {
 
 
     return (
-        <div className="flex items-center justify-center h-screen ">
+        <div className="flex items-center justify-center h-screen space-x-12 ">
             <LoginPopUp />
             <RegisterPopUp />
             <a href="/contact">

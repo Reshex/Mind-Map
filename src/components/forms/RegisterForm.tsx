@@ -20,6 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import Loading from "../loading/Loading";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase";
+import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -65,7 +68,9 @@ export default function ProfileForm() {
         setSuccess(null)
 
         try {
-            await registerUserToDB(values);
+            const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+            const user = userCredential.user;
+            await registerUserToDB(values, user.uid);
             setSuccess("Successfully registered!");
         } catch (error: any) {
             setDbError(error.message);
@@ -143,6 +148,7 @@ export default function ProfileForm() {
                     </div>
                 )}
                 <AlertDialogFooter>
+                    <GoogleAuthButton />
                     <AlertDialogCancel className="rounded">Cancel</AlertDialogCancel>
                     <Button type="submit" className="rounded">Register</Button>
                 </AlertDialogFooter>

@@ -15,9 +15,6 @@ const ProtectedRoute: React.FC = () => {
         return <Navigate to="/login" replace />;
     }
 
-    console.log("User ID: ", user.uid);
-    console.log("User email: ", user.email);
-
     return <Outlet />;
 };
 
