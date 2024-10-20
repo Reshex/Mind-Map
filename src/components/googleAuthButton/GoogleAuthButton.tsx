@@ -1,4 +1,3 @@
-// GoogleAuth.tsx
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/firebase";
 import { useState } from "react";
@@ -11,7 +10,6 @@ export default function GoogleAuth() {
 
     const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
-
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;

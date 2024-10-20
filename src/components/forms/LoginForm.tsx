@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import the navigation hook
+import { useNavigate } from "react-router-dom";  
 import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
 const formSchema = z.object({

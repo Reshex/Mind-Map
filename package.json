@@ -24,6 +24,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.26.2",
+    "reactflow": "^11.11.4",
     "scss": "^0.2.4",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
