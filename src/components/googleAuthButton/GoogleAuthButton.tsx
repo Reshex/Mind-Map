@@ -3,7 +3,7 @@ import { auth } from "@/firebase";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import registerUserToDB from "../db/userDB";
-import User from "@/types/UserType";
+import User from "@/types/userTypes/UserType";
 
 export default function GoogleAuth() {
     const [error, setError] = useState<string | null>(null);

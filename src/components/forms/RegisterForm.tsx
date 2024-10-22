@@ -3,8 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase";
+import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
-//Queries
+//DB
 import registerUserToDB from "../db/userDB";
 
 //Custom components
@@ -20,9 +23,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import Loading from "../loading/Loading";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase";
-import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
 const formSchema = z.object({
     name: z.string().min(2, {
