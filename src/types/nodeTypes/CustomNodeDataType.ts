@@ -1,5 +1,8 @@
-export default interface CustomNodeData {
-  label: string;
-  value?: string;
-  onChange: (value: string) => void;
+import { NodeProps } from "reactflow";
+
+export default interface CustomNodeProps extends NodeProps {
+  data: {
+    label: string;
+    customStyle?: string;
+  };
 }
