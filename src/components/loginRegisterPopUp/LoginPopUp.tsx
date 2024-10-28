@@ -16,7 +16,7 @@ function LoginPopUp() {
                     Login
                 </div>
             </AlertDialogTrigger>
-            <AlertDialogContent className="max-w-sm">
+            <AlertDialogContent className="max-w-min">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Login</AlertDialogTitle>
                     <AlertDialogDescription>

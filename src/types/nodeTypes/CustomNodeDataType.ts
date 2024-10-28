@@ -1,6 +1,4 @@
-import { NodeProps } from "reactflow";
-
-export default interface CustomNodeDataType extends NodeProps {
+export default interface CustomNodeDataType  {
   label: string;
   customStyle?: string;
   parentId?: string | null;

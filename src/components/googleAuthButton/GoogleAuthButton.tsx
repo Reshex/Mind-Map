@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import registerUserToDB from "../db/userDB";
 import User from "@/types/userTypes/UserType";
+import { LogIn } from "lucide-react";
 
 export default function GoogleAuth() {
     const [error, setError] = useState<string | null>(null);
@@ -29,8 +30,8 @@ export default function GoogleAuth() {
     return (
         <div>
             {error && <p className="text-red-500">{error}</p>}
-            <Button type="button" onClick={signInWithGoogle} className="bg-foreground text-secondary px-6 rounded hover:text-white">
-                Sign In with Google
+            <Button type="button" onClick={signInWithGoogle} className="bg-foreground text-secondary rounded hover:text-white">
+                Sign In with Google <LogIn className="size-4 ml-2" />
             </Button>
         </div>
     );

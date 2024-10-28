@@ -1,19 +1,12 @@
 import { useState } from 'react';
-import ReactFlow, { Node, useNodesState, useEdgesState, addEdge, Connection, Edge, Controls } from 'reactflow';
+import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
+import initialNode from '../nodes/InitialNode';
+import { onConnectNodes, onAddNode } from '../nodes/nodesController';
 
-const initialNodes: Node<CustomNodeDataType>[] = [
-    {
-        id: '1',
-        type: 'custom',
-        data: {
-            label: 'Custom Node 1',
-        },
-        position: { x: 400, y: 0 },
-    },
-];
+const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
 const initialEdges: Edge[] = [];
 
@@ -27,42 +20,26 @@ function MindMap() {
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
     function addNode(label: string) {
-        console.log("Add Node Called, selectedNodeId:", selectedNodeId);
-        if (!selectedNodeId) return;
-
-        const selectedNode = nodes.find((node) => node.id === selectedNodeId);
-        if (!selectedNode) return;
-
-        const siblingNodes = nodes.filter(node => node.data.parentId === selectedNodeId);
-        const spacingX = 150;
-        const xPosition = selectedNode.position.x + siblingNodes.length * spacingX;
-        const yPosition = selectedNode.position.y + 150;
-
-        const newNode: Node = {
-            id: `${nodes.length + 1}`,
-            type: 'custom',
-            data: { label, parentId: selectedNodeId, setSelectedNodeId, addNode },
-            position: { x: xPosition, y: yPosition },
-        };
-
-        const newEdge: Edge = {
-            id: `e${selectedNodeId}-${newNode.id}`,
-            source: selectedNodeId,
-            target: newNode.id,
-        };
-
-        setNodes((nds) => [...nds, newNode]);
-        setEdges((eds) => [...eds, newEdge]);
+        onAddNode({
+            label,
+            selectedNodeId,
+            nodes,
+            setNodes,
+            setEdges,
+        });
     };
 
-    function onConnect(params: Edge | Connection) {
-        setEdges((eds) => addEdge(params, eds));
+    function connectNodes(params: Edge | Connection) {
+        onConnectNodes({
+            params,
+            setEdges,
+        })
     }
 
     return (
         <div className="h-screen bg-gradient-to-r from-secondary to-muted-secondary">
             <ReactFlow
-                nodes={nodes.map(node => ({
+                nodes={nodes.map((node) => ({
                     ...node,
                     data: {
                         ...node.data,
@@ -73,7 +50,7 @@ function MindMap() {
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
+                onConnect={connectNodes}
                 nodeTypes={nodeTypes}
                 fitView
             >
