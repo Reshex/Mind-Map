@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -8,27 +9,34 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Plus } from "lucide-react"
-import { Input } from "../ui/input"
+} from "@/components/ui/alert-dialog";
+import { Plus } from "lucide-react";
+import { Input } from "../ui/input";
 
-
-function AddNode() {
+function AddNode({ addNode }: { addNode: (label: string) => void }) {
+    const [nodeName, setNodeName] = useState("");
 
     function handleAddNode() {
-        console.log("ADD NODE")
+        addNode(nodeName);
+        setNodeName("");
     }
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger><Plus className='w-3 h-3 hover:text-secondary' /></AlertDialogTrigger>
+            <AlertDialogTrigger>
+                <Plus className="w-3 h-3 hover:text-secondary" />
+            </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Add Node</AlertDialogTitle>
                     <AlertDialogDescription>
                         New node will be added to the mind map below the selected node.
                     </AlertDialogDescription>
-                    <Input placeholder="Add Node" />
+                    <Input
+                        placeholder="Add Node"
+                        value={nodeName}
+                        onChange={(e) => setNodeName(e.target.value)}
+                    />
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -36,7 +44,7 @@ function AddNode() {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }
 
-export default AddNode
+export default AddNode;
