@@ -9,7 +9,7 @@ interface CustomNodeProps {
 }
 
 function CustomNode({ data, id }: CustomNodeProps) {
-    const { setSelectedNodeId, addNode, label, customStyle } = data;
+    const { setSelectedNodeId, addNode, editNode, removeNode, label, customStyle } = data;
 
     return (
         <div
@@ -19,7 +19,7 @@ function CustomNode({ data, id }: CustomNodeProps) {
             <Handle type="target" position={Position.Top} className="bg-primary" />
             <div className="flex justify-between items-start">
                 <div></div>
-                <CollapsableMenu />
+                <CollapsableMenu removeNode={removeNode} editNode={editNode} />
             </div>
             <div className="text-md font-semibold text-foreground">{label}</div>
             <div className="flex justify-center mt-2">

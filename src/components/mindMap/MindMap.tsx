@@ -3,8 +3,8 @@ import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge, Contro
 import 'reactflow/dist/style.css';
 import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
-import initialNode from '../nodes/InitialNode';
-import { onConnectNodes, onAddNode } from '../nodes/nodesController';
+import initialNode from '../nodes/initialNode';
+import { onConnectNodes, onAddNode, onRemoveNode, onEditNode } from '../nodes/nodesController';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -29,6 +29,22 @@ function MindMap() {
         });
     };
 
+    function removeNode() {
+        onRemoveNode({
+            setNodes,
+            setEdges,
+            selectedNodeId: selectedNodeId
+        })
+    }
+
+    function editNode(label: string) {
+        onEditNode({
+            label,
+            setNodes,
+            nodeId: selectedNodeId,
+        })
+    }
+
     function connectNodes(params: Edge | Connection) {
         onConnectNodes({
             params,
@@ -45,6 +61,8 @@ function MindMap() {
                         ...node.data,
                         setSelectedNodeId: setSelectedNodeId,
                         addNode: addNode,
+                        removeNode: removeNode,
+                        editNode: editNode,
                     },
                 }))}
                 edges={edges}

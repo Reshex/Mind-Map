@@ -15,6 +15,18 @@ interface OnConnectParams {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
+interface OnRemoveNodeParams {
+  setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+  selectedNodeId: string | null;
+}
+
+interface OnEditNodeParams {
+  label: string;
+  nodeId: string | null;
+  setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
+}
+
 export function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: AddNodeParams) {
   if (!selectedNodeId) return;
 
@@ -34,6 +46,8 @@ export function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: 
       parentId: selectedNodeId,
       setSelectedNodeId: () => {},
       addNode: () => {},
+      removeNode: () => {},
+      editNode: () => {},
     },
     position: { x: xPosition, y: yPosition },
   };
@@ -46,6 +60,16 @@ export function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: 
 
   setNodes((nds) => [...nds, newNode]);
   setEdges((eds) => [...eds, newEdge]);
+}
+
+export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
+  if (!selectedNodeId) return;
+  setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
+  setEdges((eds) => eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId));
+}
+
+export function onEditNode({ label, setNodes, nodeId }: OnEditNodeParams) {
+  setNodes((nds) => nds.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, label } } : node)));
 }
 
 export function onConnectNodes({ params, setEdges }: OnConnectParams) {
