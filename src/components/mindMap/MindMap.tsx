@@ -4,7 +4,7 @@ import 'reactflow/dist/style.css';
 import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
 import initialNode from '../nodes/initialNode';
-import { onConnectNodes, onAddNode, onRemoveNode, onEditNode } from '../nodes/nodesController';
+import { onConnectNodes, onAddNode, onRemoveNode, onEditNode } from '../controllers/nodesController';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -33,7 +33,7 @@ function MindMap() {
         onRemoveNode({
             setNodes,
             setEdges,
-            selectedNodeId: selectedNodeId
+            selectedNodeId
         })
     }
 
@@ -41,7 +41,7 @@ function MindMap() {
         onEditNode({
             label,
             setNodes,
-            nodeId: selectedNodeId,
+            selectedNodeId,
         })
     }
 

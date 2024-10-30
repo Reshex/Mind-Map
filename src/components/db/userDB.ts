@@ -26,3 +26,4 @@ export default async function registerUserToDB(values: UserType, userUid: string
     throw new Error(error.message || "An unexpected error occurred");
   }
 }
+

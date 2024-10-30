@@ -5,5 +5,5 @@ export default interface CustomNodeDataType {
   setSelectedNodeId: (id: string) => void;
   addNode: (label: string) => void;
   removeNode: () => void;
-  editNode: () => void;
+  editNode: (label: string) => void;
 }

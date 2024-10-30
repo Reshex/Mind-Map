@@ -1,6 +1,6 @@
-// src/utils/nodeUtils.ts
 import { Node, Edge, Connection, addEdge } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
+import { removeNodeFromDB, saveNodeToDB } from "../db/nodeDB";
 
 interface AddNodeParams {
   label: string;
@@ -23,23 +23,24 @@ interface OnRemoveNodeParams {
 
 interface OnEditNodeParams {
   label: string;
-  nodeId: string | null;
+  selectedNodeId: string | null;
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
 }
 
-export function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: AddNodeParams) {
+export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: AddNodeParams) {
   if (!selectedNodeId) return;
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
   if (!selectedNode) return;
 
+  const tempNodeId = `temp_${Date.now()}`;
   const siblingNodes = nodes.filter((node) => node.data.parentId === selectedNodeId);
   const spacingX = 150;
   const xPosition = selectedNode.position.x + siblingNodes.length * spacingX;
   const yPosition = selectedNode.position.y + 150;
 
   const newNode: Node<CustomNodeDataType> = {
-    id: `${nodes.length + 1}`,
+    id: tempNodeId,
     type: "custom",
     data: {
       label,
@@ -53,23 +54,34 @@ export function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: 
   };
 
   const newEdge: Edge = {
-    id: `e${selectedNodeId}-${newNode.id}`,
+    id: `e${selectedNodeId}-${tempNodeId}`,
     source: selectedNodeId,
-    target: newNode.id,
+    target: tempNodeId,
   };
 
   setNodes((nds) => [...nds, newNode]);
   setEdges((eds) => [...eds, newEdge]);
+
+  const newNodeId = await saveNodeToDB({ label, selectedNodeId, xPosition, yPosition });
+
+  if (newNodeId) {
+    setNodes((nds) => nds.map((node) => (node.id === tempNodeId ? { ...node, id: newNodeId } : node)));
+    setEdges((eds) => eds.map((edge) => (edge.target === tempNodeId ? { ...edge, target: newNodeId } : edge)));
+  }
 }
 
 export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
   if (!selectedNodeId) return;
   setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
   setEdges((eds) => eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId));
+
+  removeNodeFromDB(selectedNodeId);
 }
 
-export function onEditNode({ label, setNodes, nodeId }: OnEditNodeParams) {
-  setNodes((nds) => nds.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, label } } : node)));
+export function onEditNode({ label, setNodes, selectedNodeId }: OnEditNodeParams) {
+  setNodes((nds) =>
+    nds.map((node) => (node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node))
+  );
 }
 
 export function onConnectNodes({ params, setEdges }: OnConnectParams) {
