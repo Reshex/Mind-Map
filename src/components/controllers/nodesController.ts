@@ -1,6 +1,6 @@
 import { Node, Edge, Connection, addEdge } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
-import { editNodeToDB, removeNodeFromDB, saveNodeToDB } from "../db/nodeDB";
+import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
 
 interface AddNodeParams {
   label: string;
@@ -25,6 +25,19 @@ interface OnEditNodeParams {
   label: string;
   selectedNodeId: string | null;
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
+}
+
+interface OnFetchNodeParams {
+  setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+  edges: Edge[];
+}
+
+export async function onGetNodes({ setNodes, setEdges, edges }: OnFetchNodeParams) {
+  const nodesFromDB = await getNodesFromDB();
+  nodesFromDB.map((node) => {
+    setNodes((nds) => [...nds, node as Node<CustomNodeDataType>]);
+  });
 }
 
 export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdges }: AddNodeParams) {
@@ -62,7 +75,7 @@ export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdg
   setNodes((nds) => [...nds, newNode]);
   setEdges((eds) => [...eds, newEdge]);
 
-  const newNodeId = await saveNodeToDB({ label, selectedNodeId, xPosition, yPosition });
+  const newNodeId = await addNodeToDB({ label, selectedNodeId, xPosition, yPosition });
 
   if (newNodeId) {
     setNodes((nds) => nds.map((node) => (node.id === tempNodeId ? { ...node, id: newNodeId } : node)));

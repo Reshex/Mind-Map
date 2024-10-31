@@ -1,7 +1,14 @@
 import { db } from "@/firebase";
-import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
-export async function saveNodeToDB({
+export async function getNodesFromDB() {
+  const nodesCollection = collection(db, "nodes");
+  const nodesSnapshot = await getDocs(nodesCollection);
+  const nodesList = nodesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return nodesList;
+}
+
+export async function addNodeToDB({
   label,
   selectedNodeId,
   xPosition,
