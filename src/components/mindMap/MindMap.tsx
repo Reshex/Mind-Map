@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
-import initialNode from '../nodes/initialNode';
+import initialNode from '../../utils/initialNode';
 import { onConnectNodes, onAddNode, onRemoveNode, onEditNode } from '../controllers/nodesController';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
@@ -51,6 +51,10 @@ function MindMap() {
             setEdges,
         })
     }
+
+    useEffect(() => {
+        
+    }, [nodes])
 
     return (
         <div className="h-screen bg-gradient-to-r from-secondary to-muted-secondary">

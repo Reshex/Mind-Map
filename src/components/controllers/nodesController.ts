@@ -1,6 +1,6 @@
 import { Node, Edge, Connection, addEdge } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
-import { removeNodeFromDB, saveNodeToDB } from "../db/nodeDB";
+import { editNodeToDB, removeNodeFromDB, saveNodeToDB } from "../db/nodeDB";
 
 interface AddNodeParams {
   label: string;
@@ -79,6 +79,8 @@ export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNod
 }
 
 export function onEditNode({ label, setNodes, selectedNodeId }: OnEditNodeParams) {
+  if (!selectedNodeId) return;
+  editNodeToDB(selectedNodeId, label);
   setNodes((nds) =>
     nds.map((node) => (node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node))
   );

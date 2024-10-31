@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export async function saveNodeToDB({
   label,
@@ -24,6 +24,10 @@ export async function saveNodeToDB({
       createdAt: new Date(),
     });
 
+    await updateDoc(doc(db, "nodes", docRef.id), {
+      id: docRef.id,
+    });
+
     return docRef.id;
   } catch (error) {
     console.error("Error saving node to database", error);
@@ -42,4 +46,14 @@ export async function removeNodeFromDB(nodeId: string) {
   }
 }
 
-export async function editNodeToDB(nodeId: string) {}
+export async function editNodeToDB(nodeId: string, newLabel: string) {
+  try {
+    await updateDoc(doc(db, "nodes", nodeId), {
+      data: {
+        label: newLabel,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to edit node:", error);
+  }
+}

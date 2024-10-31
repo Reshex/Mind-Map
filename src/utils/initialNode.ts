@@ -8,6 +8,8 @@ const initialNode: Node<CustomNodeDataType> = {
     label: "First Node",
     setSelectedNodeId: () => {},
     addNode: () => {},
+    removeNode: () => {},
+    editNode: () => {},
   },
   position: { x: 400, y: 0 },
 };
