@@ -2,10 +2,14 @@ import { db } from "@/firebase";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
 export async function getNodesFromDB() {
-  const nodesCollection = collection(db, "nodes");
-  const nodesSnapshot = await getDocs(nodesCollection);
-  const nodesList = nodesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  return nodesList;
+  try {
+    const nodesCollection = collection(db, "nodes");
+    const nodesSnapshot = await getDocs(nodesCollection);
+    const nodesList = nodesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return nodesList;
+  } catch (error) {
+    console.error("Failed to fetch nodes", error);
+  }
 }
 
 export async function addNodeToDB({
@@ -36,8 +40,9 @@ export async function addNodeToDB({
     });
 
     return docRef.id;
+
   } catch (error) {
-    console.error("Error saving node to database", error);
+    console.error("Failed saving node to database", error);
     return null;
   }
 }
@@ -45,11 +50,10 @@ export async function addNodeToDB({
 export async function removeNodeFromDB(nodeId: string) {
   try {
     const nodeDocRef = doc(db, "nodes", nodeId);
-
     await deleteDoc(nodeDocRef);
-    console.log("Node deleted with ID:", nodeId);
+
   } catch (error) {
-    console.error("Error removing node", error);
+    console.error("Failed removing node", error);
   }
 }
 
@@ -60,6 +64,7 @@ export async function editNodeToDB(nodeId: string, newLabel: string) {
         label: newLabel,
       },
     });
+
   } catch (error) {
     console.error("Failed to edit node:", error);
   }
