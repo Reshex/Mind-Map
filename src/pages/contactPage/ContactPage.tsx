@@ -1,5 +1,3 @@
-import CollapsableMenu from "@/components/dropdown/CollapsibleMenu"
-
 function Contact() {
     return (
         <>
@@ -10,7 +8,6 @@ function Contact() {
             <h1>Contact</h1>
             <h1>Contact</h1>
             <h1>Contact</h1>
-            <CollapsableMenu />
         </>
     )
 }

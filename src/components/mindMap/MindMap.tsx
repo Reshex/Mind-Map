@@ -1,11 +1,14 @@
+// Imports
 import { useEffect, useState } from 'react';
 import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge, Controls } from 'reactflow';
-import 'reactflow/dist/style.css';
 import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
-import initialNode from '../../utils/initialNode';
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '../controllers/nodesController';
 import { onConnectNodes, onGetConnection } from '../controllers/edgesController';
+import initialNode from '../../utils/initialNode';
+
+//styles
+import 'reactflow/dist/style.css';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 

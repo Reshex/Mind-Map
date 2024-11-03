@@ -29,11 +29,3 @@ export function onConnectNodes({ edge, setEdges }: OnConnectParams) {
     console.error("Failed to connect nodes", error);
   }
 }
-
-export async function onRemoveConnection() {
-  try {
-    
-  } catch (error) {
-    console.error("Failed to remove connection");
-  }
-}
