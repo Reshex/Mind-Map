@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
 import { Edge } from "reactflow";
 
 export async function getEdgesFromDB(): Promise<Edge[]> {
@@ -20,11 +20,9 @@ export async function getEdgesFromDB(): Promise<Edge[]> {
 export async function addEdgeToDB(edge: Edge) {
   try {
     const edgeCollectionRef = collection(db, "edges");
-    await addDoc(edgeCollectionRef, {
-      id: edge.id,
-      source: edge.source,
-      target: edge.target,
-      type: edge.type || null,
+    const edgeId = `e${edge.source}-${edge.target}`;
+    await setDoc(doc(edgeCollectionRef, edgeId), {
+      ...edge,
       createdAt: new Date(),
     });
   } catch (error) {
@@ -32,4 +30,12 @@ export async function addEdgeToDB(edge: Edge) {
   }
 }
 
-export async function removeEdgeFromDB() {}
+export async function removeEdgeFromDB(edgeId: string) {
+  try {
+    const edgeDocRef = doc(db, "edges", edgeId);
+
+    await deleteDoc(edgeDocRef);
+  } catch (error) {
+    console.error("Failed to delete edge from database", error);
+  }
+}

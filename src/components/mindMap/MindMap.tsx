@@ -5,7 +5,7 @@ import CustomNode from '../nodes/CustomNode';
 import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
 import initialNode from '../../utils/initialNode';
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '../controllers/nodesController';
-import { onConnectNodes, onGetEdges } from '../controllers/edgesController';
+import { onConnectNodes, onGetConnection } from '../controllers/edgesController';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -55,7 +55,7 @@ function MindMap() {
 
     async function loadData() {
         await onGetNodes({ setNodes, setEdges, edges });
-        await onGetEdges({ setEdges });
+        await onGetConnection({ setEdges });
     }
 
     useEffect(() => {

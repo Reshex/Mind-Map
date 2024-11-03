@@ -1,7 +1,7 @@
 import { Node, Edge } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
 import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
-import { addEdgeToDB } from "../db/edgeDB";
+import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
 
 interface OnGetNodeParams {
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
@@ -97,9 +97,17 @@ export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdg
 export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
   try {
     if (!selectedNodeId) return;
-    setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
-    setEdges((eds) => eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId));
 
+    setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
+
+    setEdges((eds) => {
+      const edgesToRemove = eds.filter((edge) => edge.source === selectedNodeId || edge.target === selectedNodeId);
+
+      edgesToRemove.forEach((edge) => {
+        removeEdgeFromDB(edge.id);
+      });
+      return eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
+    });
     removeNodeFromDB(selectedNodeId);
   } catch (error) {
     console.error("Failed to remove node", error);

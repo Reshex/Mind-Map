@@ -10,7 +10,7 @@ interface OnConnectParams {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
-export async function onGetEdges({ setEdges }: OnGetEdgesParams) {
+export async function onGetConnection({ setEdges }: OnGetEdgesParams) {
   try {
     const edgesFromDB = await getEdgesFromDB();
     if (!edgesFromDB) return;
@@ -27,5 +27,13 @@ export function onConnectNodes({ edge, setEdges }: OnConnectParams) {
     addEdgeToDB(newEdge as Edge);
   } catch (error) {
     console.error("Failed to connect nodes", error);
+  }
+}
+
+export async function onRemoveConnection() {
+  try {
+    
+  } catch (error) {
+    console.error("Failed to remove connection");
   }
 }
