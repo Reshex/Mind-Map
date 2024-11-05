@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
 import UserType from "@/types/userTypes/UserType";
 
 export default async function registerUserToDB(values: UserType, userUid: string) {
@@ -12,7 +12,7 @@ export default async function registerUserToDB(values: UserType, userUid: string
       return { error: "Email already exists" };
     }
 
-    const docRef = await addDoc(usersCollectionRef, {
+    const docRef = await setDoc(doc(usersCollectionRef, userUid), {
       uid: userUid,
       name: values.name,
       lastName: values.lastName,
@@ -20,10 +20,9 @@ export default async function registerUserToDB(values: UserType, userUid: string
       createdAt: new Date(),
     });
 
-    console.log("User successfully registered with Firestore ID:", docRef.id);
+    console.log("User successfully registered with Firestore ID:", docRef);
     return { uid: userUid };
   } catch (error: any) {
     throw new Error(error.message || "An unexpected error occurred");
   }
 }
-

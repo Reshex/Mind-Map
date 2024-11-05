@@ -9,6 +9,7 @@ import initialNode from '../../utils/initialNode';
 
 //styles
 import 'reactflow/dist/style.css';
+import { saveMapToDB } from '../db/mapDB';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -22,6 +23,7 @@ function MindMap() {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+    const [userId, setUserId] = useState(null)
 
     function addNode(label: string) {
         onAddNode({
@@ -55,6 +57,18 @@ function MindMap() {
             setEdges,
         })
     }
+
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             setUserId(user.uid);
+    //             loadData();
+    //         } else {
+    //             setUserId(null);
+    //         }
+    //     });
+    //     return unsubscribe;
+    // }, []);
 
     async function loadData() {
         await onGetNodes({ setNodes, setEdges, edges });

@@ -41,10 +41,10 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: "/LoadMap",
+                path: "/loadMap",
                 element: <ProtectedRoute />,
                 children: [
-                    { path: "/LoadMap", element: <LoadMap /> },
+                    { path: "/loadMap", element: <LoadMap /> },
                 ]
             }
         ]

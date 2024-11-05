@@ -42,7 +42,7 @@ function Navbar() {
                         <a href="/" className="text-muted-foreground hover:text-primary transition-colors">
                             <House />
                         </a>
-                        {user ? <a href="/mindmap" className="text-muted-foreground hover:text-primary transition-colors">
+                        {user ? <a href="/loadMap" className="text-muted-foreground hover:text-primary transition-colors">
                             <Brain />
                         </a> : null}
 
