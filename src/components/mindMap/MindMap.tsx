@@ -9,7 +9,10 @@ import initialNode from '../../utils/initialNode';
 
 //styles
 import 'reactflow/dist/style.css';
-import { saveMapToDB } from '../db/mapDB';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/firebase';
+import { Button } from '../ui/button';
+import { onSaveMap } from '../controllers/mapController';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -58,17 +61,21 @@ function MindMap() {
         })
     }
 
-    // useEffect(() => {
-    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //         if (user) {
-    //             setUserId(user.uid);
-    //             loadData();
-    //         } else {
-    //             setUserId(null);
-    //         }
-    //     });
-    //     return unsubscribe;
-    // }, []);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+            if (user) {
+                setUserId(user.uid);
+            } else {
+                setUserId(null);
+            }
+        });
+        return unsubscribe;
+    }, []);
+
+    function saveMap() {
+        const mapId = `map-${userId}`
+        onSaveMap(mapId, userId, nodes, edges)
+    }
 
     async function loadData() {
         await onGetNodes({ setNodes, setEdges, edges });
@@ -101,6 +108,7 @@ function MindMap() {
             >
                 <Controls />
             </ReactFlow>
+            <Button onClick={() => saveMap()}> save mapo</Button>
         </div>
     );
 }

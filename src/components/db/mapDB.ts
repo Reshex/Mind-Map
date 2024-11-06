@@ -1,6 +1,6 @@
 import { db } from "@/firebase";
+import { Map } from "@/types/mapTypes/MapType";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { Edge } from "reactflow";
 
 export async function loadMapFromDB(userId: string) {
   try {
@@ -8,7 +8,7 @@ export async function loadMapFromDB(userId: string) {
     const userMapQueries = query(mapCollectionRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(userMapQueries);
     if (!querySnapshot.empty) {
-      console.log(querySnapshot.docs[0].data())
+      console.log(querySnapshot.docs[0].data());
       return querySnapshot.docs[0].data();
     }
   } catch (error) {
@@ -16,18 +16,18 @@ export async function loadMapFromDB(userId: string) {
   }
 }
 
-export async function saveMapToDB(mapId: string, userId: string, nodes: Node[], edges: Edge[]) {
+export async function saveMapToDB(map: Map) {
   try {
-    const mapRef = doc(db, "maps", mapId);
+    const mapRef = doc(db, "maps", map.mapId);
+
     await setDoc(mapRef, {
-      mapId,
-      userId,
-      nodes: nodes.map((node) => ({ ...node })),
-      edges: edges.map((edge) => ({ ...edge })),
+      mapId: map.mapId,
+      userId: map.userId,
+      nodes: map.nodes,
+      edges: map.edges,
     });
     console.log("Map saved successfully!");
   } catch (error) {
     console.error("Error saving map: ", error);
   }
 }
-

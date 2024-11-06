@@ -32,7 +32,6 @@ export async function addNodeToDB({
         parentId: selectedNodeId,
       },
       position: { x: xPosition, y: yPosition },
-      createdAt: new Date(),
     });
 
     await updateDoc(doc(db, "nodes", docRef.id), {

@@ -23,7 +23,6 @@ export async function addEdgeToDB(edge: Edge) {
     const edgeId = `e${edge.source}-${edge.target}`;
     await setDoc(doc(edgeCollectionRef, edgeId), {
       ...edge,
-      createdAt: new Date(),
     });
   } catch (error) {
     console.error("Failed to save edge to database", error);
