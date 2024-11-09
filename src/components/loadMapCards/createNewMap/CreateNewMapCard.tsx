@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Input } from "../ui/input"
+import { Input } from "../../ui/input"
 import { Plus } from "lucide-react"
 import { useState } from "react"
 
@@ -27,8 +27,8 @@ function CreateNewMap() {
                 setError("Map / Initial Node supposed to have more than 2 characters")
                 return;
             }
+   
 
-            
         }
         catch (error) {
             console.error("Falied to create new map")

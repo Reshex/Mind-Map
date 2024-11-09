@@ -22,7 +22,8 @@ export async function saveMapToDB(map: Map) {
 
     await setDoc(mapRef, {
       mapId: map.mapId,
-      userId: map.userId,
+      creatorId: map.creatorId,
+      users: map.users,
       nodes: map.nodes,
       edges: map.edges,
     });

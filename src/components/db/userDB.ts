@@ -1,8 +1,8 @@
 import { db } from "@/firebase";
 import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
-import UserType from "@/types/userTypes/userType";
+import User from "@/types/userTypes/userType";
 
-export default async function registerUserToDB(values: UserType, userUid: string) {
+export default async function registerUserToDB(values: User, userUid: string) {
   try {
     const usersCollectionRef = collection(db, "users");
     const emailQuery = query(usersCollectionRef, where("email", "==", values.email));
@@ -17,6 +17,7 @@ export default async function registerUserToDB(values: UserType, userUid: string
       name: values.name,
       lastName: values.lastName,
       email: values.email,
+      map: [],
       createdAt: new Date(),
     });
 

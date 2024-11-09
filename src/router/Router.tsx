@@ -6,7 +6,7 @@ import PublicRoute from '@/components/routes/PublicRoute';
 import ProtectedRoute from '@/components/routes/ProtectedRoute';
 import ContactPage from '@/pages/contactPage/ContactPage';
 import MindMapPage from '@/pages/mindMap/MindMapPage';
-import LoadMap from '@/pages/loadMapPage/LoadMap';
+import LoadMap from '@/pages/loadMapPage/LoadMapPage';
 
 const router = createBrowserRouter([
     {

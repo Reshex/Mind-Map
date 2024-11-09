@@ -12,7 +12,8 @@ interface GetMapProps {
 
 export async function onSaveMap(
   mapId: string,
-  userId: string | null,
+  creatorId: string | null,
+  mapName: string,
   nodes: Node<CustomNodeDataType>[],
   edges: Edge[]
 ) {
@@ -31,7 +32,7 @@ export async function onSaveMap(
       source: edge.source,
       target: edge.target,
     }));
-    const map: Map = { mapId, userId, nodes: sanitizedNodes, edges: sanitizedEdges };
+    const map: Map = { mapId, mapName, creatorId, nodes: sanitizedNodes, edges: sanitizedEdges };
     await saveMapToDB(map);
   } catch (error) {
     console.error("Failed to save map", error);

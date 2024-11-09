@@ -26,7 +26,7 @@ function MindMap() {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-    const [userId, setUserId] = useState(null)
+    const [creatorId, setCreatorId] = useState(null)
 
     function addNode(label: string) {
         onAddNode({
@@ -64,17 +64,17 @@ function MindMap() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user: any) => {
             if (user) {
-                setUserId(user.uid);
+                setCreatorId(user.uid);
             } else {
-                setUserId(null);
+                setCreatorId(null);
             }
         });
         return unsubscribe;
     }, []);
 
     function saveMap() {
-        const mapId = `map-${userId}`
-        onSaveMap(mapId, userId, nodes, edges)
+        const mapId = `map-${creatorId}`
+        onSaveMap(mapId, creatorId, nodes, edges)
     }
 
     async function loadData() {
