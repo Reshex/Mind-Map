@@ -3,7 +3,8 @@ import SanitizedNode from "../nodeTypes/customNodeDataType";
 
 export interface Map {
   mapId: string;
+  mapName: string;
   userId: string | null;
-  nodes: SanitizedNode[];  
+  nodes: SanitizedNode[];
   edges: Edge[];
 }
