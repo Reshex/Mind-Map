@@ -1,18 +1,18 @@
 // Imports
 import { useEffect, useState } from 'react';
-import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge, Controls } from 'reactflow';
+import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
 import CustomNode from '../nodes/CustomNode';
-import CustomNodeDataType from '@/types/nodeTypes/CustomNodeDataType';
+import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '../controllers/nodesController';
 import { onConnectNodes, onGetConnection } from '../controllers/edgesController';
 import initialNode from '../../utils/initialNode';
-
-//styles
-import 'reactflow/dist/style.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase';
 import { Button } from '../ui/button';
 import { onSaveMap } from '../controllers/mapController';
+
+//Styles
+import 'reactflow/dist/style.css';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -93,10 +93,10 @@ function MindMap() {
                     ...node,
                     data: {
                         ...node.data,
-                        setSelectedNodeId: setSelectedNodeId,
-                        addNode: addNode,
-                        removeNode: removeNode,
-                        editNode: editNode,
+                        setSelectedNodeId: node.data.setSelectedNodeId ?? setSelectedNodeId,
+                        addNode: node.data.addNode ?? addNode,
+                        removeNode: node.data.removeNode ?? removeNode,
+                        editNode: node.data.editNode ?? editNode,
                     },
                 }))}
                 edges={edges}
@@ -105,9 +105,7 @@ function MindMap() {
                 onConnect={connectNodes}
                 nodeTypes={nodeTypes}
                 fitView
-            >
-                <Controls />
-            </ReactFlow>
+            />
             <Button onClick={() => saveMap()}> save mapo</Button>
         </div>
     );

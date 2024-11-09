@@ -1,5 +1,5 @@
 import { Edge } from "reactflow";
-import SanitizedNode from "../nodeTypes/CustomNodeDataType";
+import SanitizedNode from "../nodeTypes/customNodeDataType";
 
 export interface Map {
   mapId: string;

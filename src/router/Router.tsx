@@ -5,7 +5,7 @@ import HomePage from '../pages/homePage/HomePage';
 import PublicRoute from '@/components/routes/PublicRoute';
 import ProtectedRoute from '@/components/routes/ProtectedRoute';
 import ContactPage from '@/pages/contactPage/ContactPage';
-import MindMapPage from '@/pages/regularMindMap/RegularMindMapPage';
+import MindMapPage from '@/pages/mindMap/MindMapPage';
 import LoadMap from '@/pages/loadMapPage/LoadMap';
 
 const router = createBrowserRouter([
@@ -34,10 +34,10 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: "/regularMindMap",
+                path: "/mindMap",
                 element: <ProtectedRoute />,
                 children: [
-                    { path: "/regularMindMap", element: <MindMapPage /> },
+                    { path: "/mindMap", element: <MindMapPage /> },
                 ]
             },
             {

@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow";
-import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
+import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
 import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
 

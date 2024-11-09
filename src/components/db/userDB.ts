@@ -1,6 +1,6 @@
 import { db } from "@/firebase";
 import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
-import UserType from "@/types/userTypes/UserType";
+import UserType from "@/types/userTypes/userType";
 
 export default async function registerUserToDB(values: UserType, userUid: string) {
   try {

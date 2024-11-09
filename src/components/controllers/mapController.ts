@@ -1,8 +1,8 @@
 import { Edge, Node } from "reactflow";
 import { loadMapFromDB, saveMapToDB } from "../db/mapDB";
-import CustomNodeDataType from "@/types/nodeTypes/CustomNodeDataType";
-import { Map } from "@/types/mapTypes/MapType";
-import SanitizedNode from "@/types/nodeTypes/CustomNodeDataType";
+import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+import { Map } from "@/types/mapTypes/mapType";
+import SanitizedNode from "@/types/nodeTypes/customNodeDataType";
 
 interface GetMapProps {
   userId: string;

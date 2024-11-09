@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { Map } from "@/types/mapTypes/MapType";
+import { Map } from "@/types/mapTypes/mapType";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 export async function loadMapFromDB(userId: string) {
