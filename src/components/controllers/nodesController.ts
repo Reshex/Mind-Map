@@ -1,7 +1,7 @@
-import { Node, Edge } from "reactflow";
-import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+import { Edge, Node } from "reactflow";
 import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
 import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
+import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 
 interface OnGetNodeParams {
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
@@ -56,6 +56,7 @@ export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdg
     const tempNode: Node<CustomNodeDataType> = {
       id: tempNodeId,
       type: "custom",
+      position: { x: xPosition, y: yPosition },
       data: {
         label,
         parentId: selectedNodeId,
@@ -63,8 +64,12 @@ export async function onAddNode({ label, selectedNodeId, nodes, setNodes, setEdg
         addNode: () => {},
         removeNode: () => {},
         editNode: () => {},
+        id: tempNodeId,
+        type: "custom",
+        data: {
+          label,
+        },
       },
-      position: { x: xPosition, y: yPosition },
     };
 
     const tempEdge: Edge = {

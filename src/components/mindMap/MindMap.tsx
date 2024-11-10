@@ -1,15 +1,24 @@
-// Imports
+//Imports
 import { useEffect, useState } from 'react';
 import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
-import CustomNode from '../nodes/CustomNode';
-import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
+
+//DB
+import { auth } from '@/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+
+//Controllers
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '../controllers/nodesController';
 import { onConnectNodes, onGetConnection } from '../controllers/edgesController';
-import initialNode from '../../utils/initialNode';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/firebase';
-import { Button } from '../ui/button';
 import { onSaveMap } from '../controllers/mapController';
+
+//Types
+import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
+
+//Custom Components
+import initialNode from '../../utils/initialNode';
+import { Button } from '../ui/button';
+import CustomNode from '../nodes/CustomNode';
+
 
 //Styles
 import 'reactflow/dist/style.css';
@@ -94,10 +103,10 @@ function MindMap() {
                     ...node,
                     data: {
                         ...node.data,
-                        setSelectedNodeId: node.data.setSelectedNodeId ?? setSelectedNodeId,
-                        addNode: node.data.addNode ?? addNode,
-                        removeNode: node.data.removeNode ?? removeNode,
-                        editNode: node.data.editNode ?? editNode,
+                        setSelectedNodeId: setSelectedNodeId,
+                        addNode: addNode,
+                        removeNode: removeNode,
+                        editNode: editNode,
                     },
                 }))}
                 edges={edges}

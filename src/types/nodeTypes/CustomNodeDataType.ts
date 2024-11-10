@@ -1,11 +1,11 @@
 export default interface CustomNodeDataType {
-  label: string | "";
+  label: string;
   customStyle?: string;
-  parentId?: string | "";
-  setSelectedNodeId: (id: string) => void;
-  addNode: (label: string) => void;
+  parentId?: string;
+  setSelectedNodeId: () => void;
+  addNode: () => void;
   removeNode: () => void;
-  editNode: (label: string) => void;
+  editNode: () => void;
 }
 
 interface SanitizedNodeDataType {
@@ -18,3 +18,10 @@ export default interface SanitizedNode {
   type: string | undefined;
   data: SanitizedNodeDataType;
 }
+
+// export interface InitialNodeDataType {
+//   label: string | "";
+//   customStyle?: string;
+//   setSelectedNodeId: (id: string) => void;
+//   addNode: (label: string) => void;
+// }

@@ -1,15 +1,12 @@
-import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Node } from "reactflow";
 
-const initialNode: Node<CustomNodeDataType> = {
+const initialNode: Node = {
   id: "1",
   type: "custom",
   data: {
     label: "First Node",
-    setSelectedNodeId: () => { },
-    addNode: () => { },
-    id: "",
-    type: undefined,
+    setSelectedNodeId: () => {},
+    addNode: () => {},
   },
   position: { x: 400, y: 0 },
 };

@@ -27,11 +27,11 @@ export async function addNodeToDB({
     const nodesCollectionRef = collection(db, "nodes");
     const docRef = await addDoc(nodesCollectionRef, {
       type: "custom",
+      position: { x: xPosition, y: yPosition },
       data: {
         label,
         parentId: selectedNodeId,
       },
-      position: { x: xPosition, y: yPosition },
     });
 
     await updateDoc(doc(db, "nodes", docRef.id), {
@@ -39,7 +39,6 @@ export async function addNodeToDB({
     });
 
     return docRef.id;
-
   } catch (error) {
     console.error("Failed saving node to database", error);
     return null;
@@ -50,7 +49,6 @@ export async function removeNodeFromDB(nodeId: string) {
   try {
     const nodeDocRef = doc(db, "nodes", nodeId);
     await deleteDoc(nodeDocRef);
-
   } catch (error) {
     console.error("Failed removing node", error);
   }
@@ -63,7 +61,6 @@ export async function editNodeToDB(nodeId: string, newLabel: string) {
         label: newLabel,
       },
     });
-
   } catch (error) {
     console.error("Failed to edit node:", error);
   }
