@@ -2,7 +2,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/firebase";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import registerUserToDB from "../db/userDB";
+import { registerUserToDB } from "../db/userDB";
 import User from "@/types/userTypes/userType";
 import { LogIn } from "lucide-react";
 

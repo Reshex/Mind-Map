@@ -73,8 +73,9 @@ function MindMap() {
     }, []);
 
     function saveMap() {
+        const mapName = "map"
         const mapId = `map-${creatorId}`
-        onSaveMap(mapId, creatorId, nodes, edges)
+        onSaveMap(mapId, mapName, creatorId, nodes, edges)
     }
 
     async function loadData() {

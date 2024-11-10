@@ -3,6 +3,7 @@ import { loadMapFromDB, saveMapToDB } from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
 import SanitizedNode from "@/types/nodeTypes/customNodeDataType";
+import { updateUserToDB } from "../db/userDB";
 
 interface GetMapProps {
   userId: string;
@@ -12,8 +13,8 @@ interface GetMapProps {
 
 export async function onSaveMap(
   mapId: string,
+  mapName: string | "",
   creatorId: string | null,
-  mapName: string,
   nodes: Node<CustomNodeDataType>[],
   edges: Edge[]
 ) {
@@ -27,13 +28,18 @@ export async function onSaveMap(
       },
       position: node.position,
     }));
+
     const sanitizedEdges = edges.map((edge) => ({
       id: edge.id,
       source: edge.source,
       target: edge.target,
     }));
-    const map: Map = { mapId, mapName, creatorId, nodes: sanitizedNodes, edges: sanitizedEdges };
-    await saveMapToDB(map);
+
+    if (creatorId === null) return;
+    const newMap: Map = { mapId, mapName, creatorId, nodes: sanitizedNodes, edges: sanitizedEdges };
+
+    await saveMapToDB(newMap);
+    await updateUserToDB(creatorId, { maps: [newMap] });
   } catch (error) {
     console.error("Failed to save map", error);
   }

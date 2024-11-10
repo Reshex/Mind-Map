@@ -8,7 +8,7 @@ import { auth } from "@/firebase";
 import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 
 //DB
-import registerUserToDB from "../db/userDB";
+import { registerUserToDB } from "../db/userDB";
 
 //Custom components
 import {

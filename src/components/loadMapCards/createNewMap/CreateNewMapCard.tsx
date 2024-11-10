@@ -12,9 +12,11 @@ import {
 import { Input } from "../../ui/input"
 import { Plus } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
-function CreateNewMap() {
+function NewMapCard() {
+    const navigate = useNavigate()
     const [initialNodeName, setInitialNodeName] = useState("")
     const [error, setError] = useState<string | null>(null)
     const [mapName, setMapName] = useState("")
@@ -27,8 +29,11 @@ function CreateNewMap() {
                 setError("Map / Initial Node supposed to have more than 2 characters")
                 return;
             }
-   
 
+            navigate("/mindMap")
+
+            // try to navigate to a map according to the map id and the user id maybe with params
+            // find a way to save the new map with name for the map and for the initial node
         }
         catch (error) {
             console.error("Falied to create new map")
@@ -71,4 +76,4 @@ function CreateNewMap() {
     )
 }
 
-export default CreateNewMap
+export default NewMapCard

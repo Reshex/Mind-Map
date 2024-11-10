@@ -4,7 +4,7 @@ import { User } from "firebase/auth";
 
 export interface Map {
   mapId: string;
-  mapName: string;
+  mapName?: string;
   creatorId: string | null;
   users?: User[];
   nodes: SanitizedNode[];

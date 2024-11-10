@@ -2,10 +2,10 @@ import { db } from "@/firebase";
 import { Map } from "@/types/mapTypes/mapType";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 
-export async function loadMapFromDB(userId: string) {
+export async function loadMapFromDB(creatorId: string) {
   try {
     const mapCollectionRef = collection(db, "maps");
-    const userMapQueries = query(mapCollectionRef, where("userId", "==", userId));
+    const userMapQueries = query(mapCollectionRef, where("creatorId", "==", creatorId));
     const querySnapshot = await getDocs(userMapQueries);
     if (!querySnapshot.empty) {
       console.log(querySnapshot.docs[0].data());
@@ -22,6 +22,7 @@ export async function saveMapToDB(map: Map) {
 
     await setDoc(mapRef, {
       mapId: map.mapId,
+      mapName: map.mapName,
       creatorId: map.creatorId,
       users: map.users,
       nodes: map.nodes,
@@ -32,3 +33,5 @@ export async function saveMapToDB(map: Map) {
     console.error("Error saving map: ", error);
   }
 }
+
+//Also add update map for future uses

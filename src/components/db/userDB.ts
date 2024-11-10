@@ -1,8 +1,8 @@
 import { db } from "@/firebase";
-import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import User from "@/types/userTypes/userType";
 
-export default async function registerUserToDB(values: User, userUid: string) {
+export async function registerUserToDB(values: User, userUid: string) {
   try {
     const usersCollectionRef = collection(db, "users");
     const emailQuery = query(usersCollectionRef, where("email", "==", values.email));
@@ -12,7 +12,7 @@ export default async function registerUserToDB(values: User, userUid: string) {
       return { error: "Email already exists" };
     }
 
-    const docRef = await setDoc(doc(usersCollectionRef, userUid), {
+    await setDoc(doc(usersCollectionRef, userUid), {
       uid: userUid,
       name: values.name,
       lastName: values.lastName,
@@ -21,9 +21,25 @@ export default async function registerUserToDB(values: User, userUid: string) {
       createdAt: new Date(),
     });
 
-    console.log("User successfully registered with Firestore ID:", docRef);
     return { uid: userUid };
   } catch (error: any) {
     throw new Error(error.message || "An unexpected error occurred");
+  }
+}
+
+export async function updateUserToDB(userUid: string, values: Partial<User>) {
+  try {
+    const userRef = doc(db, "users", userUid);
+
+    const updateData = { ...values };
+
+    if (Array.isArray(values.maps)) {
+      updateData.maps = arrayUnion(...values.maps);
+    }
+
+    await updateDoc(userRef, updateData);
+    console.log("User document successfully updated:", updateData);
+  } catch (error) {
+    console.error("Failed to update user", error);
   }
 }
