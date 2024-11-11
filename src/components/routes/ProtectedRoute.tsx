@@ -1,10 +1,7 @@
-import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
 
-/*************  ✨ Codeium Command ⭐  *************/
-/******  d895ffbe-449e-4316-8a5b-aa5169cf17b6  *******/
-const ProtectedRoute: React.FC = () => {
+function ProtectedRoute() {
     const { user, loading } = useAuth();
 
     if (loading) {

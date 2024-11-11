@@ -45,13 +45,14 @@ export async function onSaveMap(
   }
 }
 
-export async function onGetMap({ userId, setNodes, setEdges }: GetMapProps) {
+export async function onGetMaps({ userId, setNodes, setEdges }: GetMapProps) {
   try {
     const mapData = await loadMapFromDB(userId);
     if (!mapData) return;
 
-    setNodes(mapData.nodes || []);
-    setEdges(mapData.edges || []);
+    console.log(mapData);
+    // setNodes(mapData.nodes || []);
+    // setEdges(mapData.edges || []);
     console.log("Map loaded succefully");
   } catch (error) {
     console.error("Failed to load map", error);

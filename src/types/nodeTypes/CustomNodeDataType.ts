@@ -2,7 +2,7 @@ export default interface CustomNodeDataType {
   label: string;
   customStyle?: string;
   parentId?: string;
-  setSelectedNodeId: () => void;
+  setSelectedNodeId: (id: string) => void;
   addNode: () => void;
   removeNode: () => void;
   editNode: () => void;

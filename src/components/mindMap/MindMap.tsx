@@ -2,14 +2,10 @@
 import { useEffect, useState } from 'react';
 import ReactFlow, { Node, useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
 
-//DB
-import { auth } from '@/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-
 //Controllers
-import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '../controllers/nodesController';
-import { onConnectNodes, onGetConnection } from '../controllers/edgesController';
-import { onSaveMap } from '../controllers/mapController';
+import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '@/controllers/nodesController';
+import { onConnectNodes, onGetConnection } from '@/controllers/edgesController';
+import { onSaveMap } from '@/controllers/mapController';
 
 //Types
 import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
@@ -19,9 +15,11 @@ import initialNode from '../../utils/initialNode';
 import { Button } from '../ui/button';
 import CustomNode from '../nodes/CustomNode';
 
-
 //Styles
 import 'reactflow/dist/style.css';
+
+//Hooks
+import { useCreatorId } from '@/hooks/useCreatorId';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -35,7 +33,8 @@ function MindMap() {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-    const [creatorId, setCreatorId] = useState(null)
+
+    const creatorId = useCreatorId();
 
     function addNode(label: string) {
         onAddNode({
@@ -70,17 +69,6 @@ function MindMap() {
         })
     }
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user: any) => {
-            if (user) {
-                setCreatorId(user.uid);
-            } else {
-                setCreatorId(null);
-            }
-        });
-        return unsubscribe;
-    }, []);
-
     function saveMap() {
         const mapName = "map"
         const mapId = `map-${creatorId}`
@@ -93,6 +81,7 @@ function MindMap() {
     }
 
     useEffect(() => {
+        console.log("user:", creatorId)
         loadData();
     }, []);
 
