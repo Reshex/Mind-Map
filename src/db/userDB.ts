@@ -2,6 +2,18 @@ import { db } from "@/firebase";
 import { collection, query, where, getDocs, setDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import User from "@/types/userTypes/userType";
 
+export async function getUsersFromDB() {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersCollectionRef);
+
+    const users = querySnapshot.docs.map((doc) => doc.data() as User);
+    return users;
+  } catch (error) {
+    console.error("Failed to load map", error);
+  }
+}
+
 export async function registerUserToDB(values: User, userUid: string) {
   try {
     const usersCollectionRef = collection(db, "users");

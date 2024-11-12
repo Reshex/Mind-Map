@@ -33,7 +33,7 @@ export async function saveMapToDB(map: Map) {
       mapId: map.mapId,
       mapName: map.mapName,
       creatorId: map.creatorId,
-      users: map.users,
+      users: map.users || [map.creatorId],
       nodes: map.nodes,
       edges: map.edges,
     });
@@ -53,4 +53,3 @@ export async function updateMapToDB(map: Map, values: Partial<Map>) {
     console.error("Failed to update map", error);
   }
 }
-//Also add update map for future uses

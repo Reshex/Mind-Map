@@ -1,3 +1,6 @@
+import { useState } from "react"
+
+//Custom components
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,28 +14,30 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "../../ui/input"
 import { Plus } from "lucide-react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import useMapContext from "@/hooks/useMapContext"
+import { useNavigate } from "react-router-dom";
+
 
 function NewMapCard() {
-    const navigate = useNavigate()
-    const [initialNodeName, setInitialNodeName] = useState("")
-    const [error, setError] = useState<string | null>(null)
-    const [mapName, setMapName] = useState("")
+    const { setMapName, setInitialNodeName } = useMapContext()
+    const navigate = useNavigate();
+    const [localMapName, setLocalMapName] = useState("");
+    const [localNodeName, setLocalNodeName] = useState("");
+    const [error, setError] = useState<string | null>(null);
 
     function navigateToNewMap() {
         try {
             setError(null)
 
-            if (mapName.length < 3 || initialNodeName.length < 3) {
-                setError("Map / Initial Node supposed to have more than 2 characters")
+            if (localMapName.length < 3 || localNodeName.length < 3) {
+                setError("Map and Initial Node need more than 2 characters");
                 return;
             }
 
-            navigate("/mindMap")
+            setMapName(localMapName);
+            setInitialNodeName(localNodeName);
+            navigate(`/mindMap/new`);
 
-            // try to navigate to a map according to the map id and the user id maybe with params
-            // find a way to save the new map with name for the map and for the initial node
         }
         catch (error) {
             console.error("Falied to create new map")
@@ -55,8 +60,8 @@ function NewMapCard() {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Create New Map</AlertDialogTitle>
                     <AlertDialogDescription className="flex flex-col gap-4" >
-                        <Input value={mapName} onChange={(event) => setMapName(event.target.value)} placeholder="Map Name"></Input>
-                        <Input value={initialNodeName} onChange={(event) => setInitialNodeName(event.target.value)} placeholder="Initial Node Name"></Input>
+                        <Input value={localMapName} onChange={(event) => setLocalMapName(event.target.value)} placeholder="Map Name"></Input>
+                        <Input value={localNodeName} onChange={(event) => setLocalNodeName(event.target.value)} placeholder="Initial Node Name"></Input>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -67,7 +72,7 @@ function NewMapCard() {
                         </div>
                     )}
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={navigateToNewMap}>Create Map</AlertDialogAction>
+                    <AlertDialogAction onClick={() => navigateToNewMap()}>Create Map</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

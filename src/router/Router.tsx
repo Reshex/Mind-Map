@@ -37,7 +37,7 @@ const router = createBrowserRouter([
                 path: "/mindMap",
                 element: <ProtectedRoute />,
                 children: [
-                    { path: "/mindMap", element: <MindMapPage /> },
+                    { path: "/mindMap/:mapId", element: <MindMapPage /> },
                 ]
             },
             {

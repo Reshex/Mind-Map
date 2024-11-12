@@ -20,6 +20,10 @@ import 'reactflow/dist/style.css';
 
 //Hooks
 import { useCreatorId } from '@/hooks/useCreatorId';
+import { useParams } from 'react-router-dom';
+import { loadMapFromDB } from '@/db/mapDB';
+import useMapContext from '@/hooks/useMapContext';
+import { getUsersFromDB } from '@/db/userDB';
 
 const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
@@ -30,9 +34,12 @@ const nodeTypes = {
 };
 
 function MindMap() {
+    const { mapId } = useParams<{ mapId: string }>();
+    const { mapName } = useMapContext()
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
 
     const creatorId = useCreatorId();
 
@@ -70,7 +77,6 @@ function MindMap() {
     }
 
     function saveMap() {
-        const mapName = "map"
         const mapId = `map-${creatorId}`
         onSaveMap(mapId, mapName, creatorId, nodes, edges)
     }
@@ -81,9 +87,23 @@ function MindMap() {
     }
 
     useEffect(() => {
-        console.log("user:", creatorId)
         loadData();
     }, []);
+
+    useEffect(() => {
+        async function fetchMapData() {
+            if (!mapId) return;
+
+            // const mapData = await loadMapFromDB(mapId);
+            // if (mapData) {
+            //     setNodes(mapData.nodes || []);
+            //     setEdges(mapData.edges || []);
+            //     setMapName(mapData.mapName || "Untitled Map");
+            // }
+        }
+
+        fetchMapData();
+    }, [mapId]);
 
     return (
         <div className="h-screen bg-gradient-to-r from-secondary to-muted-secondary">
