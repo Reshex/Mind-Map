@@ -25,6 +25,10 @@ function NewMapCard() {
     const [localNodeName, setLocalNodeName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
+
+    // Key problem - new map that is created is not saved as individual map, instead it overwrites the first map
+    // Could be that the solution is to save the map without getting the mapId first and add another function that updates the map
+    
     function navigateToNewMap() {
         try {
             setError(null)
