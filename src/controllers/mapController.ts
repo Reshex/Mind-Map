@@ -47,16 +47,3 @@ export async function onSaveMap(
     console.error("Failed to save map", error);
   }
 }
-
-// export async function onGetMaps({ userId, setNodes, setEdges }: GetMapProps) {
-//   try {
-//     const mapData = await loadMapFromDB(userId);
-//     if (!mapData) return;
-
-//     // setNodes(mapData.nodes || []);
-//     // setEdges(mapData.edges || []);
-//     console.log("Map loaded succefully");
-//   } catch (error) {
-//     console.error("Failed to load map", error);
-//   }
-// }

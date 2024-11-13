@@ -1,4 +1,5 @@
 export default interface CustomNodeDataType {
+  mapId:string,
   label: string;
   customStyle?: string;
   parentId?: string;

@@ -14,39 +14,44 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "../../ui/input"
 import { Plus } from "lucide-react"
-import useMapContext from "@/hooks/useMapContext"
 import { useNavigate } from "react-router-dom";
+import { useCreatorId } from "@/hooks/useCreatorId"
+import { onSaveMap } from "@/controllers/mapController"
+import { Edge, Node } from "reactflow";
+import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+import createInitialNode from "@/utils/initialNode";
 
 
 function NewMapCard() {
-    const { setMapName, setInitialNodeName } = useMapContext()
     const navigate = useNavigate();
-    const [localMapName, setLocalMapName] = useState("");
-    const [localNodeName, setLocalNodeName] = useState("");
+    const [mapName, setMapName] = useState("");
+    const [initialNodeName, setInitialNodeName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
+    const creatorId = useCreatorId();
+    const mapId = `map-${crypto.randomUUID()}`
+    const initialNode = createInitialNode(initialNodeName, mapId)
 
-    // Key problem - new map that is created is not saved as individual map, instead it overwrites the first map
-    // Could be that the solution is to save the map without getting the mapId first and add another function that updates the map
-    
+    const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
+
+    const initialEdges: Edge[] = [];
+
+
     function navigateToNewMap() {
         try {
             setError(null)
 
-            if (localMapName.length < 3 || localNodeName.length < 3) {
+            if (mapName.length < 3 || initialNodeName.length < 3) {
                 setError("Map and Initial Node need more than 2 characters");
                 return;
             }
 
-            setMapName(localMapName);
-            setInitialNodeName(localNodeName);
-            navigate(`/mindMap/new`);
-
+            onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges)
+            navigate(`/mindMap/${mapId}`);
         }
         catch (error) {
             console.error("Falied to create new map")
         }
-
     }
 
     return (
@@ -64,8 +69,8 @@ function NewMapCard() {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Create New Map</AlertDialogTitle>
                     <AlertDialogDescription className="flex flex-col gap-4" >
-                        <Input value={localMapName} onChange={(event) => setLocalMapName(event.target.value)} placeholder="Map Name"></Input>
-                        <Input value={localNodeName} onChange={(event) => setLocalNodeName(event.target.value)} placeholder="Initial Node Name"></Input>
+                        <Input value={mapName} onChange={(event) => setMapName(event.target.value)} placeholder="Map Name"></Input>
+                        <Input value={initialNodeName} onChange={(event) => setInitialNodeName(event.target.value)} placeholder="Initial Node Name"></Input>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

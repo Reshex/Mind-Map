@@ -12,7 +12,7 @@ export async function getNodesFromDB() {
   }
 }
 
-export async function addNodeToDB({
+export async function addNodeToDB(mapId:string,{
   label,
   selectedNodeId,
   xPosition,
@@ -26,6 +26,7 @@ export async function addNodeToDB({
   try {
     const nodesCollectionRef = collection(db, "nodes");
     const docRef = await addDoc(nodesCollectionRef, {
+      mapId,
       type: "custom",
       position: { x: xPosition, y: yPosition },
       data: {

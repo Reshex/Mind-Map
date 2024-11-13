@@ -1,14 +1,19 @@
 import { Node } from "reactflow";
 
-const initialNode: Node = {
-  id: "1",
-  type: "custom",
-  data: {
-    label: "First Node",
-    setSelectedNodeId: () => {},
-    addNode: () => {},
-  },
-  position: { x: 400, y: 0 },
-};
+function createInitialNode(nodeName: string, mapId:string) {
+  const initialNode: Node = {
+    id: "1",
+    type: "custom",
+    data: {
+      mapId,
+      label: nodeName,
+      setSelectedNodeId: () => {},
+      addNode: () => {},
+    },
+    position: { x: 0, y: 0 },
+  };
+  
+  return initialNode;
+}
 
-export default initialNode;
+export default createInitialNode;
