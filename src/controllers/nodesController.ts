@@ -2,6 +2,7 @@ import { Edge, Node } from "reactflow";
 import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
 import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+import { updateMapToDB } from "@/db/mapDB";
 
 interface OnGetNodeParams {
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
@@ -32,8 +33,8 @@ interface OnEditNodeParams {
 
 export async function onGetNodes({ mapId, setNodes }: OnGetNodeParams) {
   try {
-    console.log(mapId)
-    const nodesFromDB = await getNodesFromDB();
+    const nodesFromDB = await getNodesFromDB(mapId);
+    console.log(nodesFromDB);
     if (!nodesFromDB) throw new Error("Failed to fetch nodes");
     nodesFromDB.map((node) => {
       setNodes((nds) => [...nds, node as Node<CustomNodeDataType>]);
@@ -69,11 +70,6 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
         addNode: () => {},
         removeNode: () => {},
         editNode: () => {},
-        id: tempNodeId,
-        type: "custom",
-        data: {
-          label,
-        },
       },
     };
 
@@ -97,8 +93,8 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
       target: newNodeId,
     };
     setEdges((eds) => [...eds, newEdge]);
-
     await addEdgeToDB(newEdge);
+    await updateMapToDB(mapId, nodes);
   } catch (error) {
     console.error("Failed to add node", error);
   }

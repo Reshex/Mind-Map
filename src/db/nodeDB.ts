@@ -1,10 +1,12 @@
 import { db } from "@/firebase";
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
-export async function getNodesFromDB() {
+export async function getNodesFromDB(mapId:string) {
   try {
     const nodesCollection = collection(db, "nodes");
-    const nodesSnapshot = await getDocs(nodesCollection);
+    const nodesQuery = query(nodesCollection, where("mapId", "==", mapId));
+    const nodesSnapshot = await getDocs(nodesQuery);
+    
     const nodesList = nodesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return nodesList;
   } catch (error) {

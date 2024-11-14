@@ -11,7 +11,7 @@ export async function loadMapFromDB(creatorId: string, mapId?: string) {
       if (mapDoc.exists()) {
         return mapDoc.data() as Map;
       }
-      console.warn("Map not found with mapId:", mapId);
+      console.error("Map not found with mapId:", mapId);
       return null;
     }
 
@@ -43,9 +43,9 @@ export async function saveMapToDB(map: Map) {
   }
 }
 
-export async function updateMapToDB(map: Map, values: Partial<Map>) {
+export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
-    const mapRef = doc(db, "maps", map.mapId);
+    const mapRef = doc(db, "maps", mapId);
     const updateData = { ...values };
 
     await updateDoc(mapRef, updateData);

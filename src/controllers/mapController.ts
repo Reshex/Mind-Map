@@ -1,15 +1,8 @@
 import { Edge, Node } from "reactflow";
-import { saveMapToDB } from "../db/mapDB";
+import { saveMapToDB, updateMapToDB } from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
-import SanitizedNode from "@/types/nodeTypes/customNodeDataType";
 import { updateUserToDB } from "../db/userDB";
-
-// interface GetMapProps {
-//   userId: string;
-//   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
-//   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
-// }
 
 export async function onSaveMap(
   mapId: string,
@@ -19,12 +12,12 @@ export async function onSaveMap(
   edges: Edge[]
 ) {
   try {
-    const sanitizedNodes: SanitizedNode[] | any = nodes.map((node) => ({
+    const sanitizedNodes: Node<CustomNodeDataType> = nodes.map((node) => ({
       id: node.id,
       type: node.type,
       data: {
-        label: node.data.label || "",
-        parentId: node.data.parentId || "",
+        label: node.data.label,
+        parentId: node.data.parentId,
       },
       position: node.position,
     }));
@@ -45,5 +38,13 @@ export async function onSaveMap(
     await updateUserToDB(creatorId, { maps: [newMap] });
   } catch (error) {
     console.error("Failed to save map", error);
+  }
+}
+
+export async function onUpdateMap(mapId: string, values: Partial<Map>) {
+  try {
+    updateMapToDB(mapId, values);
+  } catch (error) {
+    console.error("Failed to update map", error);
   }
 }

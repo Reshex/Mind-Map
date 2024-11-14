@@ -25,8 +25,6 @@ function MindMap() {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
-
-
     function addNode(label: string) {
         if (mapId === undefined) {
             console.error("Map ID is missing from the URL.");
@@ -72,15 +70,19 @@ function MindMap() {
             return null;
         }
 
-        const fetchedNodes = await onGetNodes({ mapId, setNodes, setEdges });
+        const fetchedNodes = await onGetNodes({
+            mapId,
+            setNodes,
+            setEdges,
+            edges
+        });
 
-        // If there are no nodes, create an initial node
         if (!fetchedNodes || fetchedNodes.length === 0) {
             const initialNode = createInitialNode("Initial Node", mapId);
             setNodes([initialNode]);
         }
 
-        await onGetConnection({ mapId, setEdges });
+        await onGetConnection({ setEdges });
     }
 
     useEffect(() => {
