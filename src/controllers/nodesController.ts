@@ -34,7 +34,6 @@ interface OnEditNodeParams {
 export async function onGetNodes({ mapId, setNodes }: OnGetNodeParams) {
   try {
     const nodesFromDB = await getNodesFromDB(mapId);
-    console.log(nodesFromDB);
     if (!nodesFromDB) throw new Error("Failed to fetch nodes");
     nodesFromDB.map((node) => {
       setNodes((nds) => [...nds, node as Node<CustomNodeDataType>]);
@@ -94,7 +93,7 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
     };
     setEdges((eds) => [...eds, newEdge]);
     await addEdgeToDB(newEdge);
-    await updateMapToDB(mapId, nodes);
+    await updateMapToDB(mapId, { nodes });
   } catch (error) {
     console.error("Failed to add node", error);
   }

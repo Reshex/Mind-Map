@@ -1,5 +1,6 @@
 import { db } from "@/firebase";
 import { Map } from "@/types/mapTypes/mapType";
+import deepSanitize from "@/utils/deepSanitize";
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 
 export async function loadMapFromDB(creatorId: string, mapId?: string) {
@@ -43,12 +44,17 @@ export async function saveMapToDB(map: Map) {
   }
 }
 
+
+// Key problems on updating map:
+// Map updates in delay - when node gets added the database sees the previous added one
+// Edges need to be updated in the map as well and have mapId stored in them
+// edit, delete, add on each node and edge supposed to be updated in db and in map
 export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
-    const mapRef = doc(db, "maps", mapId);
-    const updateData = { ...values };
+    const sanitizedValues = deepSanitize(values);
 
-    await updateDoc(mapRef, updateData);
+    const mapRef = doc(db, "maps", mapId);
+    await updateDoc(mapRef, sanitizedValues);
   } catch (error) {
     console.error("Failed to update map", error);
   }

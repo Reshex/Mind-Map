@@ -1,26 +1,19 @@
 import { Edge, Node } from "reactflow";
-import { saveMapToDB, updateMapToDB } from "../db/mapDB";
+import { saveMapToDB} from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
 import { updateUserToDB } from "../db/userDB";
+import sanitizeNodes from "@/utils/sanitizeNodes";
 
 export async function onSaveMap(
   mapId: string,
-  mapName: string | "",
+  mapName: string,
   creatorId: string | null,
   nodes: Node<CustomNodeDataType>[],
   edges: Edge[]
 ) {
   try {
-    const sanitizedNodes: Node<CustomNodeDataType> = nodes.map((node) => ({
-      id: node.id,
-      type: node.type,
-      data: {
-        label: node.data.label,
-        parentId: node.data.parentId,
-      },
-      position: node.position,
-    }));
+    const sanitizedNodes = sanitizeNodes(nodes);
 
     const sanitizedEdges = edges.map((edge) => ({
       id: edge.id,
@@ -41,10 +34,13 @@ export async function onSaveMap(
   }
 }
 
-export async function onUpdateMap(mapId: string, values: Partial<Map>) {
-  try {
-    updateMapToDB(mapId, values);
-  } catch (error) {
-    console.error("Failed to update map", error);
-  }
-}
+// export async function onUpdateMap(mapId: string, values: Partial<Map>) {
+//   try {
+//     if (values.nodes) {
+//       sanitizeNodes(values.nodes);
+//     }
+//     updateMapToDB(mapId, values);
+//   } catch (error) {
+//     console.error("Failed to update map", error);
+//   }
+// }
