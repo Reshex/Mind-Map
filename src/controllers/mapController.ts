@@ -1,5 +1,5 @@
 import { Edge, Node } from "reactflow";
-import { saveMapToDB} from "../db/mapDB";
+import { saveMapToDB } from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
 import { updateUserToDB } from "../db/userDB";
@@ -19,6 +19,9 @@ export async function onSaveMap(
       id: edge.id,
       source: edge.source,
       target: edge.target,
+      data: {
+        mapId,
+      },
     }));
 
     if (creatorId === null) return;

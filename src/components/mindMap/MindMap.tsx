@@ -13,6 +13,7 @@ import CustomNode from '../nodes/CustomNode';
 import 'reactflow/dist/style.css';
 import createInitialNode from '@/utils/initialNode';
 import { useParams } from 'react-router-dom';
+import withValidMapId from '@/utils/mapValidation';
 
 
 const nodeTypes = {
@@ -26,27 +27,24 @@ function MindMap() {
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
     function addNode(label: string) {
-        if (mapId === undefined) {
-            console.error("Map ID is missing from the URL.");
-            return null;
-        }
-
-        onAddNode({
-            mapId,
-            label,
-            selectedNodeId,
-            nodes,
-            setNodes,
-            setEdges,
+        withValidMapId(mapId, (validMapId) => {
+            onAddNode({
+                mapId: validMapId,
+                label,
+                selectedNodeId,
+                nodes,
+                setNodes,
+                setEdges,
+            });
         });
-    };
+    }
 
     function removeNode() {
         onRemoveNode({
             setNodes,
             setEdges,
-            selectedNodeId
-        })
+            selectedNodeId,
+        });
     }
 
     function editNode(label: string) {
@@ -54,41 +52,46 @@ function MindMap() {
             label,
             setNodes,
             selectedNodeId,
-        })
+        });
     }
 
     function connectNodes(edge: Edge | Connection) {
-        onConnectNodes({
-            edge,
-            setEdges,
-        })
+        withValidMapId(mapId, (validMapId) => {
+            const updatedEdge = { ...edge, data: { mapId: validMapId } };
+            onConnectNodes({
+                mapId: validMapId,
+                edges,
+                edge: updatedEdge as Edge,
+                setEdges,
+            });
+        });
     }
 
     async function loadData() {
-        if (mapId === undefined) {
-            console.error("Map ID is missing from the URL.");
-            return null;
-        }
+        withValidMapId(mapId, async (validMapId) => {
+            const fetchedNodes = await onGetNodes({
+                mapId: validMapId,
+                setNodes,
+                setEdges,
+                edges,
+            });
 
-        const fetchedNodes = await onGetNodes({
-            mapId,
-            setNodes,
-            setEdges,
-            edges
+            if (!fetchedNodes || fetchedNodes.length === 0) {
+                const initialNode = createInitialNode("Initial Node", validMapId);
+                setNodes([initialNode]);
+            }
+            withValidMapId(mapId, async (validMapId) => {
+                await onGetConnection({
+                    setEdges,
+                    mapId: validMapId,
+                });
+            });
         });
-
-        if (!fetchedNodes || fetchedNodes.length === 0) {
-            const initialNode = createInitialNode("Initial Node", mapId);
-            setNodes([initialNode]);
-        }
-
-        await onGetConnection({ setEdges });
     }
 
     useEffect(() => {
         loadData();
     }, []);
-
 
     return (
         <div className="h-screen bg-gradient-to-r from-secondary to-muted-secondary">

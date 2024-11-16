@@ -1,18 +1,22 @@
 import { addEdge, Connection, Edge } from "reactflow";
 import { addEdgeToDB, getEdgesFromDB } from "../db/edgeDB";
+import { updateMapToDB } from "@/db/mapDB";
 
 interface OnGetEdgesParams {
+  mapId: string;
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
 interface OnConnectParams {
+  mapId: string;
+  edges: Edge[];
   edge: Edge | Connection;
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
-export async function onGetConnection({ setEdges }: OnGetEdgesParams) {
+export async function onGetConnection({  setEdges, mapId }: OnGetEdgesParams) {
   try {
-    const edgesFromDB = await getEdgesFromDB();
+    const edgesFromDB = await getEdgesFromDB(mapId);
     if (!edgesFromDB) return;
     setEdges(edgesFromDB);
   } catch (error) {
@@ -20,11 +24,12 @@ export async function onGetConnection({ setEdges }: OnGetEdgesParams) {
   }
 }
 
-export function onConnectNodes({ edge, setEdges }: OnConnectParams) {
+export async function onConnectNodes({ edges, edge, setEdges, mapId }: OnConnectParams) {
   try {
-    const newEdge = { ...edge, id: `e${edge.source}-${edge.target}` };
+    const newEdge = { ...edge, data: { mapId }, id: `e${edge.source}-${edge.target}` };
     setEdges((eds) => addEdge(edge, eds));
-    addEdgeToDB(newEdge as Edge);
+    await addEdgeToDB(newEdge as Edge);
+    await updateMapToDB(mapId, { edges });
   } catch (error) {
     console.error("Failed to connect nodes", error);
   }

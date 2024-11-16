@@ -38,23 +38,18 @@ export async function saveMapToDB(map: Map) {
       nodes: map.nodes,
       edges: map.edges,
     });
-    console.log("Map saved successfully!");
   } catch (error) {
     console.error("Error saving map: ", error);
   }
 }
 
-
-// Key problems on updating map:
-// Map updates in delay - when node gets added the database sees the previous added one
-// Edges need to be updated in the map as well and have mapId stored in them
-// edit, delete, add on each node and edge supposed to be updated in db and in map
 export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
     const sanitizedValues = deepSanitize(values);
 
     const mapRef = doc(db, "maps", mapId);
     await updateDoc(mapRef, sanitizedValues);
+    console.log("Success", sanitizedValues);
   } catch (error) {
     console.error("Failed to update map", error);
   }

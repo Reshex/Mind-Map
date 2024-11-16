@@ -90,6 +90,9 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
       id: `e${selectedNodeId}-${newNodeId}`,
       source: selectedNodeId,
       target: newNodeId,
+      data: {
+        mapId,
+      },
     };
     setEdges((eds) => [...eds, newEdge]);
     await addEdgeToDB(newEdge);
