@@ -15,6 +15,7 @@ interface AddNodeParams {
   label: string;
   selectedNodeId: string | null;
   nodes: Node<CustomNodeDataType>[];
+  edges: Edge[];
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
@@ -44,7 +45,7 @@ export async function onGetNodes({ mapId, setNodes }: OnGetNodeParams) {
   }
 }
 
-export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes, setEdges }: AddNodeParams) {
+export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, setNodes, setEdges }: AddNodeParams) {
   try {
     if (!selectedNodeId) return;
 
@@ -56,9 +57,16 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
     const xPosition = selectedNode.position.x + siblingNodes.length * spacingX;
     const yPosition = selectedNode.position.y + 150;
 
-    const tempNodeId = `temp_${Date.now()}`;
-    const tempNode: Node<CustomNodeDataType> = {
-      id: tempNodeId,
+    const newNodeId = await addNodeToDB(mapId, {
+      label,
+      selectedNodeId,
+      xPosition,
+      yPosition,
+    });
+    if (!newNodeId) return;
+
+    const newNode: Node<CustomNodeDataType> = {
+      id: newNodeId,
       type: "custom",
       position: { x: xPosition, y: yPosition },
       data: {
@@ -72,31 +80,23 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, setNodes,
       },
     };
 
-    const tempEdge: Edge = {
-      id: `e${selectedNodeId}-${tempNodeId}`,
-      source: selectedNodeId,
-      target: tempNodeId,
-    };
-    setNodes((nds) => [...nds, tempNode]);
-    setEdges((eds) => [...eds, tempEdge]);
-
-    const newNodeId = await addNodeToDB(mapId, { label, selectedNodeId, xPosition, yPosition });
-
-    if (!newNodeId) return;
-
-    setNodes((nds) => nds.map((node) => (node.id === tempNodeId ? { ...node, id: newNodeId } : node)));
+    setNodes((nds) => [...nds, newNode]);
 
     const newEdge: Edge = {
       id: `e${selectedNodeId}-${newNodeId}`,
       source: selectedNodeId,
       target: newNodeId,
-      data: {
-        mapId,
-      },
+      data: { mapId },
     };
+
     setEdges((eds) => [...eds, newEdge]);
+
     await addEdgeToDB(newEdge);
-    await updateMapToDB(mapId, { nodes });
+
+    await updateMapToDB(mapId, {
+      nodes: [...nodes, newNode],
+      edges: [...edges, newEdge],
+    });
   } catch (error) {
     console.error("Failed to add node", error);
   }

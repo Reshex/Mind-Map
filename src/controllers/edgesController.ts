@@ -14,7 +14,7 @@ interface OnConnectParams {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
-export async function onGetConnection({  setEdges, mapId }: OnGetEdgesParams) {
+export async function onGetConnection({ setEdges, mapId }: OnGetEdgesParams) {
   try {
     const edgesFromDB = await getEdgesFromDB(mapId);
     if (!edgesFromDB) return;

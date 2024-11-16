@@ -1,12 +1,12 @@
 import { db } from "@/firebase";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 
-export async function getNodesFromDB(mapId:string) {
+export async function getNodesFromDB(mapId: string) {
   try {
     const nodesCollection = collection(db, "nodes");
     const nodesQuery = query(nodesCollection, where("mapId", "==", mapId));
     const nodesSnapshot = await getDocs(nodesQuery);
-    
+
     const nodesList = nodesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return nodesList;
   } catch (error) {
@@ -14,34 +14,36 @@ export async function getNodesFromDB(mapId:string) {
   }
 }
 
-export async function addNodeToDB(mapId:string,{
-  label,
-  selectedNodeId,
-  xPosition,
-  yPosition,
-}: {
-  label: string;
-  selectedNodeId: string | null;
-  xPosition: number;
-  yPosition: number;
-}) {
+export async function addNodeToDB(
+  mapId: string,
+  {
+    label,
+    selectedNodeId,
+    xPosition,
+    yPosition,
+  }: {
+    label: string;
+    selectedNodeId: string | null;
+    xPosition: number;
+    yPosition: number;
+  }
+) {
   try {
-    const nodesCollectionRef = collection(db, "nodes");
-    const docRef = await addDoc(nodesCollectionRef, {
+    const nodeId = crypto.randomUUID();
+
+    const nodeDocRef = doc(db, "nodes", nodeId);
+    await setDoc(nodeDocRef, {
+      id: nodeId,
       mapId,
       type: "custom",
       position: { x: xPosition, y: yPosition },
       data: {
         label,
-        parentId: selectedNodeId,
+        parentId: selectedNodeId || null,
       },
     });
 
-    await updateDoc(doc(db, "nodes", docRef.id), {
-      id: docRef.id,
-    });
-
-    return docRef.id;
+    return nodeId;
   } catch (error) {
     console.error("Failed saving node to database", error);
     return null;

@@ -1,6 +1,6 @@
 //Imports
 import { useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, Connection, Edge, Node } from 'reactflow';
 
 //Controllers
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '@/controllers/nodesController';
@@ -11,9 +11,10 @@ import CustomNode from '../nodes/CustomNode';
 
 //Styles
 import 'reactflow/dist/style.css';
-import createInitialNode from '@/utils/initialNode';
 import { useParams } from 'react-router-dom';
 import withValidMapId from '@/utils/mapValidation';
+import createInitialNode from '@/utils/createInitialNode';
+import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
 
 
 const nodeTypes = {
@@ -33,6 +34,7 @@ function MindMap() {
                 label,
                 selectedNodeId,
                 nodes,
+                edges,
                 setNodes,
                 setEdges,
             });
@@ -69,23 +71,29 @@ function MindMap() {
 
     async function loadData() {
         withValidMapId(mapId, async (validMapId) => {
-            const fetchedNodes = await onGetNodes({
-                mapId: validMapId,
-                setNodes,
-                setEdges,
-                edges,
-            });
+            try {
+                const fetchedNodes = await onGetNodes({
+                    mapId: validMapId,
+                    setNodes,
+                    setEdges,
+                    edges,
+                });
 
-            if (!fetchedNodes || fetchedNodes.length === 0) {
-                const initialNode = createInitialNode("Initial Node", validMapId);
-                setNodes([initialNode]);
-            }
-            withValidMapId(mapId, async (validMapId) => {
+                if (fetchedNodes && fetchedNodes.length > 0) {
+                    setNodes(fetchedNodes as Node<CustomNodeDataType>[]);
+                } else {
+                    console.warn(`No nodes found for mapId: ${validMapId}. Creating an initial node.`);
+                    const initialNode = await createInitialNode("Initial Node", validMapId);
+                    setNodes([initialNode]);
+                }
+
                 await onGetConnection({
                     setEdges,
                     mapId: validMapId,
                 });
-            });
+            } catch (error) {
+                console.error("Error loading data:", error);
+            }
         });
     }
 

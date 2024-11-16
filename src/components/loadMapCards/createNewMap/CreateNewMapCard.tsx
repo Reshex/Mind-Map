@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState } from "react";
 
-//Custom components
+// Custom components
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,16 +11,15 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Input } from "../../ui/input"
-import { Plus } from "lucide-react"
+} from "@/components/ui/alert-dialog";
+import { Input } from "../../ui/input";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useCreatorId } from "@/hooks/useCreatorId"
-import { onSaveMap } from "@/controllers/mapController"
+import { useCreatorId } from "@/hooks/useCreatorId";
+import { onSaveMap } from "@/controllers/mapController";
 import { Edge, Node } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
-import createInitialNode from "@/utils/initialNode";
-
+import createInitialNode from "@/utils/createInitialNode";
 
 function NewMapCard() {
     const navigate = useNavigate();
@@ -29,28 +28,29 @@ function NewMapCard() {
     const [error, setError] = useState<string | null>(null);
 
     const creatorId = useCreatorId();
-    const mapId = `map-${crypto.randomUUID()}`
-    const initialNode = createInitialNode(initialNodeName, mapId)
-
-    const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
+    const mapId = `map-${crypto.randomUUID()}`;
 
     const initialEdges: Edge[] = [];
 
-
-    function navigateToNewMap() {
+    async function navigateToNewMap() {
         try {
-            setError(null)
+            setError(null);
 
             if (mapName.length < 3 || initialNodeName.length < 3) {
                 setError("Map and Initial Node need more than 2 characters");
                 return;
             }
 
-            onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges)
+            const initialNode: Node<CustomNodeDataType> = await createInitialNode(initialNodeName, mapId);
+
+            const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
+
+            await onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges);
+
             navigate(`/mindMap/${mapId}`);
-        }
-        catch (error) {
-            console.error("Falied to create new map")
+        } catch (error) {
+            console.error("Failed to create new map:", error);
+            setError("An error occurred while creating the map. Please try again.");
         }
     }
 
@@ -68,25 +68,27 @@ function NewMapCard() {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Create New Map</AlertDialogTitle>
-                    <AlertDialogDescription className="flex flex-col gap-4" >
-                        <Input value={mapName} onChange={(event) => setMapName(event.target.value)} placeholder="Map Name"></Input>
-                        <Input value={initialNodeName} onChange={(event) => setInitialNodeName(event.target.value)} placeholder="Initial Node Name"></Input>
+                    <AlertDialogDescription className="flex flex-col gap-4">
+                        <Input
+                            value={mapName}
+                            onChange={(event) => setMapName(event.target.value)}
+                            placeholder="Map Name"
+                        />
+                        <Input
+                            value={initialNodeName}
+                            onChange={(event) => setInitialNodeName(event.target.value)}
+                            placeholder="Initial Node Name"
+                        />
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-
-                    {error && (
-                        <div className="text-destructive font-semibold">
-                            {error}
-                        </div>
-                    )}
+                    {error && <div className="text-destructive font-semibold">{error}</div>}
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => navigateToNewMap()}>Create Map</AlertDialogAction>
+                    <AlertDialogAction onClick={navigateToNewMap}>Create Map</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-
-    )
+    );
 }
 
-export default NewMapCard
+export default NewMapCard;
