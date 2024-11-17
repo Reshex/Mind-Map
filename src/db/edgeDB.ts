@@ -13,7 +13,6 @@ export async function getEdgesFromDB(mapId: string): Promise<Edge[]> {
       ...doc.data(),
     })) as Edge[];
 
-    console.log(edgeList);
     return edgeList;
   } catch (error) {
     console.error("Failed to fetch edges", error);

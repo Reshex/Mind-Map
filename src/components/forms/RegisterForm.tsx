@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
-import Loading from "../loading/Loading";
+import LoadingAlert from "../loading/LoadingAlert";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -79,7 +79,12 @@ export default function ProfileForm() {
         }
     };
 
-    if (isLoading) { return <Loading /> }
+    if (isLoading) {
+        return <LoadingAlert
+            isOpen={isLoading}
+            onClose={() => setIsLoading(false)}
+        />
+    }
     if (success) {
         return <div className="text-foreground font-semibold">
             {success}

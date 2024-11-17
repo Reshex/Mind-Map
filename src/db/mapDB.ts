@@ -49,7 +49,6 @@ export async function updateMapToDB(mapId: string, values: Partial<Map>) {
 
     const mapRef = doc(db, "maps", mapId);
     await updateDoc(mapRef, sanitizedValues);
-    console.log("Success", sanitizedValues);
   } catch (error) {
     console.error("Failed to update map", error);
   }
