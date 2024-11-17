@@ -4,7 +4,7 @@ import ReactFlow, { useNodesState, useEdgesState, Connection, Edge, Node } from 
 
 //Controllers
 import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '@/controllers/nodesController';
-import { onConnectNodes, onGetConnection } from '@/controllers/edgesController';
+import { onConnectNodes, onGetConnection as onGetConnections } from '@/controllers/edgesController';
 
 //Custom Components
 import CustomNode from '../nodes/CustomNode';
@@ -74,8 +74,6 @@ function MindMap() {
             try {
                 const fetchedNodes = await onGetNodes({
                     mapId: validMapId,
-                    setNodes,
-                    setEdges,
                     edges,
                 });
 
@@ -87,10 +85,11 @@ function MindMap() {
                     setNodes([initialNode]);
                 }
 
-                await onGetConnection({
-                    setEdges,
-                    mapId: validMapId,
-                });
+                const fetchedEdges = await onGetConnections({ mapId: validMapId });
+                if (fetchedEdges) {
+                    setEdges(fetchedEdges as Edge[]);
+                }
+
             } catch (error) {
                 console.error("Error loading data:", error);
             }

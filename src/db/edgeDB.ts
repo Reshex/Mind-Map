@@ -5,13 +5,15 @@ import { Edge } from "reactflow";
 export async function getEdgesFromDB(mapId: string): Promise<Edge[]> {
   try {
     const edgesCollection = collection(db, "edges");
-    const edgesQuery = query(edgesCollection, where("mapId", "==", mapId));
+    const edgesQuery = query(edgesCollection, where("data.mapId", "==", mapId));
     const edgesSnapshot = await getDocs(edgesQuery);
 
     const edgeList = edgesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as Edge[];
+
+    console.log(edgeList);
     return edgeList;
   } catch (error) {
     console.error("Failed to fetch edges", error);

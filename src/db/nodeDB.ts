@@ -29,7 +29,7 @@ export async function addNodeToDB(
   }
 ) {
   try {
-    const nodeId = crypto.randomUUID();
+    const nodeId = `Node-${crypto.randomUUID()}`;
 
     const nodeDocRef = doc(db, "nodes", nodeId);
     await setDoc(nodeDocRef, {

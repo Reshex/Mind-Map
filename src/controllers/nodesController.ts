@@ -5,8 +5,6 @@ import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { updateMapToDB } from "@/db/mapDB";
 
 interface OnGetNodeParams {
-  setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   mapId: string;
   edges: Edge[];
 }
@@ -32,13 +30,10 @@ interface OnEditNodeParams {
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
 }
 
-export async function onGetNodes({ mapId, setNodes }: OnGetNodeParams) {
+export async function onGetNodes({ mapId }: OnGetNodeParams) {
   try {
     const nodesFromDB = await getNodesFromDB(mapId);
     if (!nodesFromDB) throw new Error("Failed to fetch nodes");
-    nodesFromDB.map((node) => {
-      setNodes((nds) => [...nds, node as Node<CustomNodeDataType>]);
-    });
     return nodesFromDB;
   } catch (error) {
     console.error("Failed to fetch nodes", error);
@@ -80,8 +75,6 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, se
       },
     };
 
-    setNodes((nds) => [...nds, newNode]);
-
     const newEdge: Edge = {
       id: `e${selectedNodeId}-${newNodeId}`,
       source: selectedNodeId,
@@ -89,7 +82,8 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, se
       data: { mapId },
     };
 
-    setEdges((eds) => [...eds, newEdge]);
+    setNodes((prevNodes) => [...prevNodes, newNode]);
+    setEdges((prevEdges) => [...prevEdges, newEdge]);
 
     await addEdgeToDB(newEdge);
 

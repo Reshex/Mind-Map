@@ -4,7 +4,6 @@ import { updateMapToDB } from "@/db/mapDB";
 
 interface OnGetEdgesParams {
   mapId: string;
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
 interface OnConnectParams {
@@ -14,11 +13,11 @@ interface OnConnectParams {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 }
 
-export async function onGetConnection({ setEdges, mapId }: OnGetEdgesParams) {
+export async function onGetConnection({  mapId }: OnGetEdgesParams) {
   try {
     const edgesFromDB = await getEdgesFromDB(mapId);
     if (!edgesFromDB) return;
-    setEdges(edgesFromDB);
+    return edgesFromDB;
   } catch (error) {
     console.error("Failed to fetch edges", error);
   }
