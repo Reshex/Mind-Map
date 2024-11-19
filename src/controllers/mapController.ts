@@ -37,6 +37,15 @@ export async function onSaveMap(
   }
 }
 
+// export async function removeMap(selectedMapId: string) {
+//   try {
+//     if (!selectedMapId) return;
+//     await removeMapFromDB(selectedMapId);
+//   } catch (error) {
+//     console.error("Failed to delete map", error);
+//   }
+// }
+
 // export async function onUpdateMap(mapId: string, values: Partial<Map>) {
 //   try {
 //     if (values.nodes) {

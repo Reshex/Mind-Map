@@ -1,7 +1,8 @@
 import { Handle, Position } from 'reactflow';
 import AddNode from './AddNode';
-import CollapsableMenu from '../dropdown/CollapsibleMenu';
 import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
+import CollapsibleMenu from '../dropdown/CollapsibleMenu';
+import EditItemDialog from './EditItemDialog';
 
 interface CustomNodeProps {
     data: CustomNodeDataType;
@@ -19,7 +20,19 @@ function CustomNode({ data, id }: CustomNodeProps) {
             <Handle type="target" position={Position.Top} className="bg-primary" />
             <div className="flex justify-between items-start">
                 <div></div>
-                <CollapsableMenu removeNode={removeNode} editNode={editNode} />
+
+                <CollapsibleMenu
+                    label="Node"
+                    editAction={(newLabel) => editNode(newLabel)}
+                    deleteAction={removeNode}
+                    EditComponent={({ closeDialog, editAction }) => (
+                        <EditItemDialog
+                            label="Node"
+                            editAction={editAction}
+                            closeDialog={closeDialog}
+                        />
+                    )}
+                />
             </div>
             <div className="text-md font-semibold text-foreground">{label}</div>
             <div className="flex justify-center mt-2">

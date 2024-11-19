@@ -96,7 +96,7 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, se
   }
 }
 
-export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
+export async function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
   try {
     if (!selectedNodeId) return;
 
@@ -110,16 +110,16 @@ export function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNod
       });
       return eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
     });
-    removeNodeFromDB(selectedNodeId);
+    await removeNodeFromDB(selectedNodeId);
   } catch (error) {
     console.error("Failed to remove node", error);
   }
 }
 
-export function onEditNode({ label, setNodes, selectedNodeId }: OnEditNodeParams) {
+export async function onEditNode({ label, setNodes, selectedNodeId }: OnEditNodeParams) {
   try {
     if (!selectedNodeId) return;
-    editNodeToDB(selectedNodeId, label);
+    await editNodeToDB(selectedNodeId, label);
     setNodes((nds) =>
       nds.map((node) => (node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node))
     );

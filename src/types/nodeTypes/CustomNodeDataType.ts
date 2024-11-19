@@ -1,14 +1,13 @@
 export default interface CustomNodeDataType {
-  mapId:string,
+  mapId: string;
   label: string;
   customStyle?: string;
   parentId?: string;
   setSelectedNodeId: (id: string) => void;
   addNode: () => void;
   removeNode: () => void;
-  editNode: () => void;
+  editNode: (label: string) => void;
 }
-
 
 // export interface InitialNodeDataType {
 //   label: string | "";

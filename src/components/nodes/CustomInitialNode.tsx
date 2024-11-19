@@ -1,6 +1,6 @@
 import { Handle, Position } from 'reactflow';
 import AddNode from './AddNode';
-import CollapsableMenu from '../dropdown/CollapsibleMenu';
+import CollapsableMenu from '../dropdown/CollapsibleMenuNode';
 import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
 
 interface CustomNodeProps {
