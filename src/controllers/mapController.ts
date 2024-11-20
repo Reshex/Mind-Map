@@ -29,8 +29,6 @@ export async function onSaveMap(
 
     await saveMapToDB(newMap);
 
-    if (newMap.creatorId === creatorId) return;
-
     await updateUserToDB(creatorId, { maps: [newMap] });
   } catch (error) {
     console.error("Failed to save map", error);

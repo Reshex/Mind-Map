@@ -15,7 +15,7 @@ function CollapsibleMenu({ label, editAction, deleteAction, EditComponent }: Col
     return (
         <>
             <DropdownMenu>
-                <DropdownMenuTrigger><Ellipsis className='size-3 hover:text-secondary' /></DropdownMenuTrigger>
+                <DropdownMenuTrigger><Ellipsis className='size-fit hover:text-secondary' /></DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>{label} Settings</DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>

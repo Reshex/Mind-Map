@@ -1,5 +1,5 @@
 //Custom components
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,13 +26,16 @@ import { Edge, Node } from "reactflow";
 import { onSaveMap } from "@/controllers/mapController";
 import createInitialNode from "@/utils/createInitialNode";
 
-function NewMapCard() {
+interface LoadMapPageProps {
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+}
+function NewMapCard({ setIsLoading }: LoadMapPageProps) {
     const navigate = useNavigate();
-    
+
     const [mapName, setMapName] = useState("");
     const [initialNodeName, setInitialNodeName] = useState("");
     const [error, setError] = useState<string | null>(null);
-    
+
     const creatorId = useCreatorId();
     const mapId = `map-${crypto.randomUUID()}`;
 
@@ -40,6 +43,7 @@ function NewMapCard() {
 
     async function navigateToNewMap() {
         try {
+            setIsLoading(true)
             setError(null);
 
             if (mapName.length < 3 || initialNodeName.length < 3) {
@@ -52,7 +56,7 @@ function NewMapCard() {
             const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
             await onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges);
-
+            
             navigate(`/mindMap/${mapId}`);
         } catch (error) {
             console.error("Failed to create new map:", error);

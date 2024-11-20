@@ -29,7 +29,7 @@ export async function registerUserToDB(values: User, userUid: string) {
       name: values.name,
       lastName: values.lastName,
       email: values.email,
-      map: [],
+      maps: [],
       createdAt: new Date(),
     });
 
@@ -41,6 +41,9 @@ export async function registerUserToDB(values: User, userUid: string) {
 
 export async function updateUserToDB(userUid: string, values: Partial<User>) {
   try {
+    // loop thorugh the users map array and equal this to the map id (from params)
+    // after finding the map, update the maps inside the users maps array
+    // map should be updated on users map array after manipulating nodes/arrays or the map itslef
     const userRef = doc(db, "users", userUid);
 
     const updateData = { ...values };
@@ -50,7 +53,6 @@ export async function updateUserToDB(userUid: string, values: Partial<User>) {
     }
 
     await updateDoc(userRef, updateData);
-    console.log("User document successfully updated:", updateData);
   } catch (error) {
     console.error("Failed to update user", error);
   }

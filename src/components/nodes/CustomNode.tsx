@@ -20,7 +20,6 @@ function CustomNode({ data, id }: CustomNodeProps) {
             <Handle type="target" position={Position.Top} className="bg-primary" />
             <div className="flex justify-between items-start">
                 <div></div>
-
                 <CollapsibleMenu
                     label="Node"
                     editAction={(newLabel) => editNode(newLabel)}
