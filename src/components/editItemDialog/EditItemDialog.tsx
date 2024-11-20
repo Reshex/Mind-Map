@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,50 +14,60 @@ import { Input } from "../ui/input";
 interface EditItemDialogProps {
     label: string;
     editAction: (label: string) => Promise<void> | void;
-    closeDialog: () => void;
+    setIsEditDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 interface EditItemDialogProps {
     label: string;
     editAction: (label: string) => Promise<void> | void;
-    closeDialog: () => void;
+    setIsEditDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-function EditItemDialog({ label, editAction, closeDialog }: EditItemDialogProps) {
+function EditItemDialog({ label, editAction, setIsEditDialogOpen }: EditItemDialogProps) {
     const [itemName, setItemName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
     async function handleEdit() {
-        if (itemName.length < 2) {
-            setError("Name must be more than 2 characters long");
+        if (itemName.length < 3) {
+            setError("Name must be at least 3 characters long");
             return;
         }
+
         try {
             await editAction(itemName);
             setItemName("");
-            closeDialog();
-        } catch (err) {
-            setError("Failed to update name");
+            setError(null);
+            setIsEditDialogOpen(false);
+        } catch (error) {
+            console.error("Failed to update item label:", error);
+            setError("An unexpected error occurred. Please try again.");
         }
     }
 
     return (
-        <AlertDialog open onOpenChange={closeDialog}>
+        <AlertDialog
+            open={true}
+        >
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Edit {label}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        The {label} name will be updated.
+                        After confirming, the <span className="text-destructive font-black">{label}</span> name will be updated.
                     </AlertDialogDescription>
                     <Input
-                        placeholder={`Edit ${label}`}
+                        placeholder={`New ${label} Name`}
                         value={itemName}
-                        onChange={(e) => setItemName(e.target.value)}
+                        onChange={(e) => {
+                            setError(null);
+                            setItemName(e.target.value);
+                        }}
                     />
                 </AlertDialogHeader>
-                {error !== null && <p className="text-red-500 text-sm">{error}</p>}
+                {error && <p className="text-destructive mt-2">{error}</p>}
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={closeDialog}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={() => setIsEditDialogOpen(false)}>
+                        Cancel
+                    </AlertDialogCancel>
                     <AlertDialogAction onClick={handleEdit}>Edit</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

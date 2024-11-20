@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { CircleX, Ellipsis, Pencil } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
@@ -6,7 +6,7 @@ interface CollapsibleMenuProps {
     label: string;
     editAction: (label: string) => Promise<void> | void;
     deleteAction: () => Promise<void> | void;
-    EditComponent: React.FC<{ closeDialog: () => void; editAction: (label: string) => Promise<void> | void }>;
+    EditComponent: React.FC<{ setIsEditDialogOpen: Dispatch<SetStateAction<boolean>>; editAction: (label: string) => Promise<void> | void }>;
 }
 
 function CollapsibleMenu({ label, editAction, deleteAction, EditComponent }: CollapsibleMenuProps) {
@@ -28,7 +28,7 @@ function CollapsibleMenu({ label, editAction, deleteAction, EditComponent }: Col
             {isEditDialogOpen && (
                 <EditComponent
                     editAction={editAction}
-                    closeDialog={() => setIsEditDialogOpen(false)}
+                    setIsEditDialogOpen={setIsEditDialogOpen}
                 />
             )}
         </>

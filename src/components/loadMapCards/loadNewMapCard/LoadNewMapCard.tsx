@@ -1,10 +1,19 @@
-import CollapsibleMenu from "@/components/dropdown/CollapsibleMenu";
-import EditItemDialog from "@/components/nodes/EditItemDialog";
-import { loadMapFromDB } from "@/db/mapDB";
-import { useCreatorId } from "@/hooks/useCreatorId";
-import { Map } from "@/types/mapTypes/mapType";
+//imports
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
+
+//db
+import { loadMapFromDB } from "@/db/mapDB";
+
+//hooks
+import { useCreatorId } from "@/hooks/useCreatorId";
 import { useNavigate } from "react-router-dom";
+
+//types
+import { Map } from "@/types/mapTypes/mapType";
+
+//custom components
+import CollapsibleMenu from "@/components/dropdown/CollapsibleMenu";
+import EditItemDialog from "@/components/editItemDialog/EditItemDialog";
 import { editMapCardName, removeMapCard } from "./loadNewMapCardsCont";
 
 interface LoadMapPageProps {
@@ -20,7 +29,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
     useEffect(() => {
         async function getMaps() {
             setIsLoading(true);
-            if (creatorId === null) return;
+            if (creatorId === null) return console.error("Creator Id cannot be null");
 
             const maps = await loadMapFromDB(creatorId);
             if (maps) setMapsList(Array.isArray(maps) ? maps : [maps]);
@@ -50,11 +59,11 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                             label="Map"
                             editAction={(newLabel) => editMapCardName(map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
                             deleteAction={() => removeMapCard(map.mapId, setRefreshTrigger, refreshTrigger)}
-                            EditComponent={({ closeDialog, editAction }) => (
+                            EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog
                                     label="Map"
                                     editAction={editAction}
-                                    closeDialog={closeDialog}
+                                    setIsEditDialogOpen={setIsEditDialogOpen}
                                 />
                             )}
                         />

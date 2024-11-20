@@ -2,7 +2,7 @@ import { Handle, Position } from 'reactflow';
 import AddNode from './AddNode';
 import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
 import CollapsibleMenu from '../dropdown/CollapsibleMenu';
-import EditItemDialog from './EditItemDialog';
+import EditItemDialog from '../editItemDialog/EditItemDialog';
 
 interface CustomNodeProps {
     data: CustomNodeDataType;
@@ -25,11 +25,11 @@ function CustomNode({ data, id }: CustomNodeProps) {
                     label="Node"
                     editAction={(newLabel) => editNode(newLabel)}
                     deleteAction={removeNode}
-                    EditComponent={({ closeDialog, editAction }) => (
+                    EditComponent={({ setIsEditDialogOpen, editAction }) => (
                         <EditItemDialog
                             label="Node"
                             editAction={editAction}
-                            closeDialog={closeDialog}
+                            setIsEditDialogOpen={setIsEditDialogOpen}
                         />
                     )}
                 />

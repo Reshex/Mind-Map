@@ -1,6 +1,5 @@
+//Custom components
 import { useState } from "react";
-
-// Custom components
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,19 +13,26 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "../../ui/input";
 import { Plus } from "lucide-react";
+
+//Hooks
 import { useNavigate } from "react-router-dom";
 import { useCreatorId } from "@/hooks/useCreatorId";
-import { onSaveMap } from "@/controllers/mapController";
-import { Edge, Node } from "reactflow";
+
+//Types
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+
+//Controllers and Utils
+import { Edge, Node } from "reactflow";
+import { onSaveMap } from "@/controllers/mapController";
 import createInitialNode from "@/utils/createInitialNode";
 
 function NewMapCard() {
     const navigate = useNavigate();
+    
     const [mapName, setMapName] = useState("");
     const [initialNodeName, setInitialNodeName] = useState("");
     const [error, setError] = useState<string | null>(null);
-
+    
     const creatorId = useCreatorId();
     const mapId = `map-${crypto.randomUUID()}`;
 

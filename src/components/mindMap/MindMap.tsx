@@ -1,20 +1,23 @@
 //Imports
 import { useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, Connection, Edge, Node } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
 
 //Controllers
-import { onAddNode, onRemoveNode, onEditNode, onGetNodes } from '@/controllers/nodesController';
+import { onAddNode, onRemoveNode, onEditNode } from '@/controllers/nodesController';
 import { onConnectNodes, onGetConnection as onGetConnections } from '@/controllers/edgesController';
 
 //Custom Components
 import CustomNode from '../nodes/CustomNode';
 
+//Utils
+import withValidMapId from '@/utils/mapValidation';
+
+//Hooks
+import { useParams } from 'react-router-dom';
+
 //Styles
 import 'reactflow/dist/style.css';
-import { useParams } from 'react-router-dom';
-import withValidMapId from '@/utils/mapValidation';
-import createInitialNode from '@/utils/createInitialNode';
-import CustomNodeDataType from '@/types/nodeTypes/customNodeDataType';
+import loadData from '@/utils/loadMindMapData';
 
 
 const nodeTypes = {
@@ -69,35 +72,10 @@ function MindMap() {
         });
     }
 
-    async function loadData() {
-        withValidMapId(mapId, async (validMapId) => {
-            try {
-                const fetchedNodes = await onGetNodes({
-                    mapId: validMapId,
-                    edges,
-                });
-
-                if (fetchedNodes && fetchedNodes.length > 0) {
-                    setNodes(fetchedNodes as Node<CustomNodeDataType>[]);
-                } else {
-                    console.warn(`No nodes found for mapId: ${validMapId}. Creating an initial node.`);
-                    const initialNode = await createInitialNode("Initial Node", validMapId);
-                    setNodes([initialNode]);
-                }
-
-                const fetchedEdges = await onGetConnections({ mapId: validMapId });
-                if (fetchedEdges) {
-                    setEdges(fetchedEdges as Edge[]);
-                }
-
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        });
-    }
-
     useEffect(() => {
-        loadData();
+        withValidMapId(mapId, async (validMapId) => {
+            loadData(validMapId, edges, setNodes, setEdges, onGetConnections);
+        })
     }, []);
 
     return (
