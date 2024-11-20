@@ -1,7 +1,7 @@
 import { db } from "@/firebase";
 import { Map } from "@/types/mapTypes/mapType";
 import deepSanitize from "@/utils/deepSanitize";
-import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 
 export async function loadMapFromDB(creatorId: string, mapId?: string) {
   try {
@@ -46,7 +46,7 @@ export async function saveMapToDB(map: Map) {
 export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
     const sanitizedValues = deepSanitize(values);
- 
+
     const mapRef = doc(db, "maps", mapId);
     await updateDoc(mapRef, sanitizedValues);
   } catch (error) {
@@ -56,9 +56,29 @@ export async function updateMapToDB(mapId: string, values: Partial<Map>) {
 
 export async function removeMapFromDB(mapId: string) {
   try {
-    const mapRef = doc(db, "maps", mapId);
-    await deleteDoc(mapRef);
+    if (!mapId) return;
+
+    const batch = writeBatch(db);
+
+    const mapDocRef = doc(db, "maps", mapId);
+    batch.delete(mapDocRef);
+
+    const nodesQuery = query(collection(db, "nodes"), where("mapId", "==", mapId));
+    const nodesSnapshot = await getDocs(nodesQuery);
+    nodesSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    const edgesQuery = query(collection(db, "edges"), where("data.mapId", "==", mapId));
+    const edgesSnapshot = await getDocs(edgesQuery);
+    edgesSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+
+    console.log(`Successfully removed map ${mapId} and all associated data.`);
   } catch (error) {
-    console.error("Failed to delete map from database", error);
+    console.error("Failed to delete map and associated data", error);
   }
 }

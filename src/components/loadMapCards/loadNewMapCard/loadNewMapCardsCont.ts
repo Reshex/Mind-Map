@@ -2,11 +2,13 @@ import { removeMapFromDB, updateMapToDB } from "@/db/mapDB";
 import { Map } from "@/types/mapTypes/mapType";
 import { Dispatch, SetStateAction } from "react";
 
-export async function removeMapCard(
+export async function removeMap(
   mapId: string,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,
-  refreshTrigger: boolean
+  refreshTrigger: boolean,
+  setIsLoading: Dispatch<SetStateAction<boolean>>
 ) {
+  setIsLoading(true);
   await removeMapFromDB(mapId);
   setRefreshTrigger(!refreshTrigger);
 }
