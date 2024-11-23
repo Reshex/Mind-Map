@@ -56,7 +56,7 @@ function NewMapCard({ setIsLoading }: LoadMapPageProps) {
             const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
             await onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges);
-            
+
             navigate(`/mindMap/${mapId}`);
         } catch (error) {
             console.error("Failed to create new map:", error);

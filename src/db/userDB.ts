@@ -1,6 +1,7 @@
 import { db } from "@/firebase";
-import { collection, query, where, getDocs, setDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
 import User from "@/types/userTypes/userType";
+import { Map } from "@/types/mapTypes/mapType";
 
 export async function getUsersFromDB() {
   try {
@@ -34,26 +35,61 @@ export async function registerUserToDB(values: User, userUid: string) {
     });
 
     return { uid: userUid };
-  } catch (error: any) {
-    throw new Error(error.message || "An unexpected error occurred");
+  } catch (error) {
+    console.error("Failed to register user to database");
   }
 }
 
-export async function updateUserToDB(userUid: string, values: Partial<User>) {
+export async function saveMapToUserDB(userUid: string, newMapValues: Map) {
   try {
-    // loop thorugh the users map array and equal this to the map id (from params)
-    // after finding the map, update the maps inside the users maps array
-    // map should be updated on users map array after manipulating nodes/arrays or the map itslef
     const userRef = doc(db, "users", userUid);
 
-    const updateData = { ...values };
-
-    if (Array.isArray(values.maps)) {
-      updateData.maps = arrayUnion(...values.maps);
+    const userSnapshot = await getDoc(userRef);
+    if (!userSnapshot.exists()) {
+      console.error("User not found");
+      return;
     }
 
-    await updateDoc(userRef, updateData);
+    const userData = userSnapshot.data();
+    const maps = userData.maps || [];
+
+    const newMaps = [...maps, newMapValues];
+
+    await updateDoc(userRef, { maps: newMaps });
   } catch (error) {
-    console.error("Failed to update user", error);
+    console.error("Failed to save map to user database");
   }
 }
+
+export async function updateMapToUserDB(userUid: string, newMapValues: Partial<Map>) {
+  try {
+    const userRef = doc(db, "users", userUid);
+
+    const userSnapshot = await getDoc(userRef);
+    if (!userSnapshot.exists()) {
+      console.error("User not found");
+      return;
+    }
+
+    const userData = userSnapshot.data();
+    const maps = userData.maps;
+
+    const updatedMaps = maps.map((map: Map) => (map.mapId === newMapValues.mapId ? { ...map, ...newMapValues } : map));
+    await updateDoc(userRef, { maps: updatedMaps });
+
+    console.log("Map updated successfully in user document.");
+  } catch (error) {
+    console.error("Failed to update map in user document:", error);
+  }
+}
+
+// export async function updateUserToDB(userUid: string, values: Partial<User>) {
+//   try {
+//   const userRef = doc(db, "users", userUid);
+
+//     const updateData = { ...values };
+
+//   } catch (error) {
+//     console.error("Failed to update user", error);
+//   }
+// }

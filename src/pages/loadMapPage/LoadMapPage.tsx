@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LoadingAlert from "@/components/loading/LoadingAlert";
-import NewMapCard from "@/components/loadMapCards/createNewMap/CreateNewMapCard";
-import LoadMapCards from "@/components/loadMapCards/loadNewMapCard/LoadNewMapCard";
+import NewMapCard from "@/components/loadMapCards/createNewMap/CreateNewMap";
+import LoadMapCards from "@/components/loadMapCards/loadNewMapCard/LoadNewMap";
 
 function LoadMap() {
     const [isLoading, setIsLoading] = useState<boolean>(false);

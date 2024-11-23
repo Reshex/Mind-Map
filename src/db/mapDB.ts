@@ -1,6 +1,5 @@
 import { db } from "@/firebase";
 import { Map } from "@/types/mapTypes/mapType";
-import deepSanitize from "@/utils/deepSanitize";
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 
 export async function loadMapFromDB(creatorId: string, mapId?: string) {
@@ -45,10 +44,10 @@ export async function saveMapToDB(map: Map) {
 
 export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
-    const sanitizedValues = deepSanitize(values);
+    // const sanitizedValues = deepSanitize(values);
 
     const mapRef = doc(db, "maps", mapId);
-    await updateDoc(mapRef, sanitizedValues);
+    await updateDoc(mapRef, values);
   } catch (error) {
     console.error("Failed to update map", error);
   }

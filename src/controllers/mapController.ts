@@ -1,9 +1,10 @@
 import { Edge, Node } from "reactflow";
-import { saveMapToDB } from "../db/mapDB";
+import { saveMapToDB, updateMapToDB } from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
-import { updateUserToDB } from "../db/userDB";
 import sanitizeNodes from "@/utils/sanitizeNodes";
+import { saveMapToUserDB, updateMapToUserDB } from "@/db/userDB";
+import deepSanitize from "@/utils/deepSanitize";
 
 export async function onSaveMap(
   mapId: string,
@@ -28,10 +29,19 @@ export async function onSaveMap(
     const newMap: Map = { mapId, mapName, creatorId, nodes: sanitizedNodes, edges: sanitizedEdges };
 
     await saveMapToDB(newMap);
-
-    await updateUserToDB(creatorId, { maps: [newMap] });
+    await saveMapToUserDB(creatorId, newMap);
   } catch (error) {
     console.error("Failed to save map", error);
+  }
+}
+
+export async function onUpdateMap(creatorId: string, mapId: string, values: Partial<Map>) {
+  try {
+    const sanitizedValues = deepSanitize(values);
+    updateMapToDB(mapId, sanitizedValues);
+    updateMapToUserDB(creatorId, values);
+  } catch (error) {
+    console.error("Failed to update map", error);
   }
 }
 
@@ -41,16 +51,5 @@ export async function onSaveMap(
 //     await removeMapFromDB(selectedMapId);
 //   } catch (error) {
 //     console.error("Failed to delete map", error);
-//   }
-// }
-
-// export async function onUpdateMap(mapId: string, values: Partial<Map>) {
-//   try {
-//     if (values.nodes) {
-//       sanitizeNodes(values.nodes);
-//     }
-//     updateMapToDB(mapId, values);
-//   } catch (error) {
-//     console.error("Failed to update map", error);
 //   }
 // }

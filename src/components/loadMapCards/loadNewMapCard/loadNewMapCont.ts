@@ -1,4 +1,5 @@
-import { removeMapFromDB, updateMapToDB } from "@/db/mapDB";
+import { onUpdateMap } from "@/controllers/mapController";
+import { removeMapFromDB } from "@/db/mapDB";
 import { Map } from "@/types/mapTypes/mapType";
 import { Dispatch, SetStateAction } from "react";
 
@@ -13,12 +14,13 @@ export async function removeMap(
   setRefreshTrigger(!refreshTrigger);
 }
 
-export async function editMapCardName(
+export async function editMapName(
+  creatorId:string,
   mapId: string,
-  label: Partial<Map>,
+  mapName: Partial<Map>,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,
   refreshTrigger: boolean
 ) {
-  await updateMapToDB(mapId, label);
+  await onUpdateMap(creatorId, mapId, mapName);
   setRefreshTrigger(!refreshTrigger);
 }

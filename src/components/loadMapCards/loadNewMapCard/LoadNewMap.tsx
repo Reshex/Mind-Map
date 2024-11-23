@@ -14,7 +14,7 @@ import { Map } from "@/types/mapTypes/mapType";
 //custom components
 import CollapsibleMenu from "@/components/dropdown/CollapsibleMenu";
 import EditItemDialog from "@/components/editItemDialog/EditItemDialog";
-import { editMapCardName, removeMap } from "./loadNewMapCardsCont";
+import { editMapName, removeMap } from "./loadNewMapCont";
 
 interface LoadMapPageProps {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -57,7 +57,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                     >
                         <CollapsibleMenu
                             label="Map"
-                            editAction={(newLabel) => editMapCardName(map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
+                            editAction={(newLabel) => editMapName(creatorId!, map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
                             deleteAction={() => removeMap(map.mapId, setRefreshTrigger, refreshTrigger, setIsLoading)}
                             EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog

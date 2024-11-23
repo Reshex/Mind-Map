@@ -46,7 +46,6 @@ export async function addNodeToDB(
     return nodeId;
   } catch (error) {
     console.error("Failed saving node to database", error);
-    return null;
   }
 }
 
