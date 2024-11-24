@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom';
 //Styles
 import 'reactflow/dist/style.css';
 import loadData from '@/utils/loadMindMapData';
+import { useCreatorId } from '@/hooks/useCreatorId';
 
 
 const nodeTypes = {
@@ -26,13 +27,16 @@ const nodeTypes = {
 
 function MindMap() {
     const { mapId } = useParams<{ mapId: string }>();
+    const creatorId = useCreatorId();
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
     function addNode(label: string) {
         withValidMapId(mapId, (validMapId) => {
+            if (!creatorId) return console.error("User id not found")
             onAddNode({
+                creatorId,
                 mapId: validMapId,
                 label,
                 selectedNodeId,
@@ -45,10 +49,17 @@ function MindMap() {
     }
 
     function removeNode() {
-        onRemoveNode({
-            setNodes,
-            setEdges,
-            selectedNodeId,
+        withValidMapId(mapId, (validMapId) => {
+            if (!creatorId) return console.error("User id not found")
+            onRemoveNode({
+                creatorId,
+                mapId: validMapId,
+                nodes,
+                edges,
+                setNodes,
+                setEdges,
+                selectedNodeId,
+            });
         });
     }
 

@@ -44,16 +44,15 @@ export async function saveMapToDB(map: Map) {
 
 export async function updateMapToDB(mapId: string, values: Partial<Map>) {
   try {
-    // const sanitizedValues = deepSanitize(values);
-
     const mapRef = doc(db, "maps", mapId);
+
     await updateDoc(mapRef, values);
   } catch (error) {
     console.error("Failed to update map", error);
   }
 }
 
-export async function removeMapFromDB(mapId: string) {
+export async function removeMapFromDB(creatorId: string, mapId: string) {
   try {
     if (!mapId) return;
 
@@ -62,13 +61,27 @@ export async function removeMapFromDB(mapId: string) {
     const mapDocRef = doc(db, "maps", mapId);
     batch.delete(mapDocRef);
 
+    const userRef = doc(db, "users", creatorId);
+    const userSnapshot = await getDoc(userRef);
+
+    if (!userSnapshot.exists()) {
+      console.error("User not found");
+      return;
+    }
+
+    const userData = userSnapshot.data();
+    const userMaps = Array.isArray(userData.maps) ? userData.maps : [];
+
+    const updatedUserMaps = userMaps.filter((map: Map) => map.mapId !== mapId);
+    batch.update(userRef, { maps: updatedUserMaps });
+
     const nodesQuery = query(collection(db, "nodes"), where("mapId", "==", mapId));
     const nodesSnapshot = await getDocs(nodesQuery);
     nodesSnapshot.forEach((doc) => {
       batch.delete(doc.ref);
     });
 
-    const edgesQuery = query(collection(db, "edges"), where("data.mapId", "==", mapId));
+    const edgesQuery = query(collection(db, "edges"), where("mapId", "==", mapId));
     const edgesSnapshot = await getDocs(edgesQuery);
     edgesSnapshot.forEach((doc) => {
       batch.delete(doc.ref);

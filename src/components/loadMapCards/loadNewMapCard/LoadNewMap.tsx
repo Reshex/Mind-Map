@@ -58,7 +58,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                         <CollapsibleMenu
                             label="Map"
                             editAction={(newLabel) => editMapName(creatorId!, map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
-                            deleteAction={() => removeMap(map.mapId, setRefreshTrigger, refreshTrigger, setIsLoading)}
+                            deleteAction={() => removeMap(creatorId!, map.mapId, setRefreshTrigger, refreshTrigger, setIsLoading)}
                             EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog
                                     label="Map"

@@ -4,18 +4,19 @@ import { Map } from "@/types/mapTypes/mapType";
 import { Dispatch, SetStateAction } from "react";
 
 export async function removeMap(
+  creatorId: string,
   mapId: string,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,
   refreshTrigger: boolean,
   setIsLoading: Dispatch<SetStateAction<boolean>>
 ) {
   setIsLoading(true);
-  await removeMapFromDB(mapId);
+  await removeMapFromDB(creatorId, mapId);
   setRefreshTrigger(!refreshTrigger);
 }
 
 export async function editMapName(
-  creatorId:string,
+  creatorId: string,
   mapId: string,
   mapName: Partial<Map>,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,

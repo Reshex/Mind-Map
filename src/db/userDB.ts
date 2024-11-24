@@ -61,7 +61,7 @@ export async function saveMapToUserDB(userUid: string, newMapValues: Map) {
   }
 }
 
-export async function updateMapToUserDB(userUid: string, newMapValues: Partial<Map>) {
+export async function updateMapToUserDB(userUid: string, mapId: string, newMapValues: Partial<Map>) {
   try {
     const userRef = doc(db, "users", userUid);
 
@@ -74,7 +74,7 @@ export async function updateMapToUserDB(userUid: string, newMapValues: Partial<M
     const userData = userSnapshot.data();
     const maps = userData.maps;
 
-    const updatedMaps = maps.map((map: Map) => (map.mapId === newMapValues.mapId ? { ...map, ...newMapValues } : map));
+    const updatedMaps = maps.map((map: Map) => (map.mapId === mapId ? { ...map, ...newMapValues } : map));
     await updateDoc(userRef, { maps: updatedMaps });
 
     console.log("Map updated successfully in user document.");
@@ -82,6 +82,29 @@ export async function updateMapToUserDB(userUid: string, newMapValues: Partial<M
     console.error("Failed to update map in user document:", error);
   }
 }
+
+// export async function removeMapFromUserDB(userUid: string, mapId: string) {
+//   try {
+//     const userRef = doc(db, "users", userUid);
+
+//     const userSnapshot = await getDoc(userRef);
+//     if (!userSnapshot.exists()) {
+//       console.error("User not found");
+//       return;
+//     }
+
+//     const userData = userSnapshot.data();
+//     const maps = userData.maps;
+
+//     const updatedMaps = maps.filter((map: Map) => map.mapId !== mapId);
+//     console.log(updatedMaps)
+
+//     await updateDoc(userRef, { maps: updatedMaps });
+//     console.log(`Map with ID ${mapId} removed successfully from user document.`);
+//   } catch (error) {
+//     console.error("Failed to remove map from user database");
+//   }
+// }
 
 // export async function updateUserToDB(userUid: string, values: Partial<User>) {
 //   try {

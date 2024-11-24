@@ -2,13 +2,14 @@ import { Edge, Node } from "reactflow";
 import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../db/nodeDB";
 import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
-import { updateMapToDB } from "@/db/mapDB";
+import { onUpdateMap } from "./mapController";
 
 interface OnGetNodeParams {
   mapId: string;
   edges: Edge[];
 }
 interface AddNodeParams {
+  creatorId: string;
   mapId: string;
   label: string;
   selectedNodeId: string | null;
@@ -19,6 +20,10 @@ interface AddNodeParams {
 }
 
 interface OnRemoveNodeParams {
+  creatorId: string;
+  mapId: string;
+  nodes: Node<CustomNodeDataType>[];
+  edges: Edge[];
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   selectedNodeId: string | null;
@@ -40,7 +45,16 @@ export async function onGetNodes({ mapId }: OnGetNodeParams) {
   }
 }
 
-export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, setNodes, setEdges }: AddNodeParams) {
+export async function onAddNode({
+  creatorId,
+  mapId,
+  label,
+  selectedNodeId,
+  nodes,
+  edges,
+  setNodes,
+  setEdges,
+}: AddNodeParams) {
   try {
     if (!selectedNodeId) return;
 
@@ -87,7 +101,7 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, se
 
     await addEdgeToDB(newEdge);
 
-    await updateMapToDB(mapId, {
+    await onUpdateMap(creatorId, mapId, {
       nodes: [...nodes, newNode],
       edges: [...edges, newEdge],
     });
@@ -96,7 +110,15 @@ export async function onAddNode({ mapId, label, selectedNodeId, nodes, edges, se
   }
 }
 
-export async function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRemoveNodeParams) {
+export async function onRemoveNode({
+  creatorId,
+  mapId,
+  nodes,
+  edges,
+  setNodes,
+  setEdges,
+  selectedNodeId,
+}: OnRemoveNodeParams) {
   try {
     if (!selectedNodeId) return;
 
@@ -111,6 +133,10 @@ export async function onRemoveNode({ setNodes, setEdges, selectedNodeId }: OnRem
       return eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
     });
     await removeNodeFromDB(selectedNodeId);
+    await onUpdateMap(creatorId, mapId, {
+      nodes: [...nodes],
+      edges: [...edges],
+    });
   } catch (error) {
     console.error("Failed to remove node", error);
   }
