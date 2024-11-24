@@ -64,17 +64,25 @@ function MindMap() {
     }
 
     function editNode(label: string) {
-        onEditNode({
-            label,
-            setNodes,
-            selectedNodeId,
+        withValidMapId(mapId, (validMapId) => {
+            if (!creatorId) return console.error("User id not found")
+            onEditNode({
+                creatorId,
+                mapId: validMapId,
+                label,
+                setNodes,
+                nodes,
+                selectedNodeId,
+            });
         });
     }
 
     function connectNodes(edge: Edge | Connection) {
         withValidMapId(mapId, (validMapId) => {
+            if (!creatorId) return console.error("User id not found")
             const updatedEdge = { ...edge, data: { mapId: validMapId } };
             onConnectNodes({
+                creatorId,
                 mapId: validMapId,
                 edges,
                 edge: updatedEdge as Edge,

@@ -1,5 +1,5 @@
 import { Edge, Node } from "reactflow";
-import { removeMapFromDB, saveMapToDB, updateMapToDB } from "../db/mapDB";
+import { saveMapToDB, updateMapToDB } from "../db/mapDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { Map } from "@/types/mapTypes/mapType";
 import sanitizeNodes from "@/utils/sanitizeNodes";
@@ -46,12 +46,12 @@ export async function onUpdateMap(creatorId: string, mapId: string, values: Part
   }
 }
 
-export async function onRemoveMap(creatorId: string, mapId: string) {
-  try {
-    if (!mapId) return;
-    await removeMapFromDB(creatorId, mapId);
-    // await removeMapFromUserDB(creatorId, mapId);
-  } catch (error) {
-    console.error("Failed to delete map", error);
-  }
-}
+// export async function onRemoveMap(creatorId: string, mapId: string) {
+//   try {
+//     if (!mapId) return;
+//     await removeMapFromDB(creatorId, mapId);
+//     // await removeMapFromUserDB(creatorId, mapId);
+//   } catch (error) {
+//     console.error("Failed to delete map", error);
+//   }
+// }

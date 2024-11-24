@@ -30,9 +30,12 @@ interface OnRemoveNodeParams {
 }
 
 interface OnEditNodeParams {
+  creatorId: string;
+  mapId: string;
   label: string;
-  selectedNodeId: string | null;
   setNodes: React.Dispatch<React.SetStateAction<Node<CustomNodeDataType>[]>>;
+  nodes: Node<CustomNodeDataType>[];
+  selectedNodeId: string | null;
 }
 
 export async function onGetNodes({ mapId }: OnGetNodeParams) {
@@ -122,34 +125,47 @@ export async function onRemoveNode({
   try {
     if (!selectedNodeId) return;
 
-    setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
+    const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
+    setNodes(updatedNodes);
 
-    setEdges((eds) => {
-      const edgesToRemove = eds.filter((edge) => edge.source === selectedNodeId || edge.target === selectedNodeId);
-
-      edgesToRemove.forEach((edge) => {
-        removeEdgeFromDB(edge.id);
-      });
-      return eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
+    const edgesToRemove = edges.filter((edge) => edge.source === selectedNodeId || edge.target === selectedNodeId);
+    edgesToRemove.forEach((edge) => {
+      removeEdgeFromDB(edge.id);
     });
+    const updatedEdges = edges.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
+    setEdges(updatedEdges);
+
     await removeNodeFromDB(selectedNodeId);
+
     await onUpdateMap(creatorId, mapId, {
-      nodes: [...nodes],
-      edges: [...edges],
+      nodes: updatedNodes,
+      edges: updatedEdges,
     });
   } catch (error) {
     console.error("Failed to remove node", error);
   }
 }
 
-export async function onEditNode({ label, setNodes, selectedNodeId }: OnEditNodeParams) {
+export async function onEditNode({ creatorId, mapId, label, setNodes, nodes, selectedNodeId }: OnEditNodeParams) {
   try {
     if (!selectedNodeId) return;
+
+    // Update the node label in the database
     await editNodeToDB(selectedNodeId, label);
-    setNodes((nds) =>
-      nds.map((node) => (node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node))
+
+    // Calculate the updated nodes
+    const updatedNodes = nodes.map((node) =>
+      node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node
     );
+
+    // Update the state
+    setNodes(updatedNodes);
+
+    // Update the map in the database with the updated nodes
+    await onUpdateMap(creatorId, mapId, {
+      nodes: updatedNodes,
+    });
   } catch (error) {
-    console.error("Failed to edit node");
+    console.error("Failed to edit node", error);
   }
 }
