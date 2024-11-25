@@ -28,22 +28,20 @@ import createInitialNode from "@/utils/createInitialNode";
 
 interface LoadMapPageProps {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
+    setError: Dispatch<SetStateAction<string | null>>;
 }
-function NewMapCard({ setIsLoading }: LoadMapPageProps) {
-    const navigate = useNavigate();
 
+function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
+    const navigate = useNavigate();
     const [mapName, setMapName] = useState("");
     const [initialNodeName, setInitialNodeName] = useState("");
-    const [error, setError] = useState<string | null>(null);
 
     const creatorId = useCreatorId();
     const mapId = `map-${crypto.randomUUID()}`;
-
     const initialEdges: Edge[] = [];
 
     async function navigateToNewMap() {
         try {
-            setIsLoading(true)
             setError(null);
 
             if (mapName.length < 3 || initialNodeName.length < 3) {
@@ -51,8 +49,9 @@ function NewMapCard({ setIsLoading }: LoadMapPageProps) {
                 return;
             }
 
-            const initialNode: Node<CustomNodeDataType> = await createInitialNode(initialNodeName, mapId);
+            setIsLoading(true);
 
+            const initialNode: Node<CustomNodeDataType> = await createInitialNode(initialNodeName, mapId);
             const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
             await onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges);
@@ -61,8 +60,11 @@ function NewMapCard({ setIsLoading }: LoadMapPageProps) {
         } catch (error) {
             console.error("Failed to create new map:", error);
             setError("An error occurred while creating the map. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     }
+
 
     return (
         <AlertDialog>
@@ -92,7 +94,6 @@ function NewMapCard({ setIsLoading }: LoadMapPageProps) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    {error && <div className="text-destructive font-semibold">{error}</div>}
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={navigateToNewMap}>Create Map</AlertDialogAction>
                 </AlertDialogFooter>
@@ -100,5 +101,6 @@ function NewMapCard({ setIsLoading }: LoadMapPageProps) {
         </AlertDialog>
     );
 }
+
 
 export default NewMapCard;

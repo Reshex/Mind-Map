@@ -1,5 +1,6 @@
 import {
     AlertDialog,
+    AlertDialogAction,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -10,26 +11,40 @@ import Loading from "@/components/loading/Loading";
 
 type LoadingAlertProps = {
     isOpen: boolean;
+    error?: string | null;
     onClose: () => void;
 };
 
-function LoadingAlert({ isOpen, onClose }: LoadingAlertProps) {
+function LoadingAlert({ isOpen, error, onClose }: LoadingAlertProps) {
     return (
-        <AlertDialog open={isOpen} onOpenChange={onClose}>
-            <AlertDialogContent >
-                <AlertDialogHeader >
-                    <AlertDialogTitle></AlertDialogTitle>
+        <AlertDialog open={isOpen || !!error} onOpenChange={onClose}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle >
+                        {error ? "Error" : "Loading"}
+                    </AlertDialogTitle>
                 </AlertDialogHeader>
-                <AlertDialogDescription className="text-center mb-4">
+                <AlertDialogDescription className="text-destructive">
+                    {error ? (
+                        <span>{error}</span>
+                    ) : (
+                        <span>Loading, please wait...</span>
+                    )}
                 </AlertDialogDescription>
                 <div className="flex justify-center mb-4">
-                    <Loading />
+                    {!error && <Loading />}
                 </div>
                 <AlertDialogFooter>
+                    {error && (
+                        <AlertDialogAction onClick={onClose}>Close</AlertDialogAction>
+                    )}
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
     );
 }
+
+
+
 
 export default LoadingAlert;
