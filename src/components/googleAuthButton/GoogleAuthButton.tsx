@@ -4,10 +4,12 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { registerUserToDB } from "@/db/userDB";
 import User from "@/types/userTypes/userType";
-import { LogIn } from "lucide-react";
+import { LogIn, ShieldCheck, } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
 
 export default function GoogleAuth() {
     const [error, setError] = useState<string | null>(null);
+    const { addToast } = useToast()
 
     const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
@@ -20,6 +22,11 @@ export default function GoogleAuth() {
                 lastName: "",
                 email: user.email,
             }
+            addToast({
+                title: "User logged in",
+                description: `Successfully logged in with the user: ${user.displayName}`,
+                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+            });
             await registerUserToDB(values, user.uid);
         } catch (error: any) {
             console.error("Error during Google sign-in: ", error);

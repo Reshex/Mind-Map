@@ -5,23 +5,31 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Brain, House, Mail, Menu, User, X } from "lucide-react";
+import { Brain, House, Mail, Menu, ShieldX, User, X } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import useAuth from "@/hooks/useAuth";
-
-async function handleLogout() {
-    try {
-        await signOut(auth);
-    } catch (error) {
-        console.error("Error logging out: ", error);
-    }
-}
+import { useToast } from "@/context/ToastContext";
 
 function Navbar() {
+    const { addToast } = useToast()
+
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useAuth();
 
+    async function handleLogout() {
+
+        try {
+            await signOut(auth);
+            addToast({
+                title: "User logged out",
+                description: `Successfully logged out`,
+                icon: <ShieldX color="#3fe3" className="size-5" />,
+            });
+        } catch (error) {
+            console.error("Error logging out: ", error);
+        }
+    }
     function toggleMenu() {
         setIsOpen(!isOpen);
     };

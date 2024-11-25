@@ -10,6 +10,8 @@ import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
+import { useToast } from "@/context/ToastContext";
+import { ShieldCheck } from "lucide-react";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address."),
@@ -19,6 +21,8 @@ const formSchema = z.object({
 export default function LoginForm() {
     const [dbError, setDbError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { addToast } = useToast()
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -30,7 +34,11 @@ export default function LoginForm() {
 
         try {
             await signInWithEmailAndPassword(auth, values.email, values.password);
-
+            addToast({
+                title: "User logged in",
+                description: `Successfully logged in with the user: ${values.email}`,
+                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+            });
             navigate("/");
         } catch (error: any) {
             setDbError(error.message);

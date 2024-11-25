@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import LoadingAlert from "../loading/LoadingAlert";
+import { useToast } from "@/context/ToastContext";
+import { ShieldCheck } from "lucide-react";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -48,6 +50,8 @@ const formSchema = z.object({
 });
 
 export default function ProfileForm() {
+    const { addToast } = useToast()
+
     const [isLoading, setIsLoading] = useState(false)
     const [dbError, setDbError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
@@ -72,6 +76,11 @@ export default function ProfileForm() {
             const user = userCredential.user;
             await registerUserToDB(values, user.uid);
             setSuccess("Successfully registered!");
+            addToast({
+                title: "User logged in",
+                description: `Successfully logged in with the user: ${user.displayName}`,
+                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+            });
         } catch (error: any) {
             setDbError(error.message);
         } finally {
