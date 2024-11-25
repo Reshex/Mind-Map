@@ -12,7 +12,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../../ui/input";
-import { Plus } from "lucide-react";
+import { Plus, Terminal } from "lucide-react";
 
 //Hooks
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,9 @@ import { useCreatorId } from "@/hooks/useCreatorId";
 
 //Types
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
+
+//Contexts
+import { useToast } from "@/context/ToastContext";
 
 //Controllers and Utils
 import { Edge, Node } from "reactflow";
@@ -33,6 +36,8 @@ interface LoadMapPageProps {
 
 function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
     const navigate = useNavigate();
+    const { addToast } = useToast();
+
     const [mapName, setMapName] = useState("");
     const [initialNodeName, setInitialNodeName] = useState("");
 
@@ -55,6 +60,12 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
             const initialNodes: Node<CustomNodeDataType>[] = [initialNode];
 
             await onSaveMap(mapId, mapName, creatorId, initialNodes, initialEdges);
+
+            addToast({
+                title: "Map Created",
+                description: `You have created the map: ${mapName}`,
+                icon: <Terminal className="h-4 w-4" />,
+            });
 
             navigate(`/mindMap/${mapId}`);
         } catch (error) {

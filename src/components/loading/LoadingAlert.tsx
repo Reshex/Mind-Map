@@ -20,20 +20,17 @@ function LoadingAlert({ isOpen, error, onClose }: LoadingAlertProps) {
         <AlertDialog open={isOpen || !!error} onOpenChange={onClose}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle >
-                        {error ? "Error" : "Loading"}
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>{error ? "Error" : null}</AlertDialogTitle>
                 </AlertDialogHeader>
-                <AlertDialogDescription className="text-destructive">
-                    {error ? (
-                        <span>{error}</span>
-                    ) : (
-                        <span>Loading, please wait...</span>
-                    )}
-                </AlertDialogDescription>
-                <div className="flex justify-center mb-4">
-                    {!error && <Loading />}
-                </div>
+                {error ? (
+                    <AlertDialogDescription className="text-center mb-4 text-destructive">
+                        {error}
+                    </AlertDialogDescription>
+                ) : (
+                    <div className="flex justify-center mb-4">
+                        <Loading />
+                    </div>
+                )}
                 <AlertDialogFooter>
                     {error && (
                         <AlertDialogAction onClick={onClose}>Close</AlertDialogAction>
@@ -43,7 +40,6 @@ function LoadingAlert({ isOpen, error, onClose }: LoadingAlertProps) {
         </AlertDialog>
     );
 }
-
 
 
 

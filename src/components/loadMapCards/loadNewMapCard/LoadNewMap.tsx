@@ -15,6 +15,7 @@ import { Map } from "@/types/mapTypes/mapType";
 import CollapsibleMenu from "@/components/dropdown/CollapsibleMenu";
 import EditItemDialog from "@/components/editItemDialog/EditItemDialog";
 import { editMapName, removeMap } from "./loadNewMapCont";
+import { useToast } from "@/context/ToastContext";
 
 interface LoadMapPageProps {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ interface LoadMapPageProps {
 function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
     const creatorId = useCreatorId();
     const navigate = useNavigate();
+    const { addToast } = useToast()
     const [mapsList, setMapsList] = useState<Map[]>([]);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
 
@@ -58,7 +60,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                         <CollapsibleMenu
                             label="Map"
                             editAction={(newLabel) => editMapName(creatorId!, map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
-                            deleteAction={() => removeMap(creatorId!, map.mapId, setRefreshTrigger, refreshTrigger, setIsLoading)}
+                            deleteAction={() => removeMap(creatorId!, map.mapId, map.mapName, addToast, setRefreshTrigger, refreshTrigger, setIsLoading)}
                             EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog
                                     label="Map"

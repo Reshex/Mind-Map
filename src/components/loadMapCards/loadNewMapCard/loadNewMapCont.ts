@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction } from "react";
 export async function removeMap(
   creatorId: string,
   mapId: string,
+  mapName: string,
+  addToast: (toast: any) => void,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,
   refreshTrigger: boolean,
   setIsLoading: Dispatch<SetStateAction<boolean>>
@@ -13,6 +15,11 @@ export async function removeMap(
   setIsLoading(true);
   await removeMapFromDB(creatorId, mapId);
   setRefreshTrigger(!refreshTrigger);
+  addToast({
+    title: "Map Deleted",
+    description: `You have deleted the map: ${mapName}`,
+    icon: null,
+  });
 }
 
 export async function editMapName(
