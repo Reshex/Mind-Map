@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { registerUserToDB } from "@/db/userDB";
 import User from "@/types/userTypes/userType";
-import { LogIn, ShieldCheck, } from "lucide-react";
+import { LogIn, ShieldCheck, ShieldX, } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 
 export default function GoogleAuth() {
@@ -31,6 +31,11 @@ export default function GoogleAuth() {
         } catch (error: any) {
             console.error("Error during Google sign-in: ", error);
             setError(error.message);
+            addToast({
+                title: "User log in failed",
+                description: `Failed to login ${error.message}`,
+                icon: <ShieldX color="#a70000" className="size-5" />,
+            });
         }
     };
 

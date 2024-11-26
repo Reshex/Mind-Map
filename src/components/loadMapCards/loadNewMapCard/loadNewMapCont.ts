@@ -17,7 +17,7 @@ export async function removeMap(
   setRefreshTrigger(!refreshTrigger);
   addToast({
     title: "Map Deleted",
-    description: `You have deleted the map: ${mapName}`,
+    description: `Map successfully deleted: ${mapName}`,
     icon: null,
   });
 }
@@ -25,10 +25,16 @@ export async function removeMap(
 export async function editMapName(
   creatorId: string,
   mapId: string,
+  addToast: (toast: any) => void,
   mapName: Partial<Map>,
   setRefreshTrigger: Dispatch<SetStateAction<boolean>>,
   refreshTrigger: boolean
 ) {
   await onUpdateMap(creatorId, mapId, mapName);
   setRefreshTrigger(!refreshTrigger);
+  addToast({
+    title: "Map Updated",
+    description: `Map successfully updated: ${mapName}`,
+    icon: null,
+  });
 }

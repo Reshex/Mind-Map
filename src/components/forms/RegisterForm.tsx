@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 import LoadingAlert from "../loading/LoadingAlert";
 import { useToast } from "@/context/ToastContext";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ShieldX } from "lucide-react";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -83,6 +83,11 @@ export default function ProfileForm() {
             });
         } catch (error: any) {
             setDbError(error.message);
+            addToast({
+                title: "User log in failed",
+                description: `Failed to login ${error.message}`,
+                icon: <ShieldX color="#a70000" className="size-5" />,
+            });
         } finally {
             setIsLoading(false);
         }

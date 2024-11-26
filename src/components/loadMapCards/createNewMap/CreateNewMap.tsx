@@ -63,13 +63,18 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
 
             addToast({
                 title: "Map Created",
-                description: `You have created the map: ${mapName}`,
-                icon: <Terminal className="h-4 w-4" />,
+                description: `Map successfully created: ${mapName}`,
+                icon: <Terminal color="#3fe3" className="h-4 w-4" />,
             });
 
             navigate(`/mindMap/${mapId}`);
         } catch (error) {
             console.error("Failed to create new map:", error);
+            addToast({
+                title: "Map Error",
+                description: `Failed to create new map:, ${error}`,
+                icon: <Terminal color="#a70000" className="h-4 w-4" />,
+            });
             setError("An error occurred while creating the map. Please try again.");
         } finally {
             setIsLoading(false);

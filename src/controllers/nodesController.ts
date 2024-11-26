@@ -150,22 +150,48 @@ export async function onEditNode({ creatorId, mapId, label, setNodes, nodes, sel
   try {
     if (!selectedNodeId) return;
 
-    // Update the node label in the database
     await editNodeToDB(selectedNodeId, label);
 
-    // Calculate the updated nodes
     const updatedNodes = nodes.map((node) =>
       node.id === selectedNodeId ? { ...node, data: { ...node.data, label } } : node
     );
 
-    // Update the state
     setNodes(updatedNodes);
 
-    // Update the map in the database with the updated nodes
     await onUpdateMap(creatorId, mapId, {
       nodes: updatedNodes,
     });
   } catch (error) {
     console.error("Failed to edit node", error);
   }
+}
+
+function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<CustomNodeDataType>[] {
+  const spacingX = 150;
+  const spacingY = 150;
+
+  // Recursive function to sort and position nodes
+  const positionNodes = (
+    parentId: string | null,
+    x: number,
+    y: number,
+    level: number = 0
+  ): Node<CustomNodeDataType>[] => {
+    const children = nodes.filter((node) => node.data.parentId === parentId);
+    let offsetX = x - ((children.length - 1) * spacingX) / 2;
+
+    return children.flatMap((child, index) => {
+      const childPosition = {
+        ...child,
+        position: { x: offsetX + index * spacingX, y: y + level * spacingY },
+      };
+
+      // Recursively position child nodes
+      return [childPosition, ...positionNodes(child.id, offsetX + index * spacingX, y + spacingY, level + 1)];
+    });
+  };
+
+  // Start sorting from the root nodes (parentId = null)
+  const rootNodes = nodes.filter((node) => !node.data.parentId);
+  return rootNodes.flatMap((rootNode, index) => positionNodes(rootNode.id, rootNode.position.x, rootNode.position.y));
 }

@@ -16,6 +16,7 @@ import CollapsibleMenu from "@/components/dropdown/CollapsibleMenu";
 import EditItemDialog from "@/components/editItemDialog/EditItemDialog";
 import { editMapName, removeMap } from "./loadNewMapCont";
 import { useToast } from "@/context/ToastContext";
+import { Terminal } from "lucide-react";
 
 interface LoadMapPageProps {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -42,6 +43,11 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
 
     function navigateToMap(mapId: string) {
         navigate(`/mindMap/${mapId}`);
+        addToast({
+            title: "Map Loaded",
+            description: `Map loaded successfully and free to use`,
+            icon: <Terminal color="#3fe3" className="h-4 w-4" />,
+        });
     }
 
     return (
@@ -59,7 +65,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                     >
                         <CollapsibleMenu
                             label="Map"
-                            editAction={(newLabel) => editMapName(creatorId!, map.mapId, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
+                            editAction={(newLabel) => editMapName(creatorId!, map.mapId, addToast, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
                             deleteAction={() => removeMap(creatorId!, map.mapId, map.mapName, addToast, setRefreshTrigger, refreshTrigger, setIsLoading)}
                             EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog

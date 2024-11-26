@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 import { useToast } from "@/context/ToastContext";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ShieldX } from "lucide-react";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address."),
@@ -42,6 +42,11 @@ export default function LoginForm() {
             navigate("/");
         } catch (error: any) {
             setDbError(error.message);
+            addToast({
+                title: "User log in failed",
+                description: `Failed to login ${error.message}`,
+                icon: <ShieldX color="#a70000" className="size-5" />,
+            });
         }
     };
 
