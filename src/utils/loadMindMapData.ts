@@ -1,4 +1,4 @@
-import { onGetNodes } from "@/controllers/nodesController";
+import { onGetNodes, sortNodesByHierarchy } from "@/controllers/nodesController";
 import { Edge, Node } from "reactflow";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import createInitialNode from "./createInitialNode";
@@ -17,7 +17,8 @@ export default async function loadData(
     });
 
     if (fetchedNodes && fetchedNodes.length > 0) {
-      setNodes(fetchedNodes as Node<CustomNodeDataType>[]);
+      const sortedNodes = sortNodesByHierarchy(fetchedNodes as Node<CustomNodeDataType>[]);
+      setNodes(sortedNodes);
     } else {
       console.warn(`No nodes found for mapId: ${mapId}. Creating an initial node.`);
       const initialNode = await createInitialNode("Initial Node", mapId);
