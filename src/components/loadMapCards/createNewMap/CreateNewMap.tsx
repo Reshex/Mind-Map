@@ -85,14 +85,15 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger>
-                <div className="flex flex-wrap justify-center gap-8 min-w-4-xl max-w-4xl cursor-pointer">
-                    <div className="w-screen rounded-2xl p-6 bg-secondary border-2 border-dashed border-foreground shadow-md text-center transition-all transform hover:scale-105 hover:border-primary">
-                        <div className="flex justify-center items-center">
+                <div className="w-full max-w-md cursor-pointer">
+                    <div className="w-full rounded-2xl p-6 bg-secondary border-2 border-dashed border-foreground shadow-2xl text-center transition-all transform hover:scale-105 hover:border-primary">
+                        <div className="flex justify-center text-foreground">
                             <Plus />
                         </div>
                     </div>
                 </div>
             </AlertDialogTrigger>
+
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Create New Map</AlertDialogTitle>
@@ -109,6 +110,7 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
                         />
                     </AlertDialogDescription>
                 </AlertDialogHeader>
+
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={navigateToNewMap}>Create Map</AlertDialogAction>

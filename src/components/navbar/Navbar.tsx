@@ -5,7 +5,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Brain, House, Mail, Menu, ShieldX, User, X } from "lucide-react";
+import { Brain, House, Mail, Menu, ShieldCheck, User, X } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import useAuth from "@/hooks/useAuth";
@@ -24,7 +24,7 @@ function Navbar() {
             addToast({
                 title: "User logged out",
                 description: `Successfully logged out`,
-                icon: <ShieldX color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck color="#3fe3" className="size-5" />,
             });
         } catch (error) {
             console.error("Error logging out: ", error);
@@ -35,93 +35,73 @@ function Navbar() {
     };
 
     return (
-        <nav className="shadow-primary w-full fixed top-0 z-50 bg-background text-foreground">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
+        <nav className="shadow-primary w-full fixed top-0 z-50 bg-background text-foreground ">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+                <div className="flex justify-between h-16 items-center">
                     {/* Left side */}
-                    <div className="flex-shrink-0 flex items-center">
-                        <a href="/" className="text-xl font-bold text-primary-foreground">
+                    <div className="flex-shrink-0 flex items-center space-x-2">
+                        <a href="/" className="text-2xl font-extrabold text-primary-foreground hover:text-primary transition-all">
                             MindMap
                         </a>
                     </div>
 
                     {/* Middle section (for larger screens) */}
-                    <div className="hidden md:flex space-x-8 items-center">
-                        <a href="/" className="text-muted-foreground hover:text-primary transition-colors">
-                            <House />
+                    <div className="hidden md:flex space-x-6 items-center">
+                        <a href="/" className="text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                            <House className="w-6 h-6" />
                         </a>
-                        {user ? <a href="/loadMap" className="text-muted-foreground hover:text-primary transition-colors">
-                            <Brain />
-                        </a> : null}
+                        {user && (
+                            <a href="/loadMap" className="text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                                <Brain className="w-6 h-6" />
+                            </a>
+                        )}
 
-                        <a href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                            <Mail />
+                        <a href="/contact" className="text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                            <Mail className="w-6 h-6" />
                         </a>
-                        <a>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    {user ?
-                                        <button className="text-muted-foreground hover:text-primary focus:outline-none">
-                                            <User />
-                                        </button> :
-                                        null}
 
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="bg-background text-foreground">
-                                    <DropdownMenuItem>My Account</DropdownMenuItem>
-                                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleLogout()} >Logout</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </a>
+                        {/* User Dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="text-muted-foreground hover:text-primary focus:outline-none p-2 rounded-lg">
+                                    <User className="w-6 h-6" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-background text-foreground shadow-lg rounded-lg">
+                                <DropdownMenuItem>My Account</DropdownMenuItem>
+                                <DropdownMenuItem>Settings</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="flex items-center justify-between md:hidden w-16">
-                        <button onClick={toggleMenu} className="text-muted-foreground hover:text-primary focus:outline-none">
+                    <div className="flex items-center md:hidden">
+                        <button onClick={toggleMenu} className="text-muted-foreground hover:text-primary focus:outline-none p-2 rounded-lg">
                             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
-
-                        {user && (
-                            <a className="ml-auto">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="text-muted-foreground hover:text-primary focus:outline-none">
-                                            <User />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="bg-background text-foreground">
-                                        <DropdownMenuItem>My Account</DropdownMenuItem>
-                                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </a>
-                        )}
                     </div>
-
                 </div>
 
                 {/* Mobile menu */}
-
                 {isOpen && (
-                    <div className="md:hidden mt-4 space-y-2">
-
-                        <a href="/" className="block text-foreground hover:text-primary transition-colors">
+                    <div className="md:hidden mt-4 space-y-4 bg-background text-foreground shadow-lg rounded-lg p-4">
+                        <a href="/" className="block text-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                             Home
                         </a>
-                        {user ?
-                            <a href="/mindMap" className="block text-muted-foreground hover:text-primary transition-colors">
+                        {user && (
+                            <a href="/mindMap" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                                 Mind Map
-                            </a> : null}
-
-                        <a href="/contact" className="block text-muted-foreground hover:text-primary transition-colors">
+                            </a>
+                        )}
+                        <a href="/contact" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                             Contact
                         </a>
                     </div>
                 )}
             </div>
         </nav>
+
 
     );
 };

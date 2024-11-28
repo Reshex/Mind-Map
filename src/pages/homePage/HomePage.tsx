@@ -9,20 +9,29 @@ function HomePage() {
     }
 
     return (
-        <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-secondary to-muted-secondary text-foreground">
-            <div className="text-center">
-                <h1 className="text-6xl font-bold mb-12 animate-pulse">Mind Map</h1>
-                <div className="space-x-4">
-                    <Button onClick={navigateToLoadMap} className="px-10 py-8 bg-secondary hover:bg-destructive text-foreground rounded-lg shadow-lg transition-all transform hover:scale-110 hover:text-base focus:ring-2 focus:ring-foreground">
+        <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-secondary to-muted-secondary text-foreground p-6">
+            <div className="text-center animate-slide-in space-y-8">
+                <h1 className="text-6xl font-extrabold mb-6 text-primary animate-pulse">
+                    Mind Map
+                </h1>
+                <p className="text-xl text-muted-foreground mb-8 max-w-xl mx-auto">
+                    Create and explore your mind maps. Choose how you want to start your journey!
+                </p>
+
+                <div className="space-x-6">
+                    <Button
+                        onClick={navigateToLoadMap}
+                        className="px-10 py-6 bg-secondary hover:bg-destructive text-foreground rounded-lg shadow-xl transition-all transform hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-primary">
                         Regular Mode
                     </Button>
-                    <Button className="px-6 py-8 bg-primary hover:bg-destructive text-foreground rounded-lg shadow-lg transition-all transform hover:scale-110 hover:text-base focus:ring-2 focus:ring-foreground">
+                    <Button
+                        onClick={() => alert("Battle Royale Mode coming soon!")}
+                        className="px-10 py-6 bg-primary hover:bg-secondary text-foreground rounded-lg shadow-xl transition-all transform hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-secondary">
                         Battle Royale Mode
                     </Button>
                 </div>
             </div>
         </div>
-
     )
 }
 

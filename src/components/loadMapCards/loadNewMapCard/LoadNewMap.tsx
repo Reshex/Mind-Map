@@ -56,17 +56,38 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                 <div
                     onClick={() => navigateToMap(map.mapId)}
                     key={map.mapId}
-                    className="w-screen rounded-2xl p-6 bg-primary shadow-md text-center transition-all transform hover:scale-105 hover:ring ring-foreground group">
+                    className="w-full max-w-md rounded-2xl p-6 bg-primary shadow-2xl text-center transition-all transform hover:scale-105 hover:ring ring-foreground group cursor-pointer"
+                >
                     <h1 className="text-4xl font-normal group-hover:font-extralight transition-all">
-                        {(map.mapName).toLocaleUpperCase()}
+                        {map.mapName.toLocaleUpperCase()}
                     </h1>
-                    <div className="absolute top-2 right-10"
+                    <div
+                        className="absolute top-2 right-10"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CollapsibleMenu
                             label="Map"
-                            editAction={(newLabel) => editMapName(creatorId!, map.mapId, addToast, { mapName: newLabel }, setRefreshTrigger, refreshTrigger)}
-                            deleteAction={() => removeMap(creatorId!, map.mapId, map.mapName, addToast, setRefreshTrigger, refreshTrigger, setIsLoading)}
+                            editAction={(newLabel) =>
+                                editMapName(
+                                    creatorId!,
+                                    map.mapId,
+                                    addToast,
+                                    { mapName: newLabel },
+                                    setRefreshTrigger,
+                                    refreshTrigger
+                                )
+                            }
+                            deleteAction={() =>
+                                removeMap(
+                                    creatorId!,
+                                    map.mapId,
+                                    map.mapName,
+                                    addToast,
+                                    setRefreshTrigger,
+                                    refreshTrigger,
+                                    setIsLoading
+                                )
+                            }
                             EditComponent={({ setIsEditDialogOpen, editAction }) => (
                                 <EditItemDialog
                                     label="Map"
@@ -80,6 +101,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
             ))}
         </>
     );
+
 }
 
 export default LoadMapCards;

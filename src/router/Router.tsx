@@ -7,6 +7,8 @@ import ProtectedRoute from '@/components/routes/ProtectedRoute';
 import ContactPage from '@/pages/contactPage/ContactPage';
 import MindMapPage from '@/pages/mindMap/MindMapPage';
 import LoadMap from '@/pages/loadMapPage/LoadMapPage';
+import NotFoundPage from '@/pages/notFoundPage/NotFoundPage';
+import UnauthorizedPage from '@/pages/unauthorizePage/UnauthorizedPage';
 
 const router = createBrowserRouter([
     {
@@ -46,6 +48,17 @@ const router = createBrowserRouter([
                 children: [
                     { path: "/loadMap", element: <LoadMap /> },
                 ]
+            },
+            {
+                path: "/unauthorizedPage",
+                element: <UnauthorizedPage />,
+                children: [
+                    { path: "/unauthorizedPage", element: <UnauthorizedPage /> }
+                ]
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
             }
         ]
     }
