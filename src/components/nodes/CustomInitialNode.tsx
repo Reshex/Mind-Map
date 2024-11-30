@@ -31,6 +31,7 @@ function InitialNode({ data, id }: InitialNodeProps) {
                             setIsEditDialogOpen={setIsEditDialogOpen}
                         />
                     )}
+                    showDeleteOption={false}
                 />
             </div>
 

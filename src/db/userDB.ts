@@ -76,8 +76,6 @@ export async function updateMapToUserDB(userUid: string, mapId: string, newMapVa
 
     const updatedMaps = maps.map((map: Map) => (map.mapId === mapId ? { ...map, ...newMapValues } : map));
     await updateDoc(userRef, { maps: updatedMaps });
-
-    console.log("Map updated successfully in user document.");
   } catch (error) {
     console.error("Failed to update map in user document:", error);
   }

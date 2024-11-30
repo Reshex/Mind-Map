@@ -88,8 +88,6 @@ export async function removeMapFromDB(creatorId: string, mapId: string) {
     });
 
     await batch.commit();
-
-    console.log(`Successfully removed map ${mapId} and all associated data.`);
   } catch (error) {
     console.error("Failed to delete map and associated data", error);
   }
