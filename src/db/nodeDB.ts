@@ -21,11 +21,13 @@ export async function addNodeToDB(
     selectedNodeId,
     xPosition,
     yPosition,
+    type,
   }: {
     label: string;
     selectedNodeId: string | null;
     xPosition: number;
     yPosition: number;
+    type: string;
   }
 ) {
   try {
@@ -35,7 +37,7 @@ export async function addNodeToDB(
     await setDoc(nodeDocRef, {
       id: nodeId,
       mapId,
-      type: "custom",
+      type,
       position: { x: xPosition, y: yPosition },
       data: {
         label,

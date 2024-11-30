@@ -15,9 +15,10 @@ function CustomNode({ data, id }: CustomNodeProps) {
     return (
         <div
             onClick={() => setSelectedNodeId(id)}
-            className={`relative bg-primary p-1 pl-3 pr-3 shadow-md border border-secondary rounded hover:ring-1 ring-foreground font-open-sans ${customStyle}`}
+            className={`relative px-2 py-1 rounded-xl transition-all hover:scale-105 hover:shadow-md hover:ring-2 ring-foreground bg-gradient-custom ${customStyle}`}
         >
-            <Handle type="target" position={Position.Top} className="bg-primary" />
+            <Handle type="target" position={Position.Top} />
+
             <div className="flex justify-between items-start">
                 <div></div>
                 <CollapsibleMenu
@@ -33,11 +34,14 @@ function CustomNode({ data, id }: CustomNodeProps) {
                     )}
                 />
             </div>
+
             <div className="text-md font-semibold text-foreground">{label}</div>
+
             <div className="flex justify-center mt-2">
                 <AddNode addNode={addNode} />
             </div>
-            <Handle type="source" position={Position.Bottom} className="bg-secondary" />
+
+            <Handle type="source" position={Position.Bottom} />
         </div>
     );
 }

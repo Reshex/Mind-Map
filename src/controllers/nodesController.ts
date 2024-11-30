@@ -78,6 +78,7 @@ export async function onAddNode({
       selectedNodeId,
       xPosition,
       yPosition,
+      type: "custom",
     });
     if (!newNodeId) return;
 

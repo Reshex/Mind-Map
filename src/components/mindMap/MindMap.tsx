@@ -8,6 +8,8 @@ import { onConnectNodes, onGetConnection as onGetConnections } from '@/controlle
 
 //Custom Components
 import CustomNode from '../nodes/CustomNode';
+import InitialNode from '../nodes/CustomInitialNode';
+
 
 //Utils
 import withValidMapId from '@/utils/mapValidation';
@@ -22,6 +24,7 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 
 
 const nodeTypes = {
+    initial: InitialNode,
     custom: CustomNode,
 };
 

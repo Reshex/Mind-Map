@@ -62,19 +62,14 @@
   }
 }
 
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+@layer components {
+  .bg-gradient-initial {
+    background: linear-gradient(135deg, #f6863b, #f32011);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-slide-in {
-  animation: slide-in 2s ease-out;
+  .bg-gradient-custom {
+    background: linear-gradient(135deg, #f6d43b, #f33303);
+  }
 }
 
 @layer base {
@@ -85,4 +80,20 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 2s ease-out;
 }

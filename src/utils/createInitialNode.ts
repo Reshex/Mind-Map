@@ -4,13 +4,14 @@ import { Node } from "reactflow";
 async function createInitialNode(nodeName: string, mapId: string): Promise<Node> {
   const initialNode: Node = {
     id: "temp_initial",
-    type: "custom",
+    type: "initial",
     data: {
       mapId,
       parentName: null,
       label: nodeName,
       setSelectedNodeId: () => {},
       addNode: () => {},
+      editNode: () => {},
     },
     position: { x: 0, y: 0 },
   };
@@ -21,6 +22,7 @@ async function createInitialNode(nodeName: string, mapId: string): Promise<Node>
       selectedNodeId: null,
       xPosition: 0,
       yPosition: 0,
+      type: "initial",
     });
 
     if (nodeId) {
