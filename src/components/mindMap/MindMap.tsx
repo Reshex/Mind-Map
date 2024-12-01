@@ -10,17 +10,16 @@ import { onConnectNodes, onGetConnection as onGetConnections } from '@/controlle
 import CustomNode from '../nodes/CustomNode';
 import InitialNode from '../nodes/CustomInitialNode';
 
-
 //Utils
 import withValidMapId from '@/utils/mapValidation';
 
 //Hooks
 import { useParams } from 'react-router-dom';
+import { useCreatorId } from '@/hooks/useCreatorId';
 
 //Styles
 import 'reactflow/dist/style.css';
 import loadData from '@/utils/loadMindMapData';
-import { useCreatorId } from '@/hooks/useCreatorId';
 
 
 const nodeTypes = {

@@ -10,9 +10,11 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import useAuth from "@/hooks/useAuth";
 import { useToast } from "@/context/ToastContext";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
     const { addToast } = useToast()
+    const navigate = useNavigate()
 
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useAuth();
@@ -69,7 +71,7 @@ function Navbar() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="bg-background text-foreground shadow-lg rounded-lg">
                                 <DropdownMenuItem>My Account</DropdownMenuItem>
-                                <DropdownMenuItem>Settings</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => navigate("/userSettings")}>Settings</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

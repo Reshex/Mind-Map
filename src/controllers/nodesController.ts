@@ -179,11 +179,10 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
   const spacingX = 150;
   const spacingY = 150;
 
-  // Calculate subtree width recursively for dynamic spacing
   function calculateSubtreeWidth(nodeId: string | null): number {
     const children = nodes.filter((node) => node.data.parentId === nodeId);
 
-    if (children.length === 0) return spacingX; // Minimum space for a single node
+    if (children.length === 0) return spacingX;
 
     return children.reduce((totalWidth, child) => {
       return totalWidth + calculateSubtreeWidth(child.id);

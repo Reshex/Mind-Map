@@ -9,6 +9,7 @@ import MindMapPage from '@/pages/mindMap/MindMapPage';
 import LoadMap from '@/pages/loadMapPage/LoadMapPage';
 import NotFoundPage from '@/pages/notFoundPage/NotFoundPage';
 import UnauthorizedPage from '@/pages/unauthorizePage/UnauthorizedPage';
+import UserSettingsPage from '@/pages/userSettingsPage/UserSettingsPage';
 
 const router = createBrowserRouter([
     {
@@ -51,9 +52,16 @@ const router = createBrowserRouter([
             },
             {
                 path: "/unauthorizedPage",
-                element: <UnauthorizedPage />,
+                element: <PublicRoute />,
                 children: [
                     { path: "/unauthorizedPage", element: <UnauthorizedPage /> }
+                ]
+            },
+            {
+                path: "/userSettings",
+                element: <ProtectedRoute />,
+                children: [
+                    { path: "/userSettings", element: <UserSettingsPage /> }
                 ]
             },
             {

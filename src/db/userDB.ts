@@ -15,6 +15,23 @@ export async function getUsersFromDB() {
   }
 }
 
+export async function getUserFromDB(userUid: string) {
+  try {
+    const userRef = doc(db, "users", userUid);
+
+    const userSnapshot = await getDoc(userRef);
+
+    if (!userSnapshot.exists()) {
+      console.error("User not found");
+      return;
+    }
+
+    return userSnapshot.data();
+  } catch (error) {
+    console.error("Failed to fetch user data");
+  }
+}
+
 export async function registerUserToDB(values: User, userUid: string) {
   try {
     const usersCollectionRef = collection(db, "users");
@@ -37,6 +54,23 @@ export async function registerUserToDB(values: User, userUid: string) {
     return { uid: userUid };
   } catch (error) {
     console.error("Failed to register user to database");
+  }
+}
+
+export async function updateUserToDB(userUid: string, values: Partial<User>) {
+  try {
+    const userRef = doc(db, "users", userUid);
+
+    const userSnapshot = await getDoc(userRef);
+    if (!userSnapshot.exists()) {
+      console.error("User not found");
+      return;
+    }
+
+    const updateData = { ...values };
+    await updateDoc(userRef, updateData);
+  } catch (error) {
+    console.error("Failed to update user", error);
   }
 }
 
@@ -101,16 +135,5 @@ export async function updateMapToUserDB(userUid: string, mapId: string, newMapVa
 //     console.log(`Map with ID ${mapId} removed successfully from user document.`);
 //   } catch (error) {
 //     console.error("Failed to remove map from user database");
-//   }
-// }
-
-// export async function updateUserToDB(userUid: string, values: Partial<User>) {
-//   try {
-//   const userRef = doc(db, "users", userUid);
-
-//     const updateData = { ...values };
-
-//   } catch (error) {
-//     console.error("Failed to update user", error);
 //   }
 // }
