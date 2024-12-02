@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+
+//DB
 import { Input } from "@/components/ui/input";
 import { updateUserToDB } from "@/db/userDB";
-import { useCreatorId } from "@/hooks/useCreatorId";
+
+//Utils
 import { fetchUserData } from "@/utils/fetchUserData";
+
+//Hooks
+import { useCreatorId } from "@/hooks/useCreatorId";
+
+//Custom Components
 import LoadingAlert from "@/components/loading/LoadingAlert";
+import { Button } from "@/components/ui/button";
 
 function UserSettingsPage() {
     const userId = useCreatorId();
@@ -26,14 +34,9 @@ function UserSettingsPage() {
         fetchUserData(userId, setError, setName, setLastName, setEmail, setIsLoading);
     }, [userId]);
 
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
     async function handleSave() {
         if (!userId) return console.error("User ID not found")
-            
+
         await updateUserToDB(userId, { name, lastName, email })
     }
 
@@ -46,7 +49,7 @@ function UserSettingsPage() {
             <LoadingAlert
                 isOpen={isLoading || !!error}
                 error={error}
-                onClose={() => setError(null)} // Close the error dialog
+                onClose={() => setError(null)}
             />
             <div className="min-h-screen bg-gradient-to-r from-secondary to-muted-secondary text-foreground">
                 <div className="max-w-5xl mx-auto p-8">
@@ -67,6 +70,9 @@ function UserSettingsPage() {
                                 </li>
                                 <li className="hover:text-primary transition-colors cursor-pointer">
                                     Appearance
+                                </li>
+                                <li className="text-destructive hover:font-semibold transition-all cursor-pointer">
+                                    Delete Account
                                 </li>
                             </ul>
                         </div>

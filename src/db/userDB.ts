@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { collection, query, where, getDocs, setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import User from "@/types/userTypes/userType";
 import { Map } from "@/types/mapTypes/mapType";
 
@@ -15,10 +15,9 @@ export async function getUsersFromDB() {
   }
 }
 
-export async function getUserFromDB(userUid: string) {
+export async function getUserFromDB(userId: string) {
   try {
-    const userRef = doc(db, "users", userUid);
-
+    const userRef = doc(db, "users", userId);
     const userSnapshot = await getDoc(userRef);
 
     if (!userSnapshot.exists()) {
@@ -32,7 +31,7 @@ export async function getUserFromDB(userUid: string) {
   }
 }
 
-export async function registerUserToDB(values: User, userUid: string) {
+export async function registerUserToDB(values: User, userId: string) {
   try {
     const usersCollectionRef = collection(db, "users");
     const emailQuery = query(usersCollectionRef, where("email", "==", values.email));
@@ -42,8 +41,8 @@ export async function registerUserToDB(values: User, userUid: string) {
       return { error: "Email already exists" };
     }
 
-    await setDoc(doc(usersCollectionRef, userUid), {
-      uid: userUid,
+    await setDoc(doc(usersCollectionRef, userId), {
+      uid: userId,
       name: values.name,
       lastName: values.lastName,
       email: values.email,
@@ -51,15 +50,15 @@ export async function registerUserToDB(values: User, userUid: string) {
       createdAt: new Date(),
     });
 
-    return { uid: userUid };
+    return { uid: userId };
   } catch (error) {
     console.error("Failed to register user to database");
   }
 }
 
-export async function updateUserToDB(userUid: string, values: Partial<User>) {
+export async function updateUserToDB(userId: string, values: Partial<User>) {
   try {
-    const userRef = doc(db, "users", userUid);
+    const userRef = doc(db, "users", userId);
 
     const userSnapshot = await getDoc(userRef);
     if (!userSnapshot.exists()) {
@@ -74,9 +73,20 @@ export async function updateUserToDB(userUid: string, values: Partial<User>) {
   }
 }
 
-export async function saveMapToUserDB(userUid: string, newMapValues: Map) {
+export async function removeUserFromDB(userId: string) {
   try {
-    const userRef = doc(db, "users", userUid);
+    const userRef = doc(db, "users", userId);
+    await deleteDoc(userRef);
+
+    console.log(`User ${userId} successfully removed from both Firestore and Authentication`);
+  } catch (error) {
+    console.error("Failed to remove user");
+  }
+}
+
+export async function saveMapToUserDB(userId: string, newMapValues: Map) {
+  try {
+    const userRef = doc(db, "users", userId);
 
     const userSnapshot = await getDoc(userRef);
     if (!userSnapshot.exists()) {
@@ -95,9 +105,9 @@ export async function saveMapToUserDB(userUid: string, newMapValues: Map) {
   }
 }
 
-export async function updateMapToUserDB(userUid: string, mapId: string, newMapValues: Partial<Map>) {
+export async function updateMapToUserDB(userId: string, mapId: string, newMapValues: Partial<Map>) {
   try {
-    const userRef = doc(db, "users", userUid);
+    const userRef = doc(db, "users", userId);
 
     const userSnapshot = await getDoc(userRef);
     if (!userSnapshot.exists()) {
@@ -115,9 +125,9 @@ export async function updateMapToUserDB(userUid: string, mapId: string, newMapVa
   }
 }
 
-// export async function removeMapFromUserDB(userUid: string, mapId: string) {
+// export async function removeMapFromUserDB(userId: string, mapId: string) {
 //   try {
-//     const userRef = doc(db, "users", userUid);
+//     const userRef = doc(db, "users", userId);
 
 //     const userSnapshot = await getDoc(userRef);
 //     if (!userSnapshot.exists()) {

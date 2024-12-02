@@ -11,6 +11,7 @@ export async function fetchUserData(
 ) {
   try {
     const userData = await getUserFromDB(userId);
+    
     if (!userData) {
       setError("User data not found");
       return;

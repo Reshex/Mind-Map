@@ -45,7 +45,7 @@ const formSchema = z.object({
             message: "Password must contain at least one number.",
         })
         .regex(/[a-zA-Z]/, {
-            message: "Password must contain at least one letter.",
+            message: "Password must contain at least one english letter.",
         }),
 });
 
