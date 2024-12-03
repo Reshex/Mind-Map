@@ -1,7 +1,14 @@
-import { db } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { collection, query, where, getDocs, setDoc, doc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import User from "@/types/userTypes/userType";
 import { Map } from "@/types/mapTypes/mapType";
+import {
+  deleteUser,
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  reauthenticateWithCredential,
+  reauthenticateWithPopup,
+} from "firebase/auth";
 
 export async function getUsersFromDB() {
   try {
@@ -38,11 +45,11 @@ export async function registerUserToDB(values: User, userId: string) {
     const querySnapshot = await getDocs(emailQuery);
 
     if (!querySnapshot.empty) {
-      return { error: "Email already exists" };
+      return console.error("Email already exists");
     }
 
     await setDoc(doc(usersCollectionRef, userId), {
-      uid: userId,
+      userId,
       name: values.name,
       lastName: values.lastName,
       email: values.email,
@@ -50,7 +57,7 @@ export async function registerUserToDB(values: User, userId: string) {
       createdAt: new Date(),
     });
 
-    return { uid: userId };
+    return { userId };
   } catch (error) {
     console.error("Failed to register user to database");
   }
@@ -73,14 +80,37 @@ export async function updateUserToDB(userId: string, values: Partial<User>) {
   }
 }
 
-export async function removeUserFromDB(userId: string) {
+export async function removeUserFromDB(userId: string, email?: string, password?: string) {
   try {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user is signed in.");
+
+    // Determine the provider used for authentication
+    const providerId = user.providerData[0]?.providerId;
+
+    if (providerId === "google.com") {
+      // Reauthenticate with Google
+      const provider = new GoogleAuthProvider();
+      await reauthenticateWithPopup(user, provider);
+    } else if (providerId === "password" && email && password) {
+      // Reauthenticate with email/password
+      const credential = EmailAuthProvider.credential(email, password);
+      await reauthenticateWithCredential(user, credential);
+    } else {
+      throw new Error("Unsupported authentication provider or missing credentials.");
+    }
+
+    // Delete the user
+    await deleteUser(user);
+
+    // Delete user data from Firestore
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
 
     console.log(`User ${userId} successfully removed from both Firestore and Authentication`);
   } catch (error) {
-    console.error("Failed to remove user");
+    console.error("Failed to remove user:", error);
+    throw error; // Re-throw the error for further handling
   }
 }
 

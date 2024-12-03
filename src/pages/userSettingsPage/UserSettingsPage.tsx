@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 //DB
 import { Input } from "@/components/ui/input";
-import { updateUserToDB } from "@/db/userDB";
+import { removeUserFromDB, updateUserToDB } from "@/db/userDB";
 
 //Utils
 import { fetchUserData } from "@/utils/fetchUserData";
@@ -71,7 +71,7 @@ function UserSettingsPage() {
                                 <li className="hover:text-primary transition-colors cursor-pointer">
                                     Appearance
                                 </li>
-                                <li className="text-destructive hover:font-semibold transition-all cursor-pointer">
+                                <li onClick={() => removeUserFromDB(userId!)} className="text-destructive hover:font-semibold transition-all cursor-pointer">
                                     Delete Account
                                 </li>
                             </ul>

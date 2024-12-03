@@ -35,7 +35,7 @@ export async function addNodeToDB(
 
     const nodeDocRef = doc(db, "nodes", nodeId);
     await setDoc(nodeDocRef, {
-      id: nodeId,
+      nodeId,
       mapId,
       type,
       position: { x: xPosition, y: yPosition },

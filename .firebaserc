@@ -1,6 +1,7 @@
 {
   "projects": {
-    "staging": "mind-map-da8fb"
+    "staging": "mind-map-da8fb",
+    "default": "mind-map-da8fb"
   },
   "targets": {},
   "etags": {}
