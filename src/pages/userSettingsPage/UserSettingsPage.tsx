@@ -13,6 +13,7 @@ import { useCreatorId } from "@/hooks/useCreatorId";
 //Custom Components
 import LoadingAlert from "@/components/loading/LoadingAlert";
 import { Button } from "@/components/ui/button";
+import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswordDialog";
 
 function UserSettingsPage() {
     const userId = useCreatorId();
@@ -71,6 +72,7 @@ function UserSettingsPage() {
                                 <li className="hover:text-primary transition-colors cursor-pointer">
                                     Appearance
                                 </li>
+                                <ChangePasswordDialog />
                                 <li onClick={() => removeUserFromDB(userId!)} className="text-destructive hover:font-semibold transition-all cursor-pointer">
                                     Delete Account
                                 </li>
