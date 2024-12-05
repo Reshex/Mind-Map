@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
 import { ShieldCheck, ShieldX } from "lucide-react";
 import LoadingAlert from "@/components/loading/LoadingAlert";
+import isValidPassword from "@/utils/isValidPassword";
 
 export default function ChangePasswordDialog() {
     const [currentUserPassword, setCurrentUserPassword] = useState("");
@@ -42,7 +43,10 @@ export default function ChangePasswordDialog() {
         try {
             await reauthenticateUser(user, currentUserPassword);
 
+            if (!(isValidPassword(newUserPassword))) return setDbError("Password missing one of the credentials: Password length > 8/ At least one Uppercase/ At least one digit")
+
             await changeUserPassword(user, newUserPassword);
+
 
             addToast({
                 title: "Password Changed",

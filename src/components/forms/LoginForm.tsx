@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import GoogleAuthButton from "../googleAuthButton/GoogleAuthButton";
 import { useToast } from "@/context/ToastContext";
 import { ShieldCheck, ShieldX } from "lucide-react";
+import ForgotPasswordDialog from "../forgotPasswordDialog/ForgotPasswordDialog";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address."),
@@ -80,6 +81,7 @@ export default function LoginForm() {
                     )}
                 />
                 {dbError && <div className="text-destructive font-semibold">{dbError}</div>}
+                <ForgotPasswordDialog />
                 <AlertDialogFooter>
                     <GoogleAuthButton />
                     <AlertDialogCancel className="rounded">Cancel</AlertDialogCancel>

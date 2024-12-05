@@ -46,10 +46,13 @@ const formSchema = z.object({
         })
         .regex(/[a-zA-Z]/, {
             message: "Password must contain at least one english letter.",
+        })
+        .regex(/[A-Z]/, {
+            message: "Password must contain at least one capital english letter.",
         }),
 });
 
-export default function ProfileForm() {
+export default function RegisterForm() {
     const { addToast } = useToast()
 
     const [isLoading, setIsLoading] = useState(false)
