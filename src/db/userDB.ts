@@ -107,7 +107,7 @@ export async function removeUserFromDB(userId: string, email?: string, password?
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
 
-    console.log(`User ${userId} successfully removed from both Firestore and Authentication`);
+    return true;
   } catch (error) {
     return console.error("Failed to remove user:", error);
   }

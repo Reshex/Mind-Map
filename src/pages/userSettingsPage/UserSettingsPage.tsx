@@ -59,7 +59,7 @@ function UserSettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Sidebar for categories */}
                         <div className="bg-muted-secondary rounded-lg shadow-lg p-6">
-                            <h2 className="text-lg font-semibold mb-4">Settings Categories</h2>
+                            <h2 className="text-lg font-semibold mb-4">Advanced Settings</h2>
                             <ul className="space-y-2">
                                 <ChangePasswordDialog />
                                 <DeleteAccountDialog userId={userId!} />
