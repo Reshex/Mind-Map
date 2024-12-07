@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 //DB
 import { Input } from "@/components/ui/input";
-import { removeUserFromDB, updateUserToDB } from "@/db/userDB";
+import { updateUserToDB } from "@/db/userDB";
 
 //Utils
 import { fetchUserData } from "@/utils/fetchUserData";
@@ -14,6 +14,7 @@ import { useCreatorId } from "@/hooks/useCreatorId";
 import LoadingAlert from "@/components/loading/LoadingAlert";
 import { Button } from "@/components/ui/button";
 import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswordDialog";
+import DeleteAccountDialog from "@/components/deleteAccountDialog/DeleteAccountDialog";
 
 function UserSettingsPage() {
     const userId = useCreatorId();
@@ -60,22 +61,8 @@ function UserSettingsPage() {
                         <div className="bg-muted-secondary rounded-lg shadow-lg p-6">
                             <h2 className="text-lg font-semibold mb-4">Settings Categories</h2>
                             <ul className="space-y-2">
-                                <li className="hover:text-primary transition-colors cursor-pointer">
-                                    Account
-                                </li>
-                                <li className="hover:text-primary transition-colors cursor-pointer">
-                                    Privacy
-                                </li>
-                                <li className="hover:text-primary transition-colors cursor-pointer">
-                                    Notifications
-                                </li>
-                                <li className="hover:text-primary transition-colors cursor-pointer">
-                                    Appearance
-                                </li>
                                 <ChangePasswordDialog />
-                                <li onClick={() => removeUserFromDB(userId!)} className="text-destructive hover:font-semibold transition-all cursor-pointer">
-                                    Delete Account
-                                </li>
+                                <DeleteAccountDialog userId={userId!} />
                             </ul>
                         </div>
 
@@ -119,6 +106,8 @@ function UserSettingsPage() {
                                     className="w-full"
                                 />
                             </div>
+                            <hr />
+                            <h2 className="text-2xl font-semibold">Appearance</h2>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium">Enable Notifications</span>
                                 {/* <Switch

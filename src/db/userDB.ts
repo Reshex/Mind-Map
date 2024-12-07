@@ -83,7 +83,7 @@ export async function updateUserToDB(userId: string, values: Partial<User>) {
 export async function removeUserFromDB(userId: string, email?: string, password?: string) {
   try {
     const user = auth.currentUser;
-    if (!user) throw new Error("No user is signed in.");
+    if (!user) return console.error("No user is signed in.");
 
     // Determine the provider used for authentication
     const providerId = user.providerData[0]?.providerId;
@@ -97,7 +97,7 @@ export async function removeUserFromDB(userId: string, email?: string, password?
       const credential = EmailAuthProvider.credential(email, password);
       await reauthenticateWithCredential(user, credential);
     } else {
-      throw new Error("Unsupported authentication provider or missing credentials.");
+      return console.error("Unsupported authentication provider or missing credentials.");
     }
 
     // Delete the user
@@ -109,8 +109,7 @@ export async function removeUserFromDB(userId: string, email?: string, password?
 
     console.log(`User ${userId} successfully removed from both Firestore and Authentication`);
   } catch (error) {
-    console.error("Failed to remove user:", error);
-    throw error; // Re-throw the error for further handling
+    return console.error("Failed to remove user:", error);
   }
 }
 
@@ -120,8 +119,7 @@ export async function saveMapToUserDB(userId: string, newMapValues: Map) {
 
     const userSnapshot = await getDoc(userRef);
     if (!userSnapshot.exists()) {
-      console.error("User not found");
-      return;
+      return console.error("User not found");
     }
 
     const userData = userSnapshot.data();
@@ -131,7 +129,7 @@ export async function saveMapToUserDB(userId: string, newMapValues: Map) {
 
     await updateDoc(userRef, { maps: newMaps });
   } catch (error) {
-    console.error("Failed to save map to user database");
+    return console.error("Failed to save map to user database");
   }
 }
 
@@ -151,7 +149,7 @@ export async function updateMapToUserDB(userId: string, mapId: string, newMapVal
     const updatedMaps = maps.map((map: Map) => (map.mapId === mapId ? { ...map, ...newMapValues } : map));
     await updateDoc(userRef, { maps: updatedMaps });
   } catch (error) {
-    console.error("Failed to update map in user document:", error);
+    return console.error("Failed to update map in user document:", error);
   }
 }
 

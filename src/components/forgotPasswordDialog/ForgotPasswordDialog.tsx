@@ -20,7 +20,7 @@ export default function ForgotPasswordDialog() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addToast } = useToast();
 
-    const handleForgotPassword = async () => {
+    async function handleForgotPassword() {
         setIsSubmitting(true);
         try {
             if (!email) {
@@ -35,7 +35,7 @@ export default function ForgotPasswordDialog() {
                 title: "Success",
                 description: "Password reset email sent successfully.",
             });
-            setEmail(""); // Clear the input field on success
+            setEmail("");
         } catch (error: any) {
             console.error("Failed to send password reset email:", error);
             addToast({
