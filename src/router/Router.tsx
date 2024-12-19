@@ -5,7 +5,7 @@ import HomePage from '../pages/homePage/HomePage';
 import PublicRoute from '@/components/routes/PublicRoute';
 import ProtectedRoute from '@/components/routes/ProtectedRoute';
 import ContactPage from '@/pages/contactPage/ContactPage';
-import MindMapPage from '@/pages/mindMap/MindMapPage';
+import MindMapPage from '@/pages/mindMapPage/MindMapPage';
 import LoadMap from '@/pages/loadMapPage/LoadMapPage';
 import NotFoundPage from '@/pages/notFoundPage/NotFoundPage';
 import UnauthorizedPage from '@/pages/unauthorizePage/UnauthorizedPage';

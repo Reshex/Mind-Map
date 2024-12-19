@@ -12,12 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { auth, } from "@/firebase";
+import { auth } from "@/firebase";
 import { useToast } from "@/context/ToastContext";
 import { removeUserFromDB } from "@/db/userDB";
 import LoadingAlert from "../loading/LoadingAlert";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 function DeleteAccountDialog({ userId }: { userId: string }) {
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [showCredentialsForm, setShowCredentialsForm] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -25,29 +27,6 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
     const [error, setError] = useState<string | null>(null);
     const { addToast } = useToast();
 
-    // Handles user authentication and deletion
-    async function handleDeleteAccount() {
-        setIsDeleting(true);
-        try {
-            await removeUserFromDB(userId, email, password);
-
-            addToast({
-                title: "Account Deleted",
-                description: "Your account has been successfully deleted.",
-            });
-
-        } catch (error: any) {
-            console.error(error);
-            addToast({
-                title: "Error",
-                description: error.message || "Failed to delete account.",
-            });
-        } finally {
-            setIsDeleting(false);
-        }
-    }
-
-    // Check the authentication provider and toggle credential form
     async function handleAuthenticationCheck() {
         try {
             const user = auth.currentUser;
@@ -55,9 +34,9 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
 
             const providerId = user.providerData[0]?.providerId;
             if (providerId === "google.com") {
-                await handleDeleteAccount(); // Directly proceed for Google accounts
+                await handleDeleteAccount();
             } else {
-                setShowCredentialsForm(true); // Show credentials form for email/password
+                setShowCredentialsForm(true);
             }
         } catch (error: any) {
             console.error("Authentication check failed:", error);
@@ -68,6 +47,47 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
         }
     }
 
+    async function handleDeleteAccount() {
+        setIsDeleting(true);
+        try {
+            const user = auth.currentUser;
+            if (!user) throw new Error("No user is signed in.");
+
+            const providerId = user.providerData[0]?.providerId;
+
+            if (providerId !== "google.com") {
+                await reauthenticateUser(email, password);
+            }
+
+            await removeUserFromDB(userId, email, password);
+
+            addToast({
+                title: "Account Deleted",
+                description: "Your account has been successfully deleted.",
+            });
+
+            await auth.signOut();
+            setDialogOpen(false);
+        } catch (error: any) {
+            console.error(error);
+            setError(error.message || "Failed to delete account.");
+        } finally {
+            setIsDeleting(false);
+        }
+    }
+
+    async function reauthenticateUser(email: string, password: string) {
+        if (!auth.currentUser) throw new Error("No user is signed in.");
+
+        const providerId = auth.currentUser.providerData[0]?.providerId;
+        if (providerId !== "password") {
+            throw new Error("Reauthentication not supported for this provider.");
+        }
+
+        await signInWithEmailAndPassword(auth, email, password);
+    }
+
+
     return (
         <>
             <LoadingAlert
@@ -75,9 +95,22 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                 error={error}
                 onClose={() => setError(null)}
             />
-            <AlertDialog>
+            <AlertDialog open={dialogOpen} onOpenChange={(isOpen) => {
+                setDialogOpen(isOpen);
+                if (!isOpen) {
+                    setShowCredentialsForm(false);
+                    setEmail("");
+                    setPassword("");
+                }
+            }}>
                 <AlertDialogTrigger asChild>
-                    <li className="text-destructive hover:font-semibold transition-all cursor-pointer">
+                    <li
+                        className="text-destructive hover:font-semibold transition-all cursor-pointer"
+                        onClick={() => {
+                            setDialogOpen(true);
+                            setShowCredentialsForm(false);
+                        }}
+                    >
                         Delete Account
                     </li>
                 </AlertDialogTrigger>
@@ -89,13 +122,15 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     {!showCredentialsForm ? (
-                        // Initial confirmation popup
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction asChild>
                                 <Button
                                     className="bg-destructive hover:bg-red-700 text-white"
-                                    onClick={handleAuthenticationCheck}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAuthenticationCheck();
+                                    }}
                                     disabled={isDeleting}
                                 >
                                     {isDeleting ? "Processing..." : "Authenticate"}
@@ -103,7 +138,6 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                             </AlertDialogAction>
                         </AlertDialogFooter>
                     ) : (
-                        // Credentials form for email/password reauthentication
                         <div className="space-y-4 mt-4">
                             <Input
                                 type="email"
@@ -135,6 +169,7 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                     )}
                 </AlertDialogContent>
             </AlertDialog>
+
         </>
     );
 }
