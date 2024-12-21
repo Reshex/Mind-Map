@@ -9,12 +9,15 @@ import { fetchUserData } from "@/utils/fetchUserData";
 
 //Hooks
 import { useCreatorId } from "@/hooks/useCreatorId";
+import { useToast } from "@/context/ToastContext";
 
 //Custom Components
 import LoadingAlert from "@/components/loading/LoadingAlert";
 import { Button } from "@/components/ui/button";
 import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswordDialog";
 import DeleteAccountDialog from "@/components/deleteAccountDialog/DeleteAccountDialog";
+import { ShieldCheck, ShieldX } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function UserSettingsPage() {
     const userId = useCreatorId();
@@ -23,6 +26,9 @@ function UserSettingsPage() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate()
+    const { addToast } = useToast();
+
     // const [notifications, setNotifications] = useState(true);
     // const [darkMode, setDarkMode] = useState(false);
 
@@ -37,13 +43,36 @@ function UserSettingsPage() {
     }, [userId]);
 
     async function handleSave() {
-        if (!userId) return console.error("User ID not found")
+        try {
+            if (!userId) return console.error("User ID not found")
 
-        await updateUserToDB(userId, { name, lastName, email })
+            await updateUserToDB(userId, { name, lastName, email })
+
+            addToast({
+                title: "User Details Changed",
+                description: "Your details have been successfully updated.",
+                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+            });
+
+            navigate("/")
+        }
+        catch (error: any) {
+            console.error("Failed to save user details", error)
+            addToast({
+                title: "User Details Changed Error",
+                description: error.message,
+                icon: <ShieldX color="#a70000" className="size-5" />,
+            });
+        }
     }
 
     function handleCancel() {
-        console.log("Changes canceled");
+        addToast({
+            title: "User Details Reset",
+            description: "Your details have been resetted.",
+            icon: <ShieldCheck color="#3fe3" className="size-5" />,
+        });
+        navigate("/")
     }
 
     return (
@@ -57,7 +86,6 @@ function UserSettingsPage() {
                 <div className="max-w-5xl mx-auto p-8">
                     <h1 className="text-4xl font-bold text-center mb-12 mt-24">User Settings</h1>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Sidebar for categories */}
                         <div className="bg-muted-secondary rounded-lg shadow-lg p-6">
                             <h2 className="text-lg font-semibold mb-4">Advanced Settings</h2>
                             <ul className="space-y-2">
@@ -66,9 +94,14 @@ function UserSettingsPage() {
                             </ul>
                         </div>
 
-                        {/* Content area */}
                         <div className="col-span-2 bg-background rounded-lg shadow-lg p-6 space-y-6">
                             <h2 className="text-2xl font-semibold">Account Settings</h2>
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                                    Email
+                                </label>
+                                <p>{email}</p>
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Name
@@ -93,19 +126,6 @@ function UserSettingsPage() {
                                     className="w-full"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                                    Email
-                                </label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email"
-                                    className="w-full"
-                                />
-                            </div>
                             <hr />
                             <h2 className="text-2xl font-semibold">Appearance</h2>
                             <div className="flex items-center justify-between">
@@ -123,17 +143,16 @@ function UserSettingsPage() {
                             /> */}
                             </div>
 
-                            {/* Action Buttons */}
                             <div className="flex justify-end space-x-4">
                                 <Button
                                     onClick={handleCancel}
-                                    className="px-6 py-2 bg-muted hover:bg-muted-secondary text-foreground rounded-lg shadow transition-all"
+                                    className="px-6 py-2 bg-muted hover:bg-muted-foreground text-foreground rounded-lg shadow transition-all"
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     onClick={handleSave}
-                                    className="px-6 py-2 bg-primary hover:bg-secondary text-background rounded-lg shadow transition-all"
+                                    className="px-6 py-2 bg-primary hover:bg-destructive rounded-lg shadow transition-all"
                                 >
                                     Save Changes
                                 </Button>

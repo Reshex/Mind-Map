@@ -192,25 +192,21 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
   function traverseAndReposition(parentId: string | null, depth: number, xCenter: number) {
     const children = nodes.filter((node) => node.data.parentId === parentId);
 
-    // Calculate total width for the current node's children
     const totalWidth = calculateSubtreeWidth(parentId);
 
-    let currentX = xCenter - totalWidth / 2; // Start positioning from the leftmost point
+    let currentX = xCenter - totalWidth / 2;
     children.forEach((child) => {
       const childWidth = calculateSubtreeWidth(child.id);
 
-      // Position the child in the center of its own subtree
       child.position.x = currentX + childWidth / 2;
       child.position.y = depth * spacingY;
 
-      // Move to the next sibling's position
       currentX += childWidth;
 
-      traverseAndReposition(child.id, depth + 1, child.position.x); // Recurse for children
+      traverseAndReposition(child.id, depth + 1, child.position.x);
     });
   }
 
-  // Start traversal from root nodes (nodes without a parent)
   const rootNodes = nodes.filter((node) => !node.data.parentId);
   const totalRootWidth = rootNodes.reduce((total, root) => total + calculateSubtreeWidth(root.id), 0);
   let currentRootX = -totalRootWidth / 2;
@@ -218,13 +214,14 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
   rootNodes.forEach((root) => {
     const rootWidth = calculateSubtreeWidth(root.id);
 
-    root.position.x = currentRootX + rootWidth / 2; // Center root node
-    root.position.y = 0; // Root nodes are at the top (depth = 0)
+    root.position.x = currentRootX + rootWidth / 2;
+    root.position.y = 0;
 
     currentRootX += rootWidth;
 
-    traverseAndReposition(root.id, 1, root.position.x); // Recurse for children
+    traverseAndReposition(root.id, 1, root.position.x);
   });
 
-  return [...nodes]; // Return updated nodes
+  return [...nodes];
 }
+

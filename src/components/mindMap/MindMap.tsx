@@ -1,6 +1,6 @@
 //Imports
 import { useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, Connection, Edge } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, Connection, Edge, Controls } from 'reactflow';
 
 //Controllers
 import { onAddNode, onRemoveNode, onEditNode } from '@/controllers/nodesController';
@@ -20,6 +20,7 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 //Styles
 import 'reactflow/dist/style.css';
 import loadData from '@/utils/loadMindMapData';
+import AddFirendToMapDialog from '../addFriendToMapDialog/AddFirendToMapDialog';
 
 
 const nodeTypes = {
@@ -99,8 +100,9 @@ function MindMap() {
         })
     }, []);
 
+
     return (
-        <div className="h-screen bg-gradient-to-r from-secondary to-muted-secondary">
+        <div className="relative h-screen bg-gradient-to-r from-secondary to-muted-secondary">
             <ReactFlow
                 nodes={nodes.map((node) => ({
                     ...node,
@@ -118,7 +120,12 @@ function MindMap() {
                 onConnect={connectNodes}
                 nodeTypes={nodeTypes}
                 fitView
-            />
+            >
+                <div className='z-10 absolute right-0 top-16 '>
+                    <AddFirendToMapDialog mapId={mapId} creatorId={creatorId} />
+                </div>
+                <Controls />
+            </ReactFlow>
         </div>
     );
 }
