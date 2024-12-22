@@ -99,6 +99,9 @@ function Navbar() {
                         <a href="/contact" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                             Contact
                         </a>
+                        <a href="/userSettings" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                            Settings
+                        </a>
                     </div>
                 )}
             </div>

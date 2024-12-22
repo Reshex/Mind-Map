@@ -6,22 +6,33 @@ export async function loadMapFromDB(creatorId: string, mapId?: string) {
   try {
     const mapCollectionRef = collection(db, "maps");
 
+    // Load specific map
     if (mapId) {
       const mapDoc = await getDoc(doc(mapCollectionRef, mapId));
-      if (mapDoc.exists()) {
-        return mapDoc.data() as Map;
+      if (!mapDoc.exists()) {
+        console.error("Map not found with mapId:", mapId);
+        return null;
       }
-      console.error("Map not found with mapId:", mapId);
-      return null;
+
+      const mapData = mapDoc.data() as Map;
+
+      if (!mapData.users?.includes(creatorId)) {
+        console.error("Access denied. User is not allowed to view this map.");
+        return null;
+      }
+
+      return mapData;
     }
 
-    const userMapQuery = query(mapCollectionRef, where("creatorId", "==", creatorId));
+    const userMapQuery = query(mapCollectionRef, where("users", "array-contains", creatorId));
     const querySnapshot = await getDocs(userMapQuery);
 
     const maps = querySnapshot.docs.map((doc) => doc.data() as Map);
+
     return maps;
   } catch (error) {
-    console.error("Failed to load map", error);
+    console.error("Failed to load maps:", error);
+    return null;
   }
 }
 
