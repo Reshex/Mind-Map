@@ -92,3 +92,29 @@ export async function removeMapFromDB(creatorId: string, mapId: string) {
     console.error("Failed to delete map and associated data", error);
   }
 }
+
+export async function getMapUsersFromDB(mapId: string): Promise<string[] | null> {
+  try {
+    const mapRef = doc(db, "maps", mapId);
+
+    const mapSnapshot = await getDoc(mapRef);
+
+    if (!mapSnapshot.exists()) {
+      console.error(`Map with ID ${mapId} does not exist`);
+      return null;
+    }
+
+    const mapData = mapSnapshot.data();
+    const users = mapData?.users;
+
+    if (Array.isArray(users)) {
+      return users;
+    } else {
+      console.warn(`Users field is missing or not an array for map ID ${mapId}`);
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch map users from the database:", error);
+    return null;
+  }
+}

@@ -13,12 +13,12 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { onUpdateMap } from "@/controllers/mapController";
-import { getUserFromDB } from "@/db/userDB";
-import { User } from "firebase/auth";
+import { UserPlus } from "lucide-react";
+import { getMapUsersFromDB } from "@/db/mapDB";
 
 interface AddFriendToMapDialogProps {
-    mapId: string;
-    creatorId: string;
+    mapId: string | undefined;
+    creatorId: string | null;
 }
 
 function AddFriendToMapDialog({ mapId, creatorId }: AddFriendToMapDialogProps) {
@@ -26,12 +26,21 @@ function AddFriendToMapDialog({ mapId, creatorId }: AddFriendToMapDialogProps) {
 
     async function handleAddFriend() {
         try {
+            if (!creatorId) return console.error("User ID not found")
+            if (!mapId) return console.error("Map ID not found")
+
             if (!friendId.trim()) {
                 console.error("Friend ID is required");
                 return;
             }
+            const mapUsersArray = await getMapUsersFromDB(mapId);
+            if (!mapUsersArray) return console.error("No users in this map")
+            if (mapUsersArray?.includes(friendId)) return console.error("User is already on the list")
 
-            await onUpdateMap(creatorId, mapId, { users: { friendId } });
+            const updatedMapUsers = [...mapUsersArray, friendId]
+
+            await onUpdateMap(creatorId, mapId, { users: updatedMapUsers });
+
         } catch (error) {
             console.error("Error adding friend to the map:", error);
         }
@@ -40,7 +49,7 @@ function AddFriendToMapDialog({ mapId, creatorId }: AddFriendToMapDialogProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className="bg-secondary z-50 cursor-pointer">+</Button>
+                <Button className="bg-secondary z-50 cursor-pointer"><UserPlus /></Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>

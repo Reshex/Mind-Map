@@ -12,6 +12,7 @@ import InitialNode from '../nodes/CustomInitialNode';
 
 //Utils
 import withValidMapId from '@/utils/mapValidation';
+import AddFirendToMapDialog from '../addFriendToMapDialog/AddFriendToMapDialog';
 
 //Hooks
 import { useParams } from 'react-router-dom';
@@ -20,7 +21,6 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 //Styles
 import 'reactflow/dist/style.css';
 import loadData from '@/utils/loadMindMapData';
-import AddFirendToMapDialog from '../addFriendToMapDialog/AddFirendToMapDialog';
 
 
 const nodeTypes = {
@@ -121,7 +121,7 @@ function MindMap() {
                 nodeTypes={nodeTypes}
                 fitView
             >
-                <div className='z-10 absolute right-0 top-16 '>
+                <div className='z-10 absolute right-0 bottom-5'>
                     <AddFirendToMapDialog mapId={mapId} creatorId={creatorId} />
                 </div>
                 <Controls />
