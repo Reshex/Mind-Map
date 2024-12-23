@@ -121,7 +121,7 @@ function MindMap() {
                 nodeTypes={nodeTypes}
                 fitView
             >
-                <div className='z-10 absolute right-0 bottom-5'>
+                <div className='z-10 absolute right-0 top-16'>
                     <AddFirendToMapDialog mapId={mapId} creatorId={creatorId} />
                 </div>
                 <Controls />

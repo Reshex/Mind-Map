@@ -64,7 +64,7 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
             addToast({
                 title: "Map Created",
                 description: `Map successfully created: ${mapName}`,
-                icon: <Terminal color="#3fe3" className="h-4 w-4" />,
+                icon: <Terminal className="h-4 w-4" />,
             });
 
             navigate(`/mindMap/${mapId}`);
@@ -86,12 +86,13 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
         <AlertDialog>
             <AlertDialogTrigger>
                 <div className="w-full max-w-md cursor-pointer">
-                    <div className="w-full rounded-2xl p-6 bg-secondary border-2 border-dashed border-foreground shadow-2xl text-center transition-all transform hover:scale-105 hover:border-primary">
-                        <div className="flex justify-center text-foreground">
-                            <Plus />
+                    <div className="w-full rounded-3xl p-8 bg-gradient-to-br from-secondary to-muted border-2 border-dashed border-muted-foreground shadow-lg hover:shadow-xl text-center transition-transform transform hover:scale-105 hover:border-primary group">
+                        <div className="flex justify-center items-center h-full text-muted-foreground group-hover:text-primary transition-colors">
+                            <Plus className="h-8 w-8" />
                         </div>
                     </div>
                 </div>
+
             </AlertDialogTrigger>
 
             <AlertDialogContent>

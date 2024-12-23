@@ -18,6 +18,7 @@ import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswo
 import DeleteAccountDialog from "@/components/deleteAccountDialog/DeleteAccountDialog";
 import { ShieldCheck, ShieldX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@radix-ui/react-switch";
 
 function UserSettingsPage() {
     const userId = useCreatorId();
@@ -28,9 +29,8 @@ function UserSettingsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate()
     const { addToast } = useToast();
-
-    // const [notifications, setNotifications] = useState(true);
-    // const [darkMode, setDarkMode] = useState(false);
+    const [notifications, setNotifications] = useState(true);
+    const [darkMode, setDarkMode] = useState(false);
 
     useEffect(() => {
         if (!userId) {
@@ -51,7 +51,7 @@ function UserSettingsPage() {
             addToast({
                 title: "User Details Changed",
                 description: "Your details have been successfully updated.",
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck  className="size-5" />,
             });
 
             navigate("/")
@@ -70,7 +70,7 @@ function UserSettingsPage() {
         addToast({
             title: "User Details Reset",
             description: "Your details have been resetted.",
-            icon: <ShieldCheck color="#3fe3" className="size-5" />,
+            icon: <ShieldCheck className="size-5" />,
         });
         navigate("/")
     }
@@ -130,17 +130,18 @@ function UserSettingsPage() {
                             <h2 className="text-2xl font-semibold">Appearance</h2>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium">Enable Notifications</span>
-                                {/* <Switch
-                                checked={notifications}
-                                onCheckedChange={(checked) => setNotifications(checked)}
-                            /> */}
+                                <Switch
+                                    checked={notifications}
+                                    onCheckedChange={(checked) => setNotifications(checked)}
+                                />
+
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium">Dark Mode</span>
-                                {/* <Switch
-                                checked={darkMode}
-                                onCheckedChange={(checked) => setDarkMode(checked)}
-                            /> */}
+                                <Switch
+                                    checked={darkMode}
+                                    onCheckedChange={(checked) => setDarkMode(checked)}
+                                />
                             </div>
 
                             <div className="flex justify-end space-x-4">

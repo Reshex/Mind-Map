@@ -51,7 +51,7 @@ export default function ChangePasswordDialog() {
             addToast({
                 title: "Password Changed",
                 description: "Your password has been successfully updated.",
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck  className="size-5" />,
             });
 
             setCurrentUserPassword("");

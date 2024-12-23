@@ -17,6 +17,7 @@ import { useToast } from "@/context/ToastContext";
 import { removeUserFromDB } from "@/db/userDB";
 import LoadingAlert from "../loading/LoadingAlert";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { ShieldCheck, ShieldX } from "lucide-react";
 
 function DeleteAccountDialog({ userId }: { userId: string }) {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -43,6 +44,7 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
             addToast({
                 title: "Error",
                 description: error.message || "Authentication check failed.",
+                icon: <ShieldX color="#a70000" className="size-5" />,
             });
         }
     }
@@ -64,6 +66,7 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
             addToast({
                 title: "Account Deleted",
                 description: "Your account has been successfully deleted.",
+                icon: <ShieldCheck  className="size-5" />,
             });
 
             await auth.signOut();

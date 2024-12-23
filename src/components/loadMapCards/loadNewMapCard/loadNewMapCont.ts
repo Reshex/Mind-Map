@@ -35,6 +35,5 @@ export async function editMapName(
   addToast({
     title: "Map Updated",
     description: `Map successfully updated: ${mapName}`,
-    icon: null,
   });
 }

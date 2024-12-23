@@ -38,7 +38,7 @@ export default function LoginForm() {
             addToast({
                 title: "User logged in",
                 description: `Successfully logged in with the user: ${values.email}`,
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck className="size-5" />,
             });
             navigate("/");
         } catch (error: any) {

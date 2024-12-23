@@ -14,6 +14,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/firebase";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+import { ShieldCheck, ShieldX } from "lucide-react";
 
 export default function ForgotPasswordDialog() {
     const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ export default function ForgotPasswordDialog() {
                 addToast({
                     title: "Error",
                     description: "Please enter a valid email address.",
+                    icon: <ShieldCheck className="size-5" />,
                 });
                 return;
             }
@@ -34,6 +36,8 @@ export default function ForgotPasswordDialog() {
             addToast({
                 title: "Success",
                 description: "Password reset email sent successfully.",
+                icon: <ShieldCheck className="size-5" />,
+
             });
             setEmail("");
         } catch (error: any) {
@@ -41,6 +45,7 @@ export default function ForgotPasswordDialog() {
             addToast({
                 title: "Error",
                 description: error.message || "Something went wrong.",
+                icon: <ShieldX color="#a70000" className="size-5" />,
             });
         } finally {
             setIsSubmitting(false);

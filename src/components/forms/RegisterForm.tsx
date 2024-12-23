@@ -82,7 +82,7 @@ export default function RegisterForm() {
             addToast({
                 title: "User logged in",
                 description: `Successfully logged in with the user: ${user.displayName}`,
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck className="size-5" />,
             });
         } catch (error: any) {
             setDbError(error.message);

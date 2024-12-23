@@ -23,7 +23,7 @@ function LoadMap() {
                     Load Your Mind Map
                 </h1>
                 <p className="text-muted-foreground text-lg text-center mb-12 max-w-2xl">
-                    Easily create or load your mind maps to start brainstorming. Select a map below to begin.
+                    Easily create or load your mind maps to start brainstorming. Select a map below to begin or create a new one.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl animate-fade-in">

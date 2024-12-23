@@ -46,7 +46,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
         addToast({
             title: "Map Loaded",
             description: `Map loaded successfully and free to use`,
-            icon: <Terminal color="#3fe3" className="h-4 w-4" />,
+            icon: <Terminal className="h-4 w-4" />,
         });
     }
 
@@ -56,11 +56,12 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                 <div
                     onClick={() => navigateToMap(map.mapId)}
                     key={map.mapId}
-                    className="w-full max-w-md rounded-2xl p-6 bg-primary shadow-2xl text-center transition-all transform hover:scale-105 hover:ring ring-foreground group cursor-pointer"
+                    className="w-full max-w-md p-8 bg-gradient-map rounded-3xl shadow-lg text-center transition-all transform hover:scale-105 hover:shadow-2xl hover:ring-4 ring-pink-400 group cursor-pointer"
                 >
-                    <h1 className="text-4xl font-normal group-hover:font-extralight transition-all">
+                    <h1 className="text-4xl font-semibold text-white tracking-wide transition-all group-hover:text-gray-200">
                         {map.mapName.toLocaleUpperCase()}
                     </h1>
+
                     <div
                         className="absolute top-2 right-10"
                         onClick={(e) => e.stopPropagation()}

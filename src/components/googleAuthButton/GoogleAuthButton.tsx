@@ -25,7 +25,7 @@ export default function GoogleAuth() {
             addToast({
                 title: "User logged in",
                 description: `Successfully logged in with the user: ${user.displayName}`,
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck className="size-5" />,
             });
             await registerUserToDB(values, user.uid);
         } catch (error: any) {

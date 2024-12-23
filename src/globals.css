@@ -70,6 +70,9 @@
   .bg-gradient-custom {
     background: linear-gradient(135deg, #f6d43b, #f33303);
   }
+  .bg-gradient-map {
+    background: linear-gradient(135deg, #f6863b, #f32011, #ad39b5);
+  }
 }
 
 @layer base {

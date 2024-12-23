@@ -26,7 +26,7 @@ function Navbar() {
             addToast({
                 title: "User logged out",
                 description: `Successfully logged out`,
-                icon: <ShieldCheck color="#3fe3" className="size-5" />,
+                icon: <ShieldCheck className="size-5" />,
             });
         } catch (error) {
             console.error("Error logging out: ", error);
@@ -70,7 +70,6 @@ function Navbar() {
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="bg-background text-foreground shadow-lg rounded-lg">
-                                <DropdownMenuItem>My Account</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => navigate("/userSettings")}>Settings</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
                             </DropdownMenuContent>
