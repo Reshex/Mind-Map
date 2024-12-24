@@ -20,7 +20,7 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 
 //Styles
 import 'reactflow/dist/style.css';
-import loadData from '@/utils/loadMindMapData';
+import useRealtimeListeners from '@/utils/realTimeFetching';
 
 
 const nodeTypes = {
@@ -95,11 +95,8 @@ function MindMap() {
     }
 
     useEffect(() => {
-        withValidMapId(mapId, async (validMapId) => {
-            loadData(validMapId, edges, setNodes, setEdges, onGetConnections);
-        })
-    }, []);
-
+        useRealtimeListeners(mapId as string, edges, setNodes, setEdges, onGetConnections);
+    }, [mapId, setNodes, setEdges, onGetConnections]);
 
     return (
         <div className="relative h-screen bg-gradient-to-r from-secondary to-muted-secondary">

@@ -91,7 +91,7 @@ function Navbar() {
                             Home
                         </a>
                         {user && (
-                            <a href="/mindMap" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                            <a href="/loadMap" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                                 Mind Map
                             </a>
                         )}
