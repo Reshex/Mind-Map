@@ -6,4 +6,5 @@ export default interface User {
   lastName: string | null;
   email: string | null;
   maps?: Map[] | FieldValue;
+  userId?: string | null;
 }

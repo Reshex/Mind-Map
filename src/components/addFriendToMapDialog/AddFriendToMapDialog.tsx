@@ -13,8 +13,11 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { onUpdateMap } from "@/controllers/mapController";
-import { UserPlus } from "lucide-react";
+import { ShieldCheck, ShieldX, UserPlus } from "lucide-react";
 import { getMapUsersFromDB } from "@/db/mapDB";
+import { getUsersFromDB } from "@/db/userDB";
+import User from "@/types/userTypes/userType";
+import { useToast } from "@/context/ToastContext";
 
 interface AddFriendToMapDialogProps {
     mapId: string | undefined;
@@ -23,39 +26,64 @@ interface AddFriendToMapDialogProps {
 
 function AddFriendToMapDialog({ mapId, creatorId }: AddFriendToMapDialogProps) {
     const [friendId, setFriendId] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { addToast } = useToast();
 
     async function handleAddFriend() {
         try {
-            if (!creatorId) return console.error("User ID not found")
-            if (!mapId) return console.error("Map ID not found")
+            if (!creatorId) return console.error("User ID not found");
+            if (!mapId) return console.error("Map ID not found");
 
-            if (!friendId.trim()) {
-                console.error("Friend ID is required");
+            const users = await getUsersFromDB();
+            if (!users) return console.error("No users found");
+
+            if (!users.map((user: User) => user.userId).includes(friendId)) {
+                setError("Friend ID not found");
                 return;
             }
+
             const mapUsersArray = await getMapUsersFromDB(mapId);
-            if (!mapUsersArray) return console.error("No users in this map")
-            if (mapUsersArray?.includes(friendId)) return console.error("User is already on the list")
+            if (!mapUsersArray) return console.error("No users in this map");
 
-            const updatedMapUsers = [...mapUsersArray, friendId]
+            if (mapUsersArray.includes(friendId)) {
+                setError("User is already on the list");
+                return;
+            }
 
+            const updatedMapUsers = [...mapUsersArray, friendId];
             await onUpdateMap(creatorId, mapId, { users: updatedMapUsers });
 
-        } catch (error) {
-            console.error("Error adding friend to the map:", error);
+            setError(null);
+            setFriendId("");
+            setIsDialogOpen(false);
+            addToast({
+                title: "Friend Added",
+                description: "Your friend has been successfully added.",
+                icon: <ShieldCheck className="size-5" />,
+            });
+        } catch (error: any) {
+            setError(error.message || "Error Adding Friend.");
+            addToast({
+                title: "Error Adding Friend",
+                description: error.message || "An unexpected error occurred.",
+                icon: <ShieldX color="#a70000" className="size-5" />,
+            });
         }
     }
 
     return (
-        <AlertDialog>
+        <AlertDialog open={isDialogOpen}>
             <AlertDialogTrigger asChild>
-                <Button className="bg-secondary z-50 cursor-pointer"><UserPlus /></Button>
+                <Button onClick={() => setIsDialogOpen(true)} className="bg-secondary z-50 cursor-pointer">
+                    <UserPlus />
+                </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Add Friend</AlertDialogTitle>
                     <AlertDialogDescription>
-                        It’s always nice to work together. Type your friend’s ID and click on Add Friend.
+                        It’s always nice to brainstorm together. Type your friend’s ID and click on Add Friend.
                     </AlertDialogDescription>
                     <Input
                         value={friendId}
@@ -63,9 +91,17 @@ function AddFriendToMapDialog({ mapId, creatorId }: AddFriendToMapDialogProps) {
                         placeholder="Friend ID"
                     />
                 </AlertDialogHeader>
+                {error && <p className="text-red-500">{error}</p>}
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleAddFriend}>Add Friend</AlertDialogAction>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleAddFriend();
+                        }}
+                    >
+                        Add Friend
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

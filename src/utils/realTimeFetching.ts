@@ -23,7 +23,6 @@ export default async function useRealtimeListeners(
         const fetchedNodes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         const sortedNodes = sortNodesByHierarchy(fetchedNodes as Node<CustomNodeDataType>[]);
 
-        // Update state only if nodes differ
         setNodes((currentNodes) => {
           const currentNodesStr = JSON.stringify(currentNodes);
           const newNodesStr = JSON.stringify(sortedNodes);
@@ -31,12 +30,10 @@ export default async function useRealtimeListeners(
         });
       });
 
-      // Set up real-time listeners for edges
       const edgesQuery = query(collection(db, "edges"), where("data.mapId", "==", validMapId));
       const unsubscribeEdges = onSnapshot(edgesQuery, (snapshot) => {
         const fetchedEdges = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-        // Update state only if edges differ
         setEdges((currentEdges) => {
           const currentEdgesStr = JSON.stringify(currentEdges);
           const newEdgesStr = JSON.stringify(fetchedEdges);
@@ -44,7 +41,6 @@ export default async function useRealtimeListeners(
         });
       });
 
-      // Cleanup listeners on unmount
       const cleanup = () => {
         unsubscribeNodes();
         unsubscribeEdges();

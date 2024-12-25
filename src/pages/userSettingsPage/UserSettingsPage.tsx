@@ -10,6 +10,7 @@ import { fetchUserData } from "@/utils/fetchUserData";
 //Hooks
 import { useCreatorId } from "@/hooks/useCreatorId";
 import { useToast } from "@/context/ToastContext";
+import { useNavigate } from "react-router-dom";
 
 //Custom Components
 import LoadingAlert from "@/components/loading/LoadingAlert";
@@ -17,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswordDialog";
 import DeleteAccountDialog from "@/components/deleteAccountDialog/DeleteAccountDialog";
 import { ShieldCheck, ShieldX } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Switch } from "@radix-ui/react-switch";
 
 function UserSettingsPage() {
@@ -51,7 +51,7 @@ function UserSettingsPage() {
             addToast({
                 title: "User Details Changed",
                 description: "Your details have been successfully updated.",
-                icon: <ShieldCheck  className="size-5" />,
+                icon: <ShieldCheck className="size-5" />,
             });
 
             navigate("/")
@@ -97,10 +97,16 @@ function UserSettingsPage() {
                         <div className="col-span-2 bg-background rounded-lg shadow-lg p-6 space-y-6">
                             <h2 className="text-2xl font-semibold">Account Settings</h2>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                                <label className="block text-sm font-medium mb-1">
                                     Email
                                 </label>
                                 <p>{email}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">
+                                    User ID
+                                </label>
+                                <p>{userId}</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">

@@ -85,25 +85,20 @@ export async function removeUserFromDB(userId: string, email?: string, password?
     const user = auth.currentUser;
     if (!user) return console.error("No user is signed in.");
 
-    // Determine the provider used for authentication
     const providerId = user.providerData[0]?.providerId;
 
     if (providerId === "google.com") {
-      // Reauthenticate with Google
       const provider = new GoogleAuthProvider();
       await reauthenticateWithPopup(user, provider);
     } else if (providerId === "password" && email && password) {
-      // Reauthenticate with email/password
       const credential = EmailAuthProvider.credential(email, password);
       await reauthenticateWithCredential(user, credential);
     } else {
       return console.error("Unsupported authentication provider or missing credentials.");
     }
 
-    // Delete the user
     await deleteUser(user);
 
-    // Delete user data from Firestore
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
 
@@ -152,26 +147,3 @@ export async function updateMapToUserDB(userId: string, mapId: string, newMapVal
     return console.error("Failed to update map in user document:", error);
   }
 }
-
-// export async function removeMapFromUserDB(userId: string, mapId: string) {
-//   try {
-//     const userRef = doc(db, "users", userId);
-
-//     const userSnapshot = await getDoc(userRef);
-//     if (!userSnapshot.exists()) {
-//       console.error("User not found");
-//       return;
-//     }
-
-//     const userData = userSnapshot.data();
-//     const maps = userData.maps;
-
-//     const updatedMaps = maps.filter((map: Map) => map.mapId !== mapId);
-//     console.log(updatedMaps)
-
-//     await updateDoc(userRef, { maps: updatedMaps });
-//     console.log(`Map with ID ${mapId} removed successfully from user document.`);
-//   } catch (error) {
-//     console.error("Failed to remove map from user database");
-//   }
-// }

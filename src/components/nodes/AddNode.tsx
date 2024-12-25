@@ -15,15 +15,24 @@ import { Input } from "../ui/input";
 
 function AddNode({ addNode }: { addNode: (label: string) => void }) {
     const [nodeName, setNodeName] = useState("");
+    const [error, setError] = useState<string | null>("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
     function handleAddNode() {
+        if (nodeName.trim().length < 2) {
+            setError("Node name must be at least 2 characters long");
+            return;
+        }
         addNode(nodeName);
         setNodeName("");
+        setError(null);
+        setIsDialogOpen(false);
     }
 
     return (
-        <AlertDialog>
-            <AlertDialogTrigger>
+        <AlertDialog open={isDialogOpen}>
+            <AlertDialogTrigger onClick={() => setIsDialogOpen(true)}>
                 <Plus className="w-3 h-3 hover:text-secondary" />
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -38,9 +47,13 @@ function AddNode({ addNode }: { addNode: (label: string) => void }) {
                         onChange={(e) => setNodeName(e.target.value)}
                     />
                 </AlertDialogHeader>
+                {error && <div className="text-red-500">{error}</div>}
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleAddNode}>Add</AlertDialogAction>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={(e) => {
+                        e.preventDefault();
+                        handleAddNode();
+                    }}>Add</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
