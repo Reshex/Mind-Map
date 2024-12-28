@@ -58,7 +58,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                     key={map.mapId}
                     className="w-full max-w-md p-8 bg-gradient-map rounded-3xl shadow-lg text-center transition-all transform hover:scale-105 hover:shadow-2xl hover:ring-4 ring-pink-400 group cursor-pointer"
                 >
-                    <h1 className="text-4xl font-semibold text-white tracking-wide transition-all group-hover:text-gray-200">
+                    <h1 className="text-4xl font-semibold text-foreground tracking-wide transition-all group-hover:text-gray-200">
                         {map.mapName.toLocaleUpperCase()}
                     </h1>
 

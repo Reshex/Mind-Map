@@ -42,7 +42,7 @@ export default function GoogleAuth() {
     return (
         <div>
             {error && <p className="text-red-500">{error}</p>}
-            <Button type="button" onClick={signInWithGoogle} className="bg-foreground text-secondary rounded hover:text-white">
+            <Button type="button" onClick={signInWithGoogle} className="bg-foreground text-secondary rounded hover:text-foreground">
                 Sign In with Google <LogIn className="size-4 ml-2" />
             </Button>
         </div>

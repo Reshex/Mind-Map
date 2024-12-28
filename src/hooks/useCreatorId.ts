@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/context/CreatorContext";
 import { useContext } from "react";
 
 export function useCreatorId() {

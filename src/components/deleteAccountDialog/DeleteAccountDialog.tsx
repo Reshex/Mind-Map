@@ -129,7 +129,7 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction asChild>
                                 <Button
-                                    className="bg-destructive hover:bg-red-700 text-white"
+                                    className="bg-destructive hover:bg-red-700 text-foreground"
                                     onClick={(e) => {
                                         e.preventDefault();
                                         handleAuthenticationCheck();
@@ -160,7 +160,7 @@ function DeleteAccountDialog({ userId }: { userId: string }) {
                                 <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
                                 <AlertDialogAction asChild>
                                     <Button
-                                        className="bg-destructive hover:bg-red-700 text-white"
+                                        className="bg-destructive hover:bg-red-700 text-foreground"
                                         onClick={handleDeleteAccount}
                                         disabled={isDeleting || !email || !password}
                                     >

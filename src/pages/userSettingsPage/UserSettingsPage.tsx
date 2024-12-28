@@ -11,6 +11,7 @@ import { fetchUserData } from "@/utils/fetchUserData";
 import { useCreatorId } from "@/hooks/useCreatorId";
 import { useToast } from "@/context/ToastContext";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/hooks/useTheme";
 
 //Custom Components
 import LoadingAlert from "@/components/loading/LoadingAlert";
@@ -29,8 +30,7 @@ function UserSettingsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate()
     const { addToast } = useToast();
-    const [notifications, setNotifications] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
+    const { theme, setTheme } = useTheme();
 
     useEffect(() => {
         if (!userId) {
@@ -41,6 +41,11 @@ function UserSettingsPage() {
 
         fetchUserData(userId, setError, setName, setLastName, setEmail, setIsLoading);
     }, [userId]);
+
+
+    const toggleTheme = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+    };
 
     async function handleSave() {
         try {
@@ -135,18 +140,9 @@ function UserSettingsPage() {
                             <hr />
                             <h2 className="text-2xl font-semibold">Appearance</h2>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium">Enable Notifications</span>
+                                <span className="text-sm font-medium">Toggle Visibility Mode</span>
                                 <Switch
-                                    checked={notifications}
-                                    onCheckedChange={(checked) => setNotifications(checked)}
-                                />
-
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium">Dark Mode</span>
-                                <Switch
-                                    checked={darkMode}
-                                    onCheckedChange={(checked) => setDarkMode(checked)}
+                                    onCheckedChange={toggleTheme}
                                 />
                             </div>
 
