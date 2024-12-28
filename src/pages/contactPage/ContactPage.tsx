@@ -1,59 +1,57 @@
+import { Linkedin, Mail, Globe, Github } from "lucide-react";
 
 function ContactPage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground px-4 animate-slide-in">
             <h1 className="text-4xl font-bold text-primary mb-4">Contact Me</h1>
             <p className="text-muted-foreground text-center mb-8 max-w-md">
-                Have questions, feedback, or need help? Feel free to reach out to me, and i’ll get back to you as soon as possible!
+                Feel free to reach out to me through any of the platforms below. I look forward to connecting!
             </p>
-            <form className="w-full max-w-lg bg-card p-8 rounded-lg shadow-lg">
-                <div className="mb-6">
-                    <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-2">
-                        Name
-                    </label>
-                    <input
-                        id="name"
-                        type="text"
-                        placeholder="Your name"
-                        className="w-full px-4 py-2 bg-input text-foreground border border-border rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
-                        required
-                    />
-                </div>
-                <div className="mb-6">
-                    <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        placeholder="Your email"
-                        className="w-full px-4 py-2 bg-input text-foreground border border-border rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
-                        required
-                    />
-                </div>
-                <div className="mb-6">
-                    <label htmlFor="message" className="block text-sm font-medium text-muted-foreground mb-2">
-                        Message
-                    </label>
-                    <textarea
-                        id="message"
-                        rows={5}
-                        placeholder="Your message"
-                        className="w-full px-4 py-2 bg-input text-foreground border border-border rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
-                        required
-                    />
-                </div>
-                <div className="text-center">
-                    <button
-                        type="submit"
-                        className="px-6 py-3 rounded-md bg-primary text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-all"
-                    >
-                        Send Message
-                    </button>
-                </div>
-            </form>
+            <div className="w-full max-w-lg bg-card p-8 rounded-lg shadow-lg space-y-6">
+                <ContactItem
+                    icon={<Linkedin className="text-primary w-6 h-6" />}
+                    title="LinkedIn"
+                    description="Connect with me on LinkedIn."
+                    link="https://www.linkedin.com/in/barabulher/"
+                />
+                <ContactItem
+                    icon={<Github className="text-primary w-6 h-6" />}
+                    title="GitHub"
+                    description="Check out my projects on GitHub."
+                    link="https://github.com/Reshex"
+                />
+                <ContactItem
+                    icon={<Globe className="text-primary w-6 h-6" />}
+                    title="Portfolio"
+                    description="Visit my portfolio website."
+                    link="https://reshex.github.io/My-Portfolio/"
+                />
+                <ContactItem
+                    icon={<Mail className="text-primary w-6 h-6" />}
+                    title="Email"
+                    description="Drop me an email."
+                    link="mailto:bar7569@gmail.com"
+                />
+            </div>
         </div>
     );
-};
+}
+
+function ContactItem({ icon, title, description, link }: { icon: React.ReactNode; title: string; description: string; link: string }) {
+    return (
+        <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-4 p-4 bg-muted hover:bg-muted-foreground rounded-lg transition"
+        >
+            <div>{icon}</div>
+            <div>
+                <h2 className="text-lg text-primary font-bold">{title}</h2>
+                <p className="text-sm text-foreground">{description}</p>
+            </div>
+        </a>
+    );
+}
 
 export default ContactPage;

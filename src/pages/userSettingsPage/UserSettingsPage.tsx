@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import ChangePasswordDialog from "@/components/changePasswordDialog/ChangePasswordDialog";
 import DeleteAccountDialog from "@/components/deleteAccountDialog/DeleteAccountDialog";
 import { ShieldCheck, ShieldX } from "lucide-react";
-import { Switch } from "@radix-ui/react-switch";
+import { Switch } from "@/components/ui/switch";
 
 function UserSettingsPage() {
     const userId = useCreatorId();

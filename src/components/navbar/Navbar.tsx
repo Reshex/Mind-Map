@@ -28,6 +28,7 @@ function Navbar() {
                 description: `Successfully logged out`,
                 icon: <ShieldCheck className="size-5" />,
             });
+            navigate("/");
         } catch (error) {
             console.error("Error logging out: ", error);
         }
@@ -63,7 +64,7 @@ function Navbar() {
                         </a>
 
                         {/* User Dropdown */}
-                        <DropdownMenu>
+                        {user && <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className="text-muted-foreground hover:text-primary focus:outline-none p-2 rounded-lg">
                                     <User className="w-6 h-6" />
@@ -73,7 +74,7 @@ function Navbar() {
                                 <DropdownMenuItem onClick={() => navigate("/userSettings")}>Settings</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu>}
                     </div>
 
                     {/* Mobile menu button */}
@@ -87,20 +88,23 @@ function Navbar() {
                 {/* Mobile menu */}
                 {isOpen && (
                     <div className="md:hidden mt-4 space-y-4 bg-background text-foreground shadow-lg rounded-lg p-4">
-                        <a href="/" className="block text-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
-                            Home
-                        </a>
                         {user && (
                             <a href="/loadMap" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                                 Mind Map
                             </a>
                         )}
+                        {user && (
+                            <a href="/userSettings" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                                Settings
+                            </a>
+                        )}
+                        <a href="/" className="block text-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
+                            Home
+                        </a>
                         <a href="/contact" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
                             Contact
                         </a>
-                        <a href="/userSettings" className="block text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg">
-                            Settings
-                        </a>
+
                     </div>
                 )}
             </div>
