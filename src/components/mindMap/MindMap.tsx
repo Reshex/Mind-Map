@@ -13,6 +13,7 @@ import InitialNode from '../nodes/CustomInitialNode';
 //Utils
 import withValidMapId from '@/utils/mapValidation';
 import AddFirendToMapDialog from '../addFriendToMapDialog/AddFriendToMapDialog';
+import useRealtimeListeners from '@/utils/realTimeFetching';
 
 //Hooks
 import { useParams } from 'react-router-dom';
@@ -20,7 +21,6 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 
 //Styles
 import 'reactflow/dist/style.css';
-import useRealtimeListeners from '@/utils/realTimeFetching';
 
 
 const nodeTypes = {

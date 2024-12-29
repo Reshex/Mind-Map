@@ -86,7 +86,7 @@ function NewMapCard({ setIsLoading, setError }: LoadMapPageProps) {
         <AlertDialog>
             <AlertDialogTrigger>
                 <div className="w-full max-w-md cursor-pointer">
-                    <div className="w-full rounded-3xl p-8 bg-gradient-to-br from-secondary to-muted border-2 border-dashed border-muted-foreground shadow-lg hover:shadow-xl text-center transition-transform transform hover:scale-105 hover:border-primary group">
+                    <div className="w-full rounded-3xl p-8 bg-gradient-to-br from-secondary to-muted border-2 border-dashed border-muted-foreground shadow-lg hover:shadow-xl text-center transition-transform transform hover:scale-110 hover:border-primary group">
                         <div className="flex justify-center items-center h-full text-muted-foreground group-hover:text-primary transition-colors">
                             <Plus className="h-8 w-8" />
                         </div>

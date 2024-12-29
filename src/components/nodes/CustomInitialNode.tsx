@@ -35,7 +35,12 @@ function InitialNode({ data, id }: InitialNodeProps) {
                 />
             </div>
 
-            <div className="text-md font-semibold text-foreground">{label}</div>
+            <div
+                className="text-md font-semibold text-foreground max-w-[15rem] max-h-[10rem] overflow-hidden break-words text-ellipsis line-clamp-3"
+                title={label}
+            >
+                {label}
+            </div>
 
             <div className="flex justify-center mt-2">
                 <AddNode addNode={addNode} />

@@ -8,6 +8,20 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0, transform: "scale(0.95)" },
+          "100%": { opacity: 1, transform: "scale(1)" },
+        },
+        fadeOut: {
+          "0%": { opacity: 1, transform: "scale(1)" },
+          "100%": { opacity: 0, transform: "scale(0.95)" },
+        },
+      },
+      animation: {
+        "fade-in": "fadeIn 0.3s ease-out",
+        "fade-out": "fadeOut 0.3s ease-in",
+      },
       boxShadow: {
         primary: "0 4px 32px -1px, 0 2px 4px -1px",
       },

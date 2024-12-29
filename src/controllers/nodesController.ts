@@ -64,14 +64,8 @@ export async function onAddNode({
     const selectedNode = nodes.find((node) => node.id === selectedNodeId);
     if (!selectedNode) return;
 
-    const siblingNodes = nodes.filter((node) => node.data.parentId === selectedNodeId);
-    const spacingY = 150;
-
-    const childIndex = siblingNodes.length;
-    const totalChildren = siblingNodes.length + 1;
-    const xOffset = (childIndex - (totalChildren - 1) / 2) * 150;
-    const xPosition = selectedNode.position.x + xOffset;
-    const yPosition = selectedNode.position.y + spacingY;
+    const xPosition = selectedNode.position.x;
+    const yPosition = selectedNode.position.y;
 
     const newNodeId = await addNodeToDB(mapId, {
       label,
@@ -176,17 +170,21 @@ export async function onEditNode({ creatorId, mapId, label, setNodes, nodes, sel
 }
 
 export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<CustomNodeDataType>[] {
-  const spacingX = 150;
-  const spacingY = 150;
+  const defaultWidth = 220;
+  const defaultHeight = 200;
+  const spacingX = 50;
+  const spacingY = 50;
 
   function calculateSubtreeWidth(nodeId: string | null): number {
     const children = nodes.filter((node) => node.data.parentId === nodeId);
 
-    if (children.length === 0) return spacingX;
+    if (children.length === 0) {
+      return defaultWidth;
+    }
 
     return children.reduce((totalWidth, child) => {
-      return totalWidth + calculateSubtreeWidth(child.id);
-    }, 0);
+      return totalWidth + calculateSubtreeWidth(child.id) + spacingX;
+    }, -spacingX);
   }
 
   function traverseAndReposition(parentId: string | null, depth: number, xCenter: number) {
@@ -195,20 +193,24 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
     const totalWidth = calculateSubtreeWidth(parentId);
 
     let currentX = xCenter - totalWidth / 2;
+
     children.forEach((child) => {
       const childWidth = calculateSubtreeWidth(child.id);
 
       child.position.x = currentX + childWidth / 2;
-      child.position.y = depth * spacingY;
+      child.position.y = depth * (defaultHeight + spacingY);
 
-      currentX += childWidth;
+      currentX += childWidth + spacingX; 
 
       traverseAndReposition(child.id, depth + 1, child.position.x);
     });
   }
 
   const rootNodes = nodes.filter((node) => !node.data.parentId);
-  const totalRootWidth = rootNodes.reduce((total, root) => total + calculateSubtreeWidth(root.id), 0);
+  const totalRootWidth = rootNodes.reduce((total, root) => {
+    return total + calculateSubtreeWidth(root.id) + spacingX;
+  }, -spacingX);
+
   let currentRootX = -totalRootWidth / 2;
 
   rootNodes.forEach((root) => {
@@ -217,11 +219,10 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
     root.position.x = currentRootX + rootWidth / 2;
     root.position.y = 0;
 
-    currentRootX += rootWidth;
+    currentRootX += rootWidth + spacingX; 
 
     traverseAndReposition(root.id, 1, root.position.x);
   });
 
   return [...nodes];
 }
-

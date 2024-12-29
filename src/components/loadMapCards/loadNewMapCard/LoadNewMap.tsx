@@ -56,9 +56,12 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
                 <div
                     onClick={() => navigateToMap(map.mapId)}
                     key={map.mapId}
-                    className="w-full max-w-md p-8 bg-gradient-map rounded-3xl shadow-lg text-center transition-all transform hover:scale-105 hover:shadow-2xl hover:ring-4 ring-pink-400 group cursor-pointer"
+                    className="w-full max-w-md max-h-64 p-8 bg-gradient-map rounded-3xl shadow-lg text-center transition-all transform hover:scale-110 hover:shadow-2xl hover:ring-4 ring-pink-400 group cursor-pointer overflow-hidden"
                 >
-                    <h1 className="text-4xl font-semibold text-foreground tracking-wide transition-all group-hover:text-gray-200">
+                    <h1
+                        className="text-3xl font-semibold text-foreground tracking-wide transition-all group-hover:text-gray-200 truncate"
+                        title={map.mapName.toLocaleUpperCase()}
+                    >
                         {map.mapName.toLocaleUpperCase()}
                     </h1>
 
@@ -102,6 +105,7 @@ function LoadMapCards({ setIsLoading }: LoadMapPageProps) {
             ))}
         </>
     );
+
 
 }
 
