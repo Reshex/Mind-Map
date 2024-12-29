@@ -1,4 +1,4 @@
-Real-Time Mind Map And Battle Royale Mod:
+Real-Time Mind Map:
 
 Key technologies:
 
