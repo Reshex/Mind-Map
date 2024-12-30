@@ -3,6 +3,7 @@ import { editNodeToDB, getNodesFromDB, removeNodeFromDB, addNodeToDB } from "../
 import { addEdgeToDB, removeEdgeFromDB } from "../db/edgeDB";
 import CustomNodeDataType from "@/types/nodeTypes/customNodeDataType";
 import { onUpdateMap } from "./mapController";
+import getDescendantNodeIds from "@/utils/getDescendantNodeIds";
 
 interface OnGetNodeParams {
   mapId: string;
@@ -128,24 +129,32 @@ export async function onRemoveNode({
   try {
     if (!selectedNodeId) return;
 
-    const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
+    const nodeIdsToRemove = [selectedNodeId, ...getDescendantNodeIds(selectedNodeId, nodes)];
+
+    const updatedNodes = nodes.filter((node) => !nodeIdsToRemove.includes(node.id));
     setNodes(updatedNodes);
 
-    const edgesToRemove = edges.filter((edge) => edge.source === selectedNodeId || edge.target === selectedNodeId);
-    edgesToRemove.forEach((edge) => {
-      removeEdgeFromDB(edge.id);
-    });
-    const updatedEdges = edges.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId);
+    const updatedEdges = edges.filter(
+      (edge) => !nodeIdsToRemove.includes(edge.source) && !nodeIdsToRemove.includes(edge.target)
+    );
     setEdges(updatedEdges);
 
-    await removeNodeFromDB(selectedNodeId);
+    const deleteNodesFromDB = Promise.all(nodeIdsToRemove.map((nodeId) => removeNodeFromDB(nodeId)));
+
+    const deleteEdgesFromDB = Promise.all(
+      edges
+        .filter((edge) => nodeIdsToRemove.includes(edge.source) || nodeIdsToRemove.includes(edge.target))
+        .map((edge) => removeEdgeFromDB(edge.id))
+    );
+
+    await Promise.all([deleteNodesFromDB, deleteEdgesFromDB]);
 
     await onUpdateMap(creatorId, mapId, {
       nodes: updatedNodes,
       edges: updatedEdges,
     });
   } catch (error) {
-    console.error("Failed to remove node", error);
+    console.error("Failed to remove node and its descendants", error);
   }
 }
 
@@ -200,7 +209,7 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
       child.position.x = currentX + childWidth / 2;
       child.position.y = depth * (defaultHeight + spacingY);
 
-      currentX += childWidth + spacingX; 
+      currentX += childWidth + spacingX;
 
       traverseAndReposition(child.id, depth + 1, child.position.x);
     });
@@ -219,7 +228,7 @@ export function sortNodesByHierarchy(nodes: Node<CustomNodeDataType>[]): Node<Cu
     root.position.x = currentRootX + rootWidth / 2;
     root.position.y = 0;
 
-    currentRootX += rootWidth + spacingX; 
+    currentRootX += rootWidth + spacingX;
 
     traverseAndReposition(root.id, 1, root.position.x);
   });

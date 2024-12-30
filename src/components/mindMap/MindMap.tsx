@@ -22,7 +22,6 @@ import { useCreatorId } from '@/hooks/useCreatorId';
 //Styles
 import 'reactflow/dist/style.css';
 
-
 const nodeTypes = {
     initial: InitialNode,
     custom: CustomNode,
@@ -93,6 +92,7 @@ function MindMap() {
             });
         });
     }
+
 
     useEffect(() => {
         useRealtimeListeners(mapId as string, edges, setNodes, setEdges, onGetConnections);

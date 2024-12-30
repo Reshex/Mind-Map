@@ -19,8 +19,8 @@ module.exports = {
         },
       },
       animation: {
-        "fade-in": "fadeIn 0.3s ease-out",
-        "fade-out": "fadeOut 0.3s ease-in",
+        "fade-in": "fadeIn 0.5s ease-out",
+        "fade-out": "fadeOut 0.5s ease-in",
       },
       boxShadow: {
         primary: "0 4px 32px -1px, 0 2px 4px -1px",

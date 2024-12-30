@@ -16,7 +16,7 @@ function CustomNode({ data, id }: CustomNodeProps) {
 
     const handleRemoveNode = () => {
         setIsDeleting(true);
-        setTimeout(() => removeNode(), 300);
+        setTimeout(() => removeNode(), 500);
     };
 
     return (
